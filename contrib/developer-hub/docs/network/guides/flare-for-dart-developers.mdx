@@ -1,0 +1,325 @@
+---
+slug: flare-for-dart-developers
+title: Flare for Dart Devs
+authors: [immadominion]
+tags: [dart, flutter, quickstart, solidity]
+description: Learn how to interact with Flare using Dart and Flutter.
+keywords: [dart, flutter, mobile, quickstart, solidity, smart-contract, flare-network]
+sidebar_position: 6
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import CodeBlock from "@theme/CodeBlock";
+import ChainIdCoston2 from "!!raw-loader!/examples/developer-hub-dart/bin/coston2/chain_id.dart";
+import ChainIdFlare from "!!raw-loader!/examples/developer-hub-dart/bin/flare/chain_id.dart";
+import MakeQueryCoston2 from "!!raw-loader!/examples/developer-hub-dart/bin/coston2/make_query.dart";
+import MakeQueryFlare from "!!raw-loader!/examples/developer-hub-dart/bin/flare/make_query.dart";
+import GetFeedId from "!!raw-loader!/examples/developer-hub-dart/bin/get_feed_id.dart";
+import FtsoV2Consumer from "!!raw-loader!/examples/developer-hub-dart/bin/coston2/ftsov2_consumer.dart";
+import FtsoV2Config from "!!raw-loader!/examples/developer-hub-dart/bin/coston2/ftsov2_config.dart";
+import SecureRandom from "!!raw-loader!/examples/developer-hub-dart/bin/coston2/secure_random.dart";
+import FetchAnchorFeeds from "!!raw-loader!/examples/developer-hub-dart/bin/coston2/fetch_anchor_feeds.dart";
+import WNat from "!!raw-loader!/examples/developer-hub-dart/bin/coston2/wnat.dart";
+
+This guide is for developers who want to interact with Flare using Dart, either
+in a Flutter app or in plain Dart on the server or command line.
+
+In this guide, using Dart, you will learn how to:
+
+- Query a contract on Flare using [`flare_network`](https://pub.dev/packages/flare_network), a pure-Dart client for the Flare JSON-RPC API.
+- Resolve contract addresses at runtime through the Flare Contract Registry.
+- Read FTSOv2 block-latency price feeds, and Scaling anchor feeds with their Merkle proofs.
+
+:::tip
+
+All examples in this guide are available at [developer-hub/examples](https://github.com/flare-foundation/developer-hub/tree/main/examples).
+
+:::
+
+:::note
+
+`flare_network` is read-only. It has no signing stack, so it cannot send
+transactions or move funds. For write operations, connect an existing Flare
+wallet over [WalletConnect/Reown](https://reown.com) and let the wallet sign.
+
+:::
+
+## Getting started
+
+Install the Dart SDK, or Flutter if you are building a mobile or desktop app.
+
+<Tabs>
+  <TabItem value="macos" label="MacOS via Homebrew" default>
+
+    ```bash
+    brew tap dart-lang/dart
+    brew install dart
+    ```
+
+  </TabItem>
+  <TabItem value="flutter" label="Flutter (all platforms)">
+
+    ```bash
+    # Follow https://docs.flutter.dev/get-started/install
+    flutter --version
+    ```
+
+  </TabItem>
+  <TabItem value="linux" label="Linux via apt">
+
+    ```bash
+    sudo apt update && sudo apt install apt-transport-https
+    wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub \
+      | sudo gpg --dearmor -o /usr/share/keyrings/dart.gpg
+    echo 'deb [signed-by=/usr/share/keyrings/dart.gpg arch=amd64] https://storage.googleapis.com/download.dartlang.org/linux/debian stable main' \
+      | sudo tee /etc/apt/sources.list.d/dart_stable.list
+    sudo apt update && sudo apt install dart
+    ```
+
+  </TabItem>
+</Tabs>
+
+Create a project and add the package:
+
+```bash
+dart create flare_quickstart
+cd flare_quickstart
+dart pub add flare_network
+```
+
+In a Flutter project, use `flutter pub add flare_network` instead. The package is
+pure Dart with no FFI and no native build step, so it works on Android, iOS,
+macOS, Windows, Linux and the web without extra configuration.
+
+## Query the chain ID
+
+The simplest possible call. `FlareClient` takes a network preset and talks to
+its public RPC endpoint.
+
+<Tabs>
+  <TabItem value="coston2" label="Coston2" default>
+    <CodeBlock language="dart" title="bin/coston2/chain_id.dart">
+      {ChainIdCoston2}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="flare" label="Flare">
+    <CodeBlock language="dart" title="bin/flare/chain_id.dart">
+      {ChainIdFlare}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+`FlareChain` provides presets for all four networks: `flare` (14), `coston2`
+(114), `songbird` (19) and `coston` (16). Pass `rpcUrl:` to use a private or
+paid endpoint instead of the public one.
+
+## Query a contract
+
+Contract addresses on Flare change. The
+[Flare Contract Registry](/network/guides/flare-contracts-registry) is the one
+stable address, and it is the same on every network, so resolve everything else
+from it at runtime.
+
+<Tabs>
+  <TabItem value="coston2" label="Coston2" default>
+    <CodeBlock language="dart" title="bin/coston2/make_query.dart">
+      {MakeQueryCoston2}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="flare" label="Flare">
+    <CodeBlock language="dart" title="bin/flare/make_query.dart">
+      {MakeQueryFlare}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+Use `addressesOf` to resolve several names in a single JSON-RPC round trip:
+
+```dart
+final addresses = await registry.addressesOf([
+  FlareContract.ftsoV2,
+  FlareContract.wNat,
+  FlareContract.protocolsV2,
+]);
+```
+
+## Build a feed ID
+
+An FTSO feed is identified by 21 bytes: one category byte, then the UTF-8 bytes
+of the feed name, right-padded with zeros.
+
+<CodeBlock language="dart" title="bin/get_feed_id.dart">
+  {GetFeedId}
+</CodeBlock>
+
+## Read FTSOv2 feeds
+
+Reads are free. The getters are declared `payable` in Solidity but resolve
+through `eth_call` at no cost, so no account, funds or signing are involved.
+
+<CodeBlock language="dart" title="bin/coston2/ftsov2_consumer.dart">
+  {FtsoV2Consumer}
+</CodeBlock>
+
+:::warning
+
+**Never assume a feed's decimal scale.** `decimals` varies per feed and is a
+signed `int8`. A single live call to Coston2 returned 8 decimals for FLR/USD,
+2 for BTC/USD, 3 for ETH/USD and 6 for XRP/USD. `FtsoFeedValue` always carries
+`value` and `decimals` together — use `toDecimalString()` for exact output.
+
+:::
+
+Inspect feed configuration, including the fee and the feed index used by the
+block-latency read path:
+
+<CodeBlock language="dart" title="bin/coston2/ftsov2_config.dart">
+  {FtsoV2Config}
+</CodeBlock>
+
+### Follow feeds live
+
+Flare publishes block-latency feeds roughly every 1.8 seconds. `watchFeeds`
+polls and suppresses repeated timestamps, so each event is a genuinely new
+publication:
+
+```dart
+await for (final tick in ftso.watchFeeds([Feeds.flrUsd])) {
+  print('${tick.first.publishedAt}  ${tick.first.toDecimalString()}');
+}
+```
+
+In a Flutter app, cancel the subscription when the app is backgrounded. A
+background poll costs battery and consumes the endpoint's rate limit for a
+result nobody can see.
+
+## Read Scaling anchor feeds
+
+[Scaling](/ftso/scaling/overview) anchor feeds are published every 90 seconds.
+Only a commitment lives on chain; the Data Availability Layer serves the feed
+body along with the Merkle proof that authenticates it.
+
+<CodeBlock language="dart" title="bin/coston2/fetch_anchor_feeds.dart">
+  {FetchAnchorFeeds}
+</CodeBlock>
+
+:::warning
+
+Anchor feed decimals are **not** the same as block-latency decimals. The same
+FLR/USD feed was 6 decimals from the DA Layer and 8 from FTSOv2 at the same
+moment. Both are correct — they are different products.
+
+:::
+
+The public DA Layer endpoints are rate-limited and send no `Retry-After`
+header. `DaLayerClient` retries with exponential backoff and full jitter by
+default. For production traffic,
+[request an API key](https://github.com/flare-foundation/developer-hub/issues/new/choose)
+and pass it as `DaLayerClient(chain, apiKey: ...)`.
+
+## Read a secure random number
+
+Flare's random number comes from the FTSO commit-reveal process rather than
+block data, so it cannot be ground by a validator. Always check
+`isSecureRandom` before relying on it.
+
+<CodeBlock language="dart" title="bin/coston2/secure_random.dart">
+  {SecureRandom}
+</CodeBlock>
+
+## Read the wrapped native token
+
+<CodeBlock language="dart" title="bin/coston2/wnat.dart">
+  {WNat}
+</CodeBlock>
+
+## Call any contract
+
+Define the function you need and call it. Solidity types map onto Dart as
+follows:
+
+| Solidity | Dart |
+| -------- | ---- |
+| `uintN`, `intN` | `BigInt` — always, including `int8` |
+| `address` | `EthAddress`, with EIP-55 enforced |
+| `bool` | `bool` |
+| `bytes`, `bytesN` | `Uint8List` |
+| `string` | `String` |
+| `T[]`, `T[k]` | `List<T>` |
+| tuple / struct | `List<Object?>`, positional |
+
+```dart
+final balanceOf = AbiFunction(
+  name: 'balanceOf',
+  inputs: [AbiParameter(name: 'owner', type: AbiType.parse('address'))],
+  outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+  stateMutability: StateMutability.view,
+);
+
+final balance = await client.callFunctionSingle(
+  contract: await registry.addressOf(FlareContract.wNat),
+  function: balanceOf,
+  args: [EthAddress.parse('0x…')],
+) as BigInt;
+```
+
+Every integer decodes to `BigInt` so nothing overflows silently; narrow with
+`.toInt()` where you know the range.
+
+## Handle errors
+
+Errors form a sealed hierarchy, so a `switch` over `FlareException` is
+exhaustive:
+
+| Type | Meaning |
+| ---- | ------- |
+| `FlareTransportException` | Unreachable, timed out, or non-200. Check `isRetryable` |
+| `FlareRpcException` | The node returned a JSON-RPC error object |
+| `FlareContractException` | The call reverted, or returned no data |
+| `FlareAbiException` | Encode/decode failure, or a value out of range |
+| `FlareRegistryException` | Unknown registry name |
+
+```dart
+try {
+  await ftso.getFeedById(Feeds.flrUsd);
+} on FlareTransportException catch (e) {
+  if (e.isRetryable) { /* back off and retry */ }
+} on FlareContractException {
+  // Usually a wrong address, or a revert.
+}
+```
+
+`FlareClient` already retries transient transport failures with exponential
+backoff and full jitter. Tune it with `RetryPolicy`, or disable it with
+`RetryPolicy.none`.
+
+## Build a Flutter app
+
+[Flare Pulse](https://github.com/Immadominion/flare-dart/tree/main/apps/flare_pulse)
+is a complete reference app: a live FTSOv2 ticker that flashes on each price
+change, switches between all four networks, and pauses polling when
+backgrounded. It needs no wallet, no account and no funds.
+
+Two platform notes that are easy to miss:
+
+- **macOS** requires `com.apple.security.network.client` in both
+  `DebugProfile.entitlements` and `Release.entitlements`. Flutter's template
+  adds `network.server`, which is for the hot-reload tooling, not outbound
+  requests.
+- **Android** requires `android.permission.INTERNET` in
+  `android/app/src/main/AndroidManifest.xml`. Flutter's template adds it only
+  to the debug manifest, so a release build otherwise has no network access.
+
+## Typed contract bindings
+
+For the full periphery surface, `flare_network_periphery` ships generated
+bindings for 142 contracts covering 1,049 read methods, produced from Flare's
+published ABI artifacts. Multi-output functions return named records:
+
+```dart
+final result = await ftsoContract.getFeedsById(feedIds);
+result.values;     // List<BigInt>
+result.decimals;   // List<BigInt>
+result.timestamp;  // BigInt
+```
