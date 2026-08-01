@@ -5,6 +5,90 @@ Newest first.
 
 ---
 
+## Sprint 3 — FDC, FAssets, four-network verification, 160/160
+**2026-08-01** · Status: **complete, all green**
+
+### Shipped
+
+- **`FdcClient`** — Flare Data Connector reads: per-type attestation fees,
+  voting-round timing from `ProtocolsV2` (cached), round-ID derivation, and
+  on-chain proof verification for all nine attestation types.
+- **`FAssetsClient`** — asset manager discovery, token metadata, supply at the
+  token's own scale, holder balances, emergency-pause state, lot size.
+- **`networks_test.dart`** — the same seven checks against all four networks.
+- **Flare Pulse** — the Flutter reference app: live ticker, flash on change,
+  network switcher, lifecycle-aware polling.
+- **`flare-for-dart-developers.mdx`** — guide draft matching developer-hub's
+  existing per-language template.
+- Codegen test suite: 30 tests over naming, type mapping and emission.
+
+### Proven
+
+| Suite | Count |
+|---|---:|
+| Core hermetic | **131** |
+| Core live (Coston2) | **46** |
+| Cross-network live (all 4) | **30** |
+| Generated bindings live | **8** |
+| Codegen unit | **30** |
+| Flutter widget | **9** |
+
+`dart analyze` clean across five packages. **pana: 160/160**, including 20/20
+platform support across all six targets — independent confirmation of the
+"pure Dart, no FFI" claim.
+
+### Measured this sprint
+
+- **FDC source identifiers are network-specific.** Coston2 rejects every
+  mainnet source name with *"Type and source combination not supported"*.
+  Testnets expect `testXRP`, `testBTC`, `testETH`; mainnets use the bare names.
+  `Web2Json`/`PublicWeb2` is chain-agnostic. Every supported pair costs **1000
+  wei** on Coston2 against **20 FLR** on mainnet.
+- **DA Layer rate limit, measured**: 18 sequential requests succeed, the 19th
+  returns 429, and **no `Retry-After` header is sent at all**.
+- **The DA Layer does not preserve request order** — a call for
+  `[FLR/USD, BTC/USD]` returned BTC first.
+- **Anchor decimals differ from block-latency decimals** for the same feed:
+  FLR/USD at 6 dp from the DA Layer, 8 dp from FTSOv2, simultaneously.
+- All four networks serve live FTSOv2 feeds, host the registry at the same
+  address, and resolve WNat to four distinct addresses.
+
+### Corrected mid-sprint
+
+- **`meta: ^1.19.0` made the package unresolvable from any Flutter app**, since
+  Flutter pins 1.18.0. The main audience could not use it. `dart analyze` and
+  the whole suite were green throughout — it only surfaced when a real Flutter
+  app was built against the package. Relaxed to `^1.15.0`.
+- **macOS had no `network.client` entitlement** in either profile, so the app
+  could not make outbound requests at all. Flutter's template supplies
+  `network.server`, which is for the hot-reload tooling.
+- **Android had `INTERNET` only in the debug manifest**, so a release build
+  would have had no network access.
+- **The lifecycle handler tore down on `AppLifecycleState.hidden`**, which on
+  desktop fires when a window is merely occluded — the ticker froze whenever it
+  lost focus. Found by running the built app, not by testing it. Verified after
+  the fix: 12 of 12 sampled seconds hold a connection, against 0 of 10 before.
+- **A test assumed an unused address holds no FAsset**; `0x…0001` holds 10.1
+  FXRP on Coston2. Replaced with the accounting invariant.
+- **A hand-written `bytes32` vector had a stray hex digit.** The test caught it;
+  the expected values now come from `cast format-bytes32-string`.
+
+### Still unverified — not cited as fact anywhere
+
+`web3dart` signing defects, the pointycastle vs `secp256k1_ecdsa` performance
+ratio, `web3dart_builders` resolution on Dart 3.12, and `blockchain_utils`
+requiring a browser `self` global. None are depended on: the SDK is read-only
+and uses none of them.
+
+### Next
+
+1. Push the repository so the pubspec `repository:` URL resolves.
+2. File the developer-hub issue before opening the guide PR, per its
+   CONTRIBUTING.md.
+3. Decide whether v0.5 gets a signing story or stays permanently read-only.
+
+---
+
 ## Sprint 2 — Codegen, DA Layer, parity examples, docs
 **2026-08-01** · Status: **complete, all green**
 
