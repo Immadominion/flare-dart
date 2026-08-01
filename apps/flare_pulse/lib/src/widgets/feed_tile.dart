@@ -26,7 +26,10 @@ class _FeedTileState extends State<FeedTile>
   @override
   void initState() {
     super.initState();
-    if (widget.row.direction != 0) _flash.forward(from: 1);
+    // `reverse`, not `forward`. The controller runs 1 -> 0 so the tint decays;
+    // `forward(from: 1)` would set the value to 1 and then animate towards 1,
+    // leaving the row permanently lit.
+    if (widget.row.direction != 0) _flash.reverse(from: 1);
   }
 
   @override
@@ -35,7 +38,7 @@ class _FeedTileState extends State<FeedTile>
     // Re-flash only when the value actually changed, not on every rebuild.
     final changed = old.row.value.value != widget.row.value.value;
     if (changed && widget.row.direction != 0) {
-      _flash.forward(from: 1);
+      _flash.reverse(from: 1);
     }
   }
 

@@ -98,6 +98,46 @@ void main() {
     expect(find.byIcon(Icons.arrow_drop_down), findsNothing);
   });
 
+  testWidgets('the flash fades out rather than staying lit', (tester) async {
+    // Regression test. The controller was driven with `forward(from: 1)`,
+    // which sets the value to 1.0 and then animates *towards* 1.0 — no
+    // movement. The tint stayed at full opacity forever. `reverse(from: 1)`
+    // animates 1.0 -> 0.0, which is what "flash" means.
+    //
+    // A settles-without-hanging assertion cannot catch this, because the
+    // broken version also completed instantly. Only sampling the actual
+    // opacity over time does.
+    double tintAlpha() {
+      final box = tester.widget<DecoratedBox>(
+        find
+            .descendant(
+              of: find.byType(FeedTile),
+              matching: find.byType(DecoratedBox),
+            )
+            .first,
+      );
+      return ((box.decoration as BoxDecoration).color ??
+              const Color(0x00000000))
+          .a;
+    }
+
+    await pump(
+      tester,
+      row(feed: Feeds.flrUsd, value: 626973, decimals: 8, direction: 1),
+    );
+
+    await tester.pump(const Duration(milliseconds: 16));
+    final atStart = tintAlpha();
+    expect(atStart, greaterThan(0.0), reason: 'the flash should be visible');
+
+    await tester.pump(const Duration(milliseconds: 350));
+    final midway = tintAlpha();
+    expect(midway, lessThan(atStart), reason: 'the flash should be fading');
+
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    expect(tintAlpha(), 0.0, reason: 'the flash should end fully transparent');
+  });
+
   testWidgets('the flash settles rather than animating forever', (
     tester,
   ) async {
