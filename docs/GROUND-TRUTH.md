@@ -168,6 +168,29 @@ An integration test derives the current epoch this way and checks it against
 mainnet returns `20000000000000000000` wei = **20 FLR**. A request that omits
 `msg.value` reverts, so the fee must always be read and attached.
 
+### Source identifiers differ between mainnet and testnets
+
+Discovered by calling `getRequestFee` on Coston2 with mainnet source names and
+getting `execution reverted: Type and source combination not supported` for
+every pair. Retrying with `test`-prefixed names succeeded:
+
+| Type | Source on Coston2 | Fee |
+|---|---|---|
+| `Payment` | `testXRP`, `testBTC`, `testDOGE` | 1000 wei |
+| `EVMTransaction` | `testETH`, `testSGB`, `testFLR` | 1000 wei |
+| `AddressValidity` | `testXRP` | 1000 wei |
+| `ConfirmedBlockHeightExists` | `testBTC` | 1000 wei |
+| `ReferencedPaymentNonexistence` | `testXRP` | 1000 wei |
+| `BalanceDecreasingTransaction` | `testXRP` | 1000 wei |
+| `Web2Json` | `PublicWeb2` — **no `test` variant** | 1000 wei |
+
+Every supported pair on Coston2 is **1000 wei**; mainnet is **20 FLR**.
+`Web2Json` is not chain-specific, so its source is identical everywhere.
+
+A port that hardcodes mainnet source names reverts on every testnet call, and
+the revert message says nothing about the naming rule. `AttestationSource.xrp
+.forChain(chain)` picks the right form.
+
 **Refuted:** prior research claimed Flare's example hardcodes a Coston timing
 value "45 seconds off from mainnet". Coston2 and mainnet return **identical**
 values for both parameters, so that specific discrepancy does not exist between

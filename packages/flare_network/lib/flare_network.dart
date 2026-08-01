@@ -57,6 +57,17 @@ export 'src/abi/hex.dart' show bytesToHex, hexToBigInt, hexToBytes;
 export 'src/dalayer/da_layer_client.dart'
     show AnchorFeed, DaLayerClient, FspStatus;
 
+// FDC (Flare Data Connector)
+export 'src/fdc/attestation.dart'
+    show
+        AttestationProof,
+        AttestationSource,
+        AttestationType,
+        VotingEpochTiming,
+        bytes32Hex,
+        encodeTypeAndSource;
+export 'src/fdc/fdc_client.dart' show FdcClient;
+
 // FTSO
 export 'src/ftso/feed_id.dart' show FeedCategory, FeedId, Feeds;
 export 'src/ftso/ftso_v2.dart' show FtsoFeedValue, FtsoV2;

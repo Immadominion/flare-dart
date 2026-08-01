@@ -144,6 +144,38 @@ API key through the
 [developer-hub issue tracker](https://github.com/flare-foundation/developer-hub/issues/new/choose)
 and pass it as `DaLayerClient(chain, apiKey: ...)`.
 
+## Flare Data Connector
+
+The FDC proves facts about other chains and about public Web2 APIs. Requesting
+an attestation needs a signed, payable transaction — which this package does not
+do — but everything around it is a free read.
+
+```dart
+final fdc = await FdcClient.resolve(client);
+
+// Source identifiers differ per network; let forChain pick.
+final source = AttestationSource.xrp.forChain(client.chain);
+final fee = await fdc.getRequestFee(AttestationType.payment, source);
+
+final round = await fdc.currentVotingRoundId();
+final timing = await fdc.timing();
+```
+
+> **Testnets use `test`-prefixed sources.** Coston2 and Coston expect `testXRP`,
+> `testBTC`, `testETH`; Flare and Songbird expect the bare names. Using a
+> mainnet name on a testnet reverts with *"Type and source combination not
+> supported"*, which says nothing about the actual rule — so
+> `AttestationSource.xrp.forChain(chain)` exists to get it right.
+> `Web2Json` is chain-agnostic and always uses `PublicWeb2`.
+
+Measured fees: **1000 wei** for every supported pair on Coston2, **20 FLR** on
+Flare mainnet. Always read the fee — a request that omits it reverts.
+
+Voting round timing must also be read at runtime. `fdc.timing()` fetches
+`firstVotingRoundStartTs` and `votingEpochDurationSeconds` from `ProtocolsV2`
+and caches them; `votingRoundIdAt(when)` derives the round a past event belongs
+to, which is what a proof lookup needs.
+
 ## Calling any contract
 
 ```dart

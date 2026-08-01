@@ -21,6 +21,12 @@ non-goal.
 - `DaLayerClient` — Scaling anchor feeds with Merkle proofs, plus protocol
   status. Results are re-ordered to match the request, because the API does not
   preserve request order. Supports an `X-API-KEY` for higher rate limits.
+- `FdcClient` — Flare Data Connector reads: per-type attestation fees, voting
+  round timing from `ProtocolsV2` (cached), round-ID derivation, and on-chain
+  proof verification. `AttestationSource.<chain>.forChain(chain)` resolves the
+  network-specific source identifier, because testnets use `test`-prefixed
+  names (`testXRP`, `testETH`) and a mainnet name reverts there with a message
+  that does not explain why.
 - A complete ABI codec: `AbiType`, `AbiFunction`, `ContractAbi`, `AbiCodec`,
   covering every Solidity type including nested tuples and fixed arrays.
 - `EthAddress` with EIP-55 checksum validation enforced by default.
@@ -30,4 +36,8 @@ non-goal.
 
 - ABI encoding is cross-checked against Foundry (`cast sig`, `cast calldata`,
   `cast abi-encode`) rather than against its own output.
-- 54 hermetic unit tests, plus 30 integration tests against live Coston2.
+- 131 hermetic unit tests, plus 39 integration tests against live Coston2, and
+  9 widget tests in the reference app.
+- Measured, not assumed: FDC fees are 1000 wei on Coston2 and 20 FLR on
+  mainnet; the public DA Layer serves ~18 requests before returning 429 and
+  sends no `Retry-After`.
