@@ -1,0 +1,108 @@
+// GENERATED CODE — DO NOT EDIT BY HAND.
+//
+// Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
+// Contract: IIFlareAssetRegistryProvider
+// Functions: 3 readable of 3 total (state-changing functions are omitted — this SDK does not sign).
+//
+// Regenerate with:
+//   dart run flare_network_codegen --artifacts <dir> --out <dir>
+
+import 'dart:typed_data';
+
+import 'package:flare_network/flare_network.dart';
+
+/// Typed read bindings for Flare's `IIFlareAssetRegistryProvider` contract.
+///
+/// Resolve it through the registry rather than hardcoding an
+/// address — Flare redeploys contracts.
+class IIFlareAssetRegistryProviderContract {
+  /// Client used for calls.
+  final FlareClient client;
+
+  /// Resolved address on [client]'s network.
+  final EthAddress address;
+
+  const IIFlareAssetRegistryProviderContract({required this.client, required this.address});
+
+  /// Resolves `IIFlareAssetRegistryProvider` through the [ContractRegistry].
+  static Future<IIFlareAssetRegistryProviderContract> resolve(
+    FlareClient client, {
+    ContractRegistry? registry,
+    String registryName = 'IIFlareAssetRegistryProvider',
+  }) async {
+    final resolved = await (registry ?? ContractRegistry(client))
+        .addressOf(registryName);
+    return IIFlareAssetRegistryProviderContract(client: client, address: resolved);
+  }
+
+  /// ABI descriptor for `allAssets()`.
+  static final AbiFunction allAssetsFn = AbiFunction(
+    name: 'allAssets',
+    inputs: [
+    ],
+    outputs: [
+      AbiParameter(name: '', type: AbiType.parse('address[]')),
+    ],
+    stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `assetType()`.
+  static final AbiFunction assetTypeFn = AbiFunction(
+    name: 'assetType',
+    inputs: [
+    ],
+    outputs: [
+      AbiParameter(name: '', type: AbiType.parse('bytes32')),
+    ],
+    stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `getAttribute(address,bytes32)`.
+  static final AbiFunction getAttributeFn = AbiFunction(
+    name: 'getAttribute',
+    inputs: [
+      AbiParameter(name: '_token', type: AbiType.parse('address')),
+      AbiParameter(name: '_nameHash', type: AbiType.parse('bytes32')),
+    ],
+    outputs: [
+      AbiParameter(name: '_defined', type: AbiType.parse('bool')),
+      AbiParameter(name: '_value', type: AbiType.parse('bytes32')),
+    ],
+    stateMutability: StateMutability.view,
+  );
+
+  /// Calls `allAssets()`.
+  ///
+  /// Declared `view` in Solidity; read via `eth_call`.
+  Future<List<EthAddress>> allAssets() async {
+    final out = await client.callFunction(
+      contract: address,
+      function: allAssetsFn,
+    );
+    return (out[0]! as List).cast<EthAddress>();
+  }
+
+  /// Calls `assetType()`.
+  ///
+  /// Declared `view` in Solidity; read via `eth_call`.
+  Future<Uint8List> assetType() async {
+    final out = await client.callFunction(
+      contract: address,
+      function: assetTypeFn,
+    );
+    return out[0]! as Uint8List;
+  }
+
+  /// Calls `getAttribute(address,bytes32)`.
+  ///
+  /// Declared `view` in Solidity; read via `eth_call`.
+  Future<({bool defined, Uint8List value})> getAttribute(EthAddress token, Uint8List nameHash) async {
+    final out = await client.callFunction(
+      contract: address,
+      function: getAttributeFn,
+      args: [token, nameHash],
+    );
+    return (defined: out[0]! as bool, value: out[1]! as Uint8List);
+  }
+
+}
