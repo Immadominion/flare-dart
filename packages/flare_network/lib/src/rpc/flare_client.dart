@@ -10,6 +10,7 @@ import '../network/flare_chain.dart';
 import 'flare_exception.dart';
 import 'json_rpc_client.dart';
 import 'logs.dart';
+import 'transaction.dart';
 
 /// Block tags accepted where a block parameter is required.
 enum BlockTag {
@@ -190,6 +191,124 @@ class FlareClient {
       block: block,
     );
     return out.single;
+  }
+
+  /// The receipt for [transactionHash], or null while it is still pending.
+  ///
+  /// This is how a wallet-signed transaction is followed to completion: this
+  /// package cannot sign, but once an external wallet returns a hash it can
+  /// tell you whether the transaction actually succeeded.
+  ///
+  /// **Check [TransactionReceipt.succeeded].** A reverted transaction still
+  /// produces a receipt and still costs gas; the receipt arriving is not the
+  /// same as the transaction working.
+  Future<TransactionReceipt?> getTransactionReceipt(
+    Uint8List transactionHash,
+  ) async {
+    final result = await _rpc.call('eth_getTransactionReceipt', [
+      bytesToHex(transactionHash),
+    ]);
+    if (result == null) return null;
+    if (result is! Map) {
+      throw FlareTransportException(
+        'Expected an object from eth_getTransactionReceipt, '
+        'got ${result.runtimeType}',
+        endpoint: chain.rpcUrl,
+      );
+    }
+    return TransactionReceipt.fromJson(result.cast<String, Object?>());
+  }
+
+  /// Waits for [transactionHash] to be mined and returns its receipt.
+  ///
+  /// Polls every [pollInterval] until [timeout] elapses. Flare's block time is
+  /// roughly 1.8 s, so the default interval is a little under that.
+  ///
+  /// Throws [FlareTransportException] on timeout. A timeout means the
+  /// transaction has not been included **yet** — it may still land later, so
+  /// treat it as unknown rather than failed.
+  Future<TransactionReceipt> waitForReceipt(
+    Uint8List transactionHash, {
+    Duration pollInterval = const Duration(milliseconds: 1500),
+    Duration timeout = const Duration(minutes: 2),
+  }) async {
+    final deadline = DateTime.now().add(timeout);
+    while (DateTime.now().isBefore(deadline)) {
+      final receipt = await getTransactionReceipt(transactionHash);
+      if (receipt != null) return receipt;
+      await Future<void>.delayed(pollInterval);
+    }
+    throw FlareTransportException(
+      'Transaction ${bytesToHex(transactionHash)} was not mined within '
+      '${timeout.inSeconds}s. It may still be pending — re-check rather than '
+      'assuming it failed.',
+      endpoint: chain.rpcUrl,
+    );
+  }
+
+  /// A transaction by hash, or null if the node has never seen it.
+  Future<TransactionInfo?> getTransactionByHash(Uint8List hash) async {
+    final result = await _rpc.call('eth_getTransactionByHash', [
+      bytesToHex(hash),
+    ]);
+    if (result == null) return null;
+    if (result is! Map) return null;
+    return TransactionInfo.fromJson(result.cast<String, Object?>());
+  }
+
+  /// `eth_getTransactionCount` — the next nonce for [address].
+  ///
+  /// Pass [BlockTag.pending] to include transactions still in the mempool,
+  /// which is what a wallet needs when queuing another transaction.
+  Future<BigInt> getTransactionCount(
+    EthAddress address, {
+    BlockTag block = BlockTag.latest,
+  }) async => hexToBigInt(
+    (await _rpc.call('eth_getTransactionCount', [address.hex, block.value]))!
+        as String,
+  );
+
+  /// `eth_estimateGas` — how much gas [request] would consume.
+  ///
+  /// Use this to price an action before asking a user to sign it. The node
+  /// simulates the call, so a request that would revert throws here rather
+  /// than costing real gas to discover.
+  Future<BigInt> estimateGas(CallRequest request) async => hexToBigInt(
+    (await _rpc.call('eth_estimateGas', [request.toJson()]))! as String,
+  );
+
+  /// A block by height. Returns transaction hashes rather than full bodies.
+  ///
+  /// **Flare rejects heights it has not finalised** rather than returning null:
+  /// asking for a block beyond the head raises
+  /// `FlareRpcException(-32000, 'cannot query unfinalized data')`. That is a
+  /// different condition from "this block does not exist", so it is surfaced
+  /// rather than flattened to null. Use [getLatestBlock] for the head, which is
+  /// always answerable.
+  Future<BlockInfo?> getBlockByNumber(BigInt number) async {
+    final result = await _rpc.call('eth_getBlockByNumber', [
+      bigIntToHex(number),
+      false,
+    ]);
+    if (result is! Map) return null;
+    return BlockInfo.fromJson(result.cast<String, Object?>());
+  }
+
+  /// The most recent block.
+  Future<BlockInfo?> getLatestBlock() async {
+    final result = await _rpc.call('eth_getBlockByNumber', ['latest', false]);
+    if (result is! Map) return null;
+    return BlockInfo.fromJson(result.cast<String, Object?>());
+  }
+
+  /// A block by hash, or null if unknown.
+  Future<BlockInfo?> getBlockByHash(Uint8List hash) async {
+    final result = await _rpc.call('eth_getBlockByHash', [
+      bytesToHex(hash),
+      false,
+    ]);
+    if (result is! Map) return null;
+    return BlockInfo.fromJson(result.cast<String, Object?>());
   }
 
   /// Largest block span Flare's public RPC accepts in one `eth_getLogs`.

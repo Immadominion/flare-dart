@@ -293,10 +293,59 @@ result.decimals;   // List<BigInt>
 result.timestamp;  // BigInt
 ```
 
+## Following a wallet transaction
+
+This package cannot sign — but it covers everything either side of the wallet,
+so the flow completes:
+
+```dart
+// 1. Price it before asking the user to sign.
+final gas = await client.estimateGas(CallRequest(to: contract, data: calldata));
+final tip = await client.getMaxPriorityFeePerGas();
+
+// 2. The wallet signs and broadcasts; you get a hash back.
+
+// 3. Wait for it, and check it actually worked.
+final receipt = await client.waitForReceipt(hash);
+if (!receipt.succeeded) { /* reverted — still mined, still cost gas */ }
+
+// 4. Read what it emitted.
+for (final log in receipt.logs) { … }
+```
+
+> **A receipt is not success.** A reverted transaction is still included in a
+> block and still costs gas. Only `receipt.succeeded` distinguishes them.
+
+`waitForReceipt` timing out means *not yet*, not *failed* — the transaction may
+still land. Also available: `getTransactionByHash`, `getTransactionCount` (pass
+`BlockTag.pending` for the next usable nonce), `getBlockByNumber`,
+`getBlockByHash`, `getLatestBlock`.
+
+## Live subscriptions
+
+Flare serves `eth_subscribe` over WebSocket on every network:
+
+```dart
+final subs = FlareSubscriptions(FlareChain.coston2);
+await for (final block in subs.newHeads()) print(block.number);
+await for (final log in subs.logs(LogFilter(addresses: [token]))) print(log);
+```
+
+Reconnects with jittered backoff. Delivery is **at-most-once**: a dropped socket
+loses whatever was produced while it was down, so anything that must not be
+missed should be reconciled with a `getLogs` sweep over the gap.
+
+Polling is not the inferior option on mobile. A socket is dropped when the OS
+suspends the app and must be re-established across background transitions;
+`FtsoV2.watchFeeds` just works. Reach for subscriptions when you need low
+latency. `FlareSubscriptions` uses `dart:io`, so it is unavailable on Flutter
+Web — the rest of the package is platform-neutral.
+
 ## Scope
 
 **Supported:** contract resolution, FTSOv2 reads, DA Layer anchor feeds and
-proofs, arbitrary `eth_call`, chain queries.
+proofs, FDC, FAssets, event logs, transaction receipts and gas estimation,
+WebSocket subscriptions, arbitrary `eth_call`, chain queries.
 
 **Deliberately not supported — a non-goal, not a missing feature:** transaction
 signing, and therefore P-chain staking, delegation and C↔P transfers. P-chain
