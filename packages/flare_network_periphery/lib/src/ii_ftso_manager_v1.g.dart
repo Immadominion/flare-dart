@@ -28,31 +28,37 @@ class IIFtsoManagerV1Contract {
     ContractRegistry? registry,
     String registryName = 'IIFtsoManagerV1',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIFtsoManagerV1Contract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getCurrentRewardEpoch()`.
   static final AbiFunction getCurrentRewardEpochFn = AbiFunction(
     name: 'getCurrentRewardEpoch',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getPriceEpochConfiguration()`.
   static final AbiFunction getPriceEpochConfigurationFn = AbiFunction(
     name: 'getPriceEpochConfiguration',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_firstPriceEpochStartTs', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_priceEpochDurationSeconds', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_revealEpochDurationSeconds', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_firstPriceEpochStartTs',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_priceEpochDurationSeconds',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_revealEpochDurationSeconds',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -60,11 +66,8 @@ class IIFtsoManagerV1Contract {
   /// ABI descriptor for `rewardEpochDurationSeconds()`.
   static final AbiFunction rewardEpochDurationSecondsFn = AbiFunction(
     name: 'rewardEpochDurationSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -85,11 +88,8 @@ class IIFtsoManagerV1Contract {
   /// ABI descriptor for `rewardEpochsStartTs()`.
   static final AbiFunction rewardEpochsStartTsFn = AbiFunction(
     name: 'rewardEpochsStartTs',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -107,12 +107,23 @@ class IIFtsoManagerV1Contract {
   /// Calls `getPriceEpochConfiguration()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt firstPriceEpochStartTs, BigInt priceEpochDurationSeconds, BigInt revealEpochDurationSeconds})> getPriceEpochConfiguration() async {
+  Future<
+    ({
+      BigInt firstPriceEpochStartTs,
+      BigInt priceEpochDurationSeconds,
+      BigInt revealEpochDurationSeconds,
+    })
+  >
+  getPriceEpochConfiguration() async {
     final out = await client.callFunction(
       contract: address,
       function: getPriceEpochConfigurationFn,
     );
-    return (firstPriceEpochStartTs: out[0]! as BigInt, priceEpochDurationSeconds: out[1]! as BigInt, revealEpochDurationSeconds: out[2]! as BigInt);
+    return (
+      firstPriceEpochStartTs: out[0]! as BigInt,
+      priceEpochDurationSeconds: out[1]! as BigInt,
+      revealEpochDurationSeconds: out[2]! as BigInt,
+    );
   }
 
   /// Calls `rewardEpochDurationSeconds()`.
@@ -129,13 +140,18 @@ class IIFtsoManagerV1Contract {
   /// Calls `rewardEpochs(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt votepowerBlock, BigInt startBlock, BigInt startTimestamp})> rewardEpochs(BigInt rewardEpochId) async {
+  Future<({BigInt votepowerBlock, BigInt startBlock, BigInt startTimestamp})>
+  rewardEpochs(BigInt rewardEpochId) async {
     final out = await client.callFunction(
       contract: address,
       function: rewardEpochsFn,
       args: [rewardEpochId],
     );
-    return (votepowerBlock: out[0]! as BigInt, startBlock: out[1]! as BigInt, startTimestamp: out[2]! as BigInt);
+    return (
+      votepowerBlock: out[0]! as BigInt,
+      startBlock: out[1]! as BigInt,
+      startTimestamp: out[2]! as BigInt,
+    );
   }
 
   /// Calls `rewardEpochsStartTs()`.
@@ -148,5 +164,4 @@ class IIFtsoManagerV1Contract {
     );
     return out[0]! as BigInt;
   }
-
 }

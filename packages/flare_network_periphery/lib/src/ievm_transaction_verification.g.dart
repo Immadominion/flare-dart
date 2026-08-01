@@ -20,7 +20,10 @@ class IEVMTransactionVerificationContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IEVMTransactionVerificationContract({required this.client, required this.address});
+  const IEVMTransactionVerificationContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IEVMTransactionVerification` through the [ContractRegistry].
   static Future<IEVMTransactionVerificationContract> resolve(
@@ -28,20 +31,27 @@ class IEVMTransactionVerificationContract {
     ContractRegistry? registry,
     String registryName = 'IEVMTransactionVerification',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
-    return IEVMTransactionVerificationContract(client: client, address: resolved);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
+    return IEVMTransactionVerificationContract(
+      client: client,
+      address: resolved,
+    );
   }
 
   /// ABI descriptor for `verifyEVMTransaction((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint16,bool,bool,uint32[]),(uint64,uint64,address,bool,address,uint256,bytes,uint8,(uint32,address,bytes32[],bytes,bool)[]))))`.
   static final AbiFunction verifyEVMTransactionFn = AbiFunction(
     name: 'verifyEVMTransaction',
     inputs: [
-      AbiParameter(name: '_proof', type: AbiType.parse('(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint16,bool,bool,uint32[]),(uint64,uint64,address,bool,address,uint256,bytes,uint8,(uint32,address,bytes32[],bytes,bool)[])))')),
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint16,bool,bool,uint32[]),(uint64,uint64,address,bool,address,uint256,bytes,uint8,(uint32,address,bytes32[],bytes,bool)[])))',
+        ),
+      ),
     ],
-    outputs: [
-      AbiParameter(name: '_proved', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '_proved', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -56,5 +66,4 @@ class IEVMTransactionVerificationContract {
     );
     return out[0]! as bool;
   }
-
 }

@@ -20,7 +20,10 @@ class IFtsoRewardOffersManagerContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IFtsoRewardOffersManagerContract({required this.client, required this.address});
+  const IFtsoRewardOffersManagerContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IFtsoRewardOffersManager` through the [ContractRegistry].
   static Future<IFtsoRewardOffersManagerContract> resolve(
@@ -28,19 +31,17 @@ class IFtsoRewardOffersManagerContract {
     ContractRegistry? registry,
     String registryName = 'IFtsoRewardOffersManager',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IFtsoRewardOffersManagerContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `minimalRewardsOfferValueWei()`.
   static final AbiFunction minimalRewardsOfferValueWeiFn = AbiFunction(
     name: 'minimalRewardsOfferValueWei',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -54,5 +55,4 @@ class IFtsoRewardOffersManagerContract {
     );
     return out[0]! as BigInt;
   }
-
 }

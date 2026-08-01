@@ -20,7 +20,10 @@ class RandomNumberV2InterfaceContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const RandomNumberV2InterfaceContract({required this.client, required this.address});
+  const RandomNumberV2InterfaceContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `RandomNumberV2Interface` through the [ContractRegistry].
   static Future<RandomNumberV2InterfaceContract> resolve(
@@ -28,16 +31,16 @@ class RandomNumberV2InterfaceContract {
     ContractRegistry? registry,
     String registryName = 'RandomNumberV2Interface',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return RandomNumberV2InterfaceContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getRandomNumber()`.
   static final AbiFunction getRandomNumberFn = AbiFunction(
     name: 'getRandomNumber',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_randomNumber', type: AbiType.parse('uint256')),
       AbiParameter(name: '_isSecureRandom', type: AbiType.parse('bool')),
@@ -63,24 +66,33 @@ class RandomNumberV2InterfaceContract {
   /// Calls `getRandomNumber()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt randomNumber, bool isSecureRandom, BigInt randomTimestamp})> getRandomNumber() async {
+  Future<({BigInt randomNumber, bool isSecureRandom, BigInt randomTimestamp})>
+  getRandomNumber() async {
     final out = await client.callFunction(
       contract: address,
       function: getRandomNumberFn,
     );
-    return (randomNumber: out[0]! as BigInt, isSecureRandom: out[1]! as bool, randomTimestamp: out[2]! as BigInt);
+    return (
+      randomNumber: out[0]! as BigInt,
+      isSecureRandom: out[1]! as bool,
+      randomTimestamp: out[2]! as BigInt,
+    );
   }
 
   /// Calls `getRandomNumberHistorical(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt randomNumber, bool isSecureRandom, BigInt randomTimestamp})> getRandomNumberHistorical(BigInt votingRoundId) async {
+  Future<({BigInt randomNumber, bool isSecureRandom, BigInt randomTimestamp})>
+  getRandomNumberHistorical(BigInt votingRoundId) async {
     final out = await client.callFunction(
       contract: address,
       function: getRandomNumberHistoricalFn,
       args: [votingRoundId],
     );
-    return (randomNumber: out[0]! as BigInt, isSecureRandom: out[1]! as bool, randomTimestamp: out[2]! as BigInt);
+    return (
+      randomNumber: out[0]! as BigInt,
+      isSecureRandom: out[1]! as bool,
+      randomTimestamp: out[2]! as BigInt,
+    );
   }
-
 }

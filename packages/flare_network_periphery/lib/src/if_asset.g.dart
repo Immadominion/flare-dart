@@ -28,8 +28,9 @@ class IFAssetContract {
     ContractRegistry? registry,
     String registryName = 'IFAsset',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IFAssetContract(client: client, address: resolved);
   }
 
@@ -40,98 +41,71 @@ class IFAssetContract {
       AbiParameter(name: 'owner', type: AbiType.parse('address')),
       AbiParameter(name: 'spender', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `assetManager()`.
   static final AbiFunction assetManagerFn = AbiFunction(
     name: 'assetManager',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `assetName()`.
   static final AbiFunction assetNameFn = AbiFunction(
     name: 'assetName',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `assetSymbol()`.
   static final AbiFunction assetSymbolFn = AbiFunction(
     name: 'assetSymbol',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `balanceOf(address)`.
   static final AbiFunction balanceOfFn = AbiFunction(
     name: 'balanceOf',
-    inputs: [
-      AbiParameter(name: 'account', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: 'account', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `decimals()`.
   static final AbiFunction decimalsFn = AbiFunction(
     name: 'decimals',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint8')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint8'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `name()`.
   static final AbiFunction nameFn = AbiFunction(
     name: 'name',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `symbol()`.
   static final AbiFunction symbolFn = AbiFunction(
     name: 'symbol',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `totalSupply()`.
   static final AbiFunction totalSupplyFn = AbiFunction(
     name: 'totalSupply',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -207,10 +181,7 @@ class IFAssetContract {
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
   Future<String> name() async {
-    final out = await client.callFunction(
-      contract: address,
-      function: nameFn,
-    );
+    final out = await client.callFunction(contract: address, function: nameFn);
     return out[0]! as String;
   }
 
@@ -235,5 +206,4 @@ class IFAssetContract {
     );
     return out[0]! as BigInt;
   }
-
 }

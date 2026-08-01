@@ -20,7 +20,10 @@ class IIVoterWhitelisterContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IIVoterWhitelisterContract({required this.client, required this.address});
+  const IIVoterWhitelisterContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IIVoterWhitelister` through the [ContractRegistry].
   static Future<IIVoterWhitelisterContract> resolve(
@@ -28,67 +31,50 @@ class IIVoterWhitelisterContract {
     ContractRegistry? registry,
     String registryName = 'IIVoterWhitelister',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIVoterWhitelisterContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `chilledUntilRewardEpoch(address)`.
   static final AbiFunction chilledUntilRewardEpochFn = AbiFunction(
     name: 'chilledUntilRewardEpoch',
-    inputs: [
-      AbiParameter(name: '_voter', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `defaultMaxVotersForFtso()`.
   static final AbiFunction defaultMaxVotersForFtsoFn = AbiFunction(
     name: 'defaultMaxVotersForFtso',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getFtsoWhitelistedPriceProviders(uint256)`.
   static final AbiFunction getFtsoWhitelistedPriceProvidersFn = AbiFunction(
     name: 'getFtsoWhitelistedPriceProviders',
-    inputs: [
-      AbiParameter(name: '_ftsoIndex', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    inputs: [AbiParameter(name: '_ftsoIndex', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getFtsoWhitelistedPriceProvidersBySymbol(string)`.
-  static final AbiFunction getFtsoWhitelistedPriceProvidersBySymbolFn = AbiFunction(
-    name: 'getFtsoWhitelistedPriceProvidersBySymbol',
-    inputs: [
-      AbiParameter(name: '_symbol', type: AbiType.parse('string')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getFtsoWhitelistedPriceProvidersBySymbolFn =
+      AbiFunction(
+        name: 'getFtsoWhitelistedPriceProvidersBySymbol',
+        inputs: [AbiParameter(name: '_symbol', type: AbiType.parse('string'))],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `maxVotersForFtso(uint256)`.
   static final AbiFunction maxVotersForFtsoFn = AbiFunction(
     name: 'maxVotersForFtso',
-    inputs: [
-      AbiParameter(name: '_ftsoIndex', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_ftsoIndex', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -118,7 +104,9 @@ class IIVoterWhitelisterContract {
   /// Calls `getFtsoWhitelistedPriceProviders(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<EthAddress>> getFtsoWhitelistedPriceProviders(BigInt ftsoIndex) async {
+  Future<List<EthAddress>> getFtsoWhitelistedPriceProviders(
+    BigInt ftsoIndex,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getFtsoWhitelistedPriceProvidersFn,
@@ -130,7 +118,9 @@ class IIVoterWhitelisterContract {
   /// Calls `getFtsoWhitelistedPriceProvidersBySymbol(string)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<EthAddress>> getFtsoWhitelistedPriceProvidersBySymbol(String symbol) async {
+  Future<List<EthAddress>> getFtsoWhitelistedPriceProvidersBySymbol(
+    String symbol,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getFtsoWhitelistedPriceProvidersBySymbolFn,
@@ -150,5 +140,4 @@ class IIVoterWhitelisterContract {
     );
     return out[0]! as BigInt;
   }
-
 }

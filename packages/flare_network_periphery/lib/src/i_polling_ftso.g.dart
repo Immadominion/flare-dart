@@ -28,20 +28,17 @@ class IPollingFtsoContract {
     ContractRegistry? registry,
     String registryName = 'IPollingFtso',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IPollingFtsoContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `canPropose(address)`.
   static final AbiFunction canProposeFn = AbiFunction(
     name: 'canPropose',
-    inputs: [
-      AbiParameter(name: '_account', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [AbiParameter(name: '_account', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -52,17 +49,14 @@ class IPollingFtsoContract {
       AbiParameter(name: '_account', type: AbiType.parse('address')),
       AbiParameter(name: '_proposalId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getLastProposal()`.
   static final AbiFunction getLastProposalFn = AbiFunction(
     name: 'getLastProposal',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_proposalId', type: AbiType.parse('uint256')),
       AbiParameter(name: '_description', type: AbiType.parse('string')),
@@ -73,20 +67,15 @@ class IPollingFtsoContract {
   /// ABI descriptor for `getManagementGroupMembers()`.
   static final AbiFunction getManagementGroupMembersFn = AbiFunction(
     name: 'getManagementGroupMembers',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '_list', type: AbiType.parse('address[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '_list', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getProposalDescription(uint256)`.
   static final AbiFunction getProposalDescriptionFn = AbiFunction(
     name: 'getProposalDescription',
-    inputs: [
-      AbiParameter(name: '_proposalId', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_proposalId', type: AbiType.parse('uint256'))],
     outputs: [
       AbiParameter(name: '_description', type: AbiType.parse('string')),
     ],
@@ -96,17 +85,24 @@ class IPollingFtsoContract {
   /// ABI descriptor for `getProposalInfo(uint256)`.
   static final AbiFunction getProposalInfoFn = AbiFunction(
     name: 'getProposalInfo',
-    inputs: [
-      AbiParameter(name: '_proposalId', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_proposalId', type: AbiType.parse('uint256'))],
     outputs: [
       AbiParameter(name: '_description', type: AbiType.parse('string')),
       AbiParameter(name: '_proposer', type: AbiType.parse('address')),
       AbiParameter(name: '_voteStartTime', type: AbiType.parse('uint256')),
       AbiParameter(name: '_voteEndTime', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_thresholdConditionBIPS', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_majorityConditionBIPS', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_noOfEligibleMembers', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_thresholdConditionBIPS',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_majorityConditionBIPS',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_noOfEligibleMembers',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -114,9 +110,7 @@ class IPollingFtsoContract {
   /// ABI descriptor for `getProposalVotes(uint256)`.
   static final AbiFunction getProposalVotesFn = AbiFunction(
     name: 'getProposalVotes',
-    inputs: [
-      AbiParameter(name: '_proposalId', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_proposalId', type: AbiType.parse('uint256'))],
     outputs: [
       AbiParameter(name: '_for', type: AbiType.parse('uint256')),
       AbiParameter(name: '_against', type: AbiType.parse('uint256')),
@@ -131,45 +125,31 @@ class IPollingFtsoContract {
       AbiParameter(name: '_proposalId', type: AbiType.parse('uint256')),
       AbiParameter(name: '_voter', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `isMember(address)`.
   static final AbiFunction isMemberFn = AbiFunction(
     name: 'isMember',
-    inputs: [
-      AbiParameter(name: '_account', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [AbiParameter(name: '_account', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `propose(string)`.
   static final AbiFunction proposeFn = AbiFunction(
     name: 'propose',
-    inputs: [
-      AbiParameter(name: '_description', type: AbiType.parse('string')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_description', type: AbiType.parse('string'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.payable,
   );
 
   /// ABI descriptor for `state(uint256)`.
   static final AbiFunction stateFn = AbiFunction(
     name: 'state',
-    inputs: [
-      AbiParameter(name: '_proposalId', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint8')),
-    ],
+    inputs: [AbiParameter(name: '_proposalId', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint8'))],
     stateMutability: StateMutability.view,
   );
 
@@ -234,19 +214,40 @@ class IPollingFtsoContract {
   /// Calls `getProposalInfo(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({String description, EthAddress proposer, BigInt voteStartTime, BigInt voteEndTime, BigInt thresholdConditionBIPS, BigInt majorityConditionBIPS, BigInt noOfEligibleMembers})> getProposalInfo(BigInt proposalId) async {
+  Future<
+    ({
+      String description,
+      EthAddress proposer,
+      BigInt voteStartTime,
+      BigInt voteEndTime,
+      BigInt thresholdConditionBIPS,
+      BigInt majorityConditionBIPS,
+      BigInt noOfEligibleMembers,
+    })
+  >
+  getProposalInfo(BigInt proposalId) async {
     final out = await client.callFunction(
       contract: address,
       function: getProposalInfoFn,
       args: [proposalId],
     );
-    return (description: out[0]! as String, proposer: out[1]! as EthAddress, voteStartTime: out[2]! as BigInt, voteEndTime: out[3]! as BigInt, thresholdConditionBIPS: out[4]! as BigInt, majorityConditionBIPS: out[5]! as BigInt, noOfEligibleMembers: out[6]! as BigInt);
+    return (
+      description: out[0]! as String,
+      proposer: out[1]! as EthAddress,
+      voteStartTime: out[2]! as BigInt,
+      voteEndTime: out[3]! as BigInt,
+      thresholdConditionBIPS: out[4]! as BigInt,
+      majorityConditionBIPS: out[5]! as BigInt,
+      noOfEligibleMembers: out[6]! as BigInt,
+    );
   }
 
   /// Calls `getProposalVotes(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt forValue, BigInt against})> getProposalVotes(BigInt proposalId) async {
+  Future<({BigInt forValue, BigInt against})> getProposalVotes(
+    BigInt proposalId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getProposalVotesFn,
@@ -302,5 +303,4 @@ class IPollingFtsoContract {
     );
     return out[0]! as BigInt;
   }
-
 }

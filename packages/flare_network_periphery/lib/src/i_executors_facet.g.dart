@@ -28,16 +28,16 @@ class IExecutorsFacetContract {
     ContractRegistry? registry,
     String registryName = 'IExecutorsFacet',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IExecutorsFacetContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getExecutorInfo()`.
   static final AbiFunction getExecutorInfoFn = AbiFunction(
     name: 'getExecutorInfo',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_executor', type: AbiType.parse('address')),
       AbiParameter(name: '_executorFee', type: AbiType.parse('uint256')),
@@ -55,5 +55,4 @@ class IExecutorsFacetContract {
     );
     return (executor: out[0]! as EthAddress, executorFee: out[1]! as BigInt);
   }
-
 }

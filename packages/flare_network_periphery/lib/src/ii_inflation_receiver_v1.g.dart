@@ -20,7 +20,10 @@ class IIInflationReceiverV1Contract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IIInflationReceiverV1Contract({required this.client, required this.address});
+  const IIInflationReceiverV1Contract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IIInflationReceiverV1` through the [ContractRegistry].
   static Future<IIInflationReceiverV1Contract> resolve(
@@ -28,19 +31,17 @@ class IIInflationReceiverV1Contract {
     ContractRegistry? registry,
     String registryName = 'IIInflationReceiverV1',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIInflationReceiverV1Contract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getContractName()`.
   static final AbiFunction getContractNameFn = AbiFunction(
     name: 'getContractName',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
@@ -54,5 +55,4 @@ class IIInflationReceiverV1Contract {
     );
     return out[0]! as String;
   }
-
 }

@@ -28,19 +28,17 @@ class IERC173Contract {
     ContractRegistry? registry,
     String registryName = 'IERC173',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IERC173Contract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `owner()`.
   static final AbiFunction ownerFn = AbiFunction(
     name: 'owner',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: 'owner_', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: 'owner_', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -48,11 +46,7 @@ class IERC173Contract {
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
   Future<EthAddress> owner() async {
-    final out = await client.callFunction(
-      contract: address,
-      function: ownerFn,
-    );
+    final out = await client.callFunction(contract: address, function: ownerFn);
     return out[0]! as EthAddress;
   }
-
 }

@@ -22,7 +22,10 @@ class IMasterAccountControllerContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IMasterAccountControllerContract({required this.client, required this.address});
+  const IMasterAccountControllerContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IMasterAccountController` through the [ContractRegistry].
   static Future<IMasterAccountControllerContract> resolve(
@@ -30,18 +33,21 @@ class IMasterAccountControllerContract {
     ContractRegistry? registry,
     String registryName = 'IMasterAccountController',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IMasterAccountControllerContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `agentVaults()`.
   static final AbiFunction agentVaultsFn = AbiFunction(
     name: 'agentVaults',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_agentVaults', type: AbiType.parse('(uint256,address)[]')),
+      AbiParameter(
+        name: '_agentVaults',
+        type: AbiType.parse('(uint256,address)[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -61,8 +67,7 @@ class IMasterAccountControllerContract {
   /// ABI descriptor for `facetAddresses()`.
   static final AbiFunction facetAddressesFn = AbiFunction(
     name: 'facetAddresses',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: 'facetAddresses_', type: AbiType.parse('address[]')),
     ],
@@ -72,11 +77,12 @@ class IMasterAccountControllerContract {
   /// ABI descriptor for `facetFunctionSelectors(address)`.
   static final AbiFunction facetFunctionSelectorsFn = AbiFunction(
     name: 'facetFunctionSelectors',
-    inputs: [
-      AbiParameter(name: '_facet', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_facet', type: AbiType.parse('address'))],
     outputs: [
-      AbiParameter(name: 'facetFunctionSelectors_', type: AbiType.parse('bytes4[]')),
+      AbiParameter(
+        name: 'facetFunctionSelectors_',
+        type: AbiType.parse('bytes4[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -84,10 +90,12 @@ class IMasterAccountControllerContract {
   /// ABI descriptor for `facets()`.
   static final AbiFunction facetsFn = AbiFunction(
     name: 'facets',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: 'facets_', type: AbiType.parse('(address,bytes4[])[]')),
+      AbiParameter(
+        name: 'facets_',
+        type: AbiType.parse('(address,bytes4[])[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -95,11 +103,13 @@ class IMasterAccountControllerContract {
   /// ABI descriptor for `getAgentVaults()`.
   static final AbiFunction getAgentVaultsFn = AbiFunction(
     name: 'getAgentVaults',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_agentVaultIds', type: AbiType.parse('uint256[]')),
-      AbiParameter(name: '_agentVaultAddresses', type: AbiType.parse('address[]')),
+      AbiParameter(
+        name: '_agentVaultAddresses',
+        type: AbiType.parse('address[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -107,11 +117,14 @@ class IMasterAccountControllerContract {
   /// ABI descriptor for `getBalances(string)`.
   static final AbiFunction getBalancesFn = AbiFunction(
     name: 'getBalances',
-    inputs: [
-      AbiParameter(name: '_xrplOwner', type: AbiType.parse('string')),
-    ],
+    inputs: [AbiParameter(name: '_xrplOwner', type: AbiType.parse('string'))],
     outputs: [
-      AbiParameter(name: '_balances', type: AbiType.parse('(uint256,(address,uint256),(address,uint256),(uint256,address,uint8,uint256,uint256)[])')),
+      AbiParameter(
+        name: '_balances',
+        type: AbiType.parse(
+          '(uint256,(address,uint256),(address,uint256),(uint256,address,uint8,uint256,uint256)[])',
+        ),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -119,11 +132,14 @@ class IMasterAccountControllerContract {
   /// ABI descriptor for `getBalances(address)`.
   static final AbiFunction getBalances2Fn = AbiFunction(
     name: 'getBalances',
-    inputs: [
-      AbiParameter(name: '_account', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_account', type: AbiType.parse('address'))],
     outputs: [
-      AbiParameter(name: '_balances', type: AbiType.parse('(uint256,(address,uint256),(address,uint256),(uint256,address,uint8,uint256,uint256)[])')),
+      AbiParameter(
+        name: '_balances',
+        type: AbiType.parse(
+          '(uint256,(address,uint256),(address,uint256),(uint256,address,uint8,uint256,uint256)[])',
+        ),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -131,22 +147,20 @@ class IMasterAccountControllerContract {
   /// ABI descriptor for `getDefaultInstructionFee()`.
   static final AbiFunction getDefaultInstructionFeeFn = AbiFunction(
     name: 'getDefaultInstructionFee',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getExecuteTimelockedCallTimestamp(bytes)`.
   static final AbiFunction getExecuteTimelockedCallTimestampFn = AbiFunction(
     name: 'getExecuteTimelockedCallTimestamp',
-    inputs: [
-      AbiParameter(name: '_encodedCall', type: AbiType.parse('bytes')),
-    ],
+    inputs: [AbiParameter(name: '_encodedCall', type: AbiType.parse('bytes'))],
     outputs: [
-      AbiParameter(name: '_allowedAfterTimestamp', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_allowedAfterTimestamp',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -157,17 +171,14 @@ class IMasterAccountControllerContract {
     inputs: [
       AbiParameter(name: '_personalAccount', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getExecutorInfo()`.
   static final AbiFunction getExecutorInfoFn = AbiFunction(
     name: 'getExecutorInfo',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_executor', type: AbiType.parse('address')),
       AbiParameter(name: '_executorFee', type: AbiType.parse('uint256')),
@@ -181,9 +192,7 @@ class IMasterAccountControllerContract {
     inputs: [
       AbiParameter(name: '_instructionId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -193,96 +202,84 @@ class IMasterAccountControllerContract {
     inputs: [
       AbiParameter(name: '_personalAccount', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getPausers()`.
   static final AbiFunction getPausersFn = AbiFunction(
     name: 'getPausers',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getPaymentProofValidityDurationSeconds()`.
-  static final AbiFunction getPaymentProofValidityDurationSecondsFn = AbiFunction(
-    name: 'getPaymentProofValidityDurationSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getPaymentProofValidityDurationSecondsFn =
+      AbiFunction(
+        name: 'getPaymentProofValidityDurationSeconds',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getPersonalAccount(string)`.
   static final AbiFunction getPersonalAccountFn = AbiFunction(
     name: 'getPersonalAccount',
-    inputs: [
-      AbiParameter(name: '_xrplOwner', type: AbiType.parse('string')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_xrplOwner', type: AbiType.parse('string'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getSourceId()`.
   static final AbiFunction getSourceIdFn = AbiFunction(
     name: 'getSourceId',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bytes32')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bytes32'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getTimelockDurationSeconds()`.
   static final AbiFunction getTimelockDurationSecondsFn = AbiFunction(
     name: 'getTimelockDurationSeconds',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_timelockDurationSeconds', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_timelockDurationSeconds',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getTransactionIdForCollateralReservation(uint256)`.
-  static final AbiFunction getTransactionIdForCollateralReservationFn = AbiFunction(
-    name: 'getTransactionIdForCollateralReservation',
-    inputs: [
-      AbiParameter(name: '_collateralReservationId', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '_transactionId', type: AbiType.parse('bytes32')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getTransactionIdForCollateralReservationFn =
+      AbiFunction(
+        name: 'getTransactionIdForCollateralReservation',
+        inputs: [
+          AbiParameter(
+            name: '_collateralReservationId',
+            type: AbiType.parse('uint256'),
+          ),
+        ],
+        outputs: [
+          AbiParameter(name: '_transactionId', type: AbiType.parse('bytes32')),
+        ],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getUnpausers()`.
   static final AbiFunction getUnpausersFn = AbiFunction(
     name: 'getUnpausers',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getVaults()`.
   static final AbiFunction getVaultsFn = AbiFunction(
     name: 'getVaults',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_vaultIds', type: AbiType.parse('uint256[]')),
       AbiParameter(name: '_vaultAddresses', type: AbiType.parse('address[]')),
@@ -294,54 +291,39 @@ class IMasterAccountControllerContract {
   /// ABI descriptor for `getXrplProviderWallets()`.
   static final AbiFunction getXrplProviderWalletsFn = AbiFunction(
     name: 'getXrplProviderWallets',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `implementation()`.
   static final AbiFunction implementationFn = AbiFunction(
     name: 'implementation',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `isPaused()`.
   static final AbiFunction isPausedFn = AbiFunction(
     name: 'isPaused',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `isPauser(address)`.
   static final AbiFunction isPauserFn = AbiFunction(
     name: 'isPauser',
-    inputs: [
-      AbiParameter(name: '_account', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [AbiParameter(name: '_account', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `isSmartAccount(address)`.
   static final AbiFunction isSmartAccountFn = AbiFunction(
     name: 'isSmartAccount',
-    inputs: [
-      AbiParameter(name: '_address', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_address', type: AbiType.parse('address'))],
     outputs: [
       AbiParameter(name: '_isSmartAccount', type: AbiType.parse('bool')),
       AbiParameter(name: '_xrplOwner', type: AbiType.parse('string')),
@@ -355,32 +337,23 @@ class IMasterAccountControllerContract {
     inputs: [
       AbiParameter(name: '_transactionId', type: AbiType.parse('bytes32')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `isUnpauser(address)`.
   static final AbiFunction isUnpauserFn = AbiFunction(
     name: 'isUnpauser',
-    inputs: [
-      AbiParameter(name: '_account', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [AbiParameter(name: '_account', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `owner()`.
   static final AbiFunction ownerFn = AbiFunction(
     name: 'owner',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: 'owner_', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: 'owner_', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -393,7 +366,10 @@ class IMasterAccountControllerContract {
       AbiParameter(name: '_transactionId', type: AbiType.parse('bytes32')),
     ],
     outputs: [
-      AbiParameter(name: '_collateralReservationId', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_collateralReservationId',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.payable,
   );
@@ -401,22 +377,20 @@ class IMasterAccountControllerContract {
   /// ABI descriptor for `supportsInterface(bytes4)`.
   static final AbiFunction supportsInterfaceFn = AbiFunction(
     name: 'supportsInterface',
-    inputs: [
-      AbiParameter(name: 'interfaceId', type: AbiType.parse('bytes4')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [AbiParameter(name: 'interfaceId', type: AbiType.parse('bytes4'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `vaults()`.
   static final AbiFunction vaultsFn = AbiFunction(
     name: 'vaults',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_vaults', type: AbiType.parse('(uint256,address,uint8)[]')),
+      AbiParameter(
+        name: '_vaults',
+        type: AbiType.parse('(uint256,address,uint8)[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -481,12 +455,16 @@ class IMasterAccountControllerContract {
   /// Calls `getAgentVaults()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<BigInt> agentVaultIds, List<EthAddress> agentVaultAddresses})> getAgentVaults() async {
+  Future<({List<BigInt> agentVaultIds, List<EthAddress> agentVaultAddresses})>
+  getAgentVaults() async {
     final out = await client.callFunction(
       contract: address,
       function: getAgentVaultsFn,
     );
-    return (agentVaultIds: (out[0]! as List).cast<BigInt>(), agentVaultAddresses: (out[1]! as List).cast<EthAddress>());
+    return (
+      agentVaultIds: (out[0]! as List).cast<BigInt>(),
+      agentVaultAddresses: (out[1]! as List).cast<EthAddress>(),
+    );
   }
 
   /// Calls `getBalances(string)`.
@@ -527,7 +505,9 @@ class IMasterAccountControllerContract {
   /// Calls `getExecuteTimelockedCallTimestamp(bytes)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> getExecuteTimelockedCallTimestamp(Uint8List encodedCall) async {
+  Future<BigInt> getExecuteTimelockedCallTimestamp(
+    Uint8List encodedCall,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getExecuteTimelockedCallTimestampFn,
@@ -642,7 +622,9 @@ class IMasterAccountControllerContract {
   /// Calls `getTransactionIdForCollateralReservation(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<Uint8List> getTransactionIdForCollateralReservation(BigInt collateralReservationId) async {
+  Future<Uint8List> getTransactionIdForCollateralReservation(
+    BigInt collateralReservationId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getTransactionIdForCollateralReservationFn,
@@ -665,12 +647,23 @@ class IMasterAccountControllerContract {
   /// Calls `getVaults()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<BigInt> vaultIds, List<EthAddress> vaultAddresses, List<BigInt> vaultTypes})> getVaults() async {
+  Future<
+    ({
+      List<BigInt> vaultIds,
+      List<EthAddress> vaultAddresses,
+      List<BigInt> vaultTypes,
+    })
+  >
+  getVaults() async {
     final out = await client.callFunction(
       contract: address,
       function: getVaultsFn,
     );
-    return (vaultIds: (out[0]! as List).cast<BigInt>(), vaultAddresses: (out[1]! as List).cast<EthAddress>(), vaultTypes: (out[2]! as List).cast<BigInt>());
+    return (
+      vaultIds: (out[0]! as List).cast<BigInt>(),
+      vaultAddresses: (out[1]! as List).cast<EthAddress>(),
+      vaultTypes: (out[2]! as List).cast<BigInt>(),
+    );
   }
 
   /// Calls `getXrplProviderWallets()`.
@@ -721,7 +714,9 @@ class IMasterAccountControllerContract {
   /// Calls `isSmartAccount(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({bool isSmartAccount, String xrplOwner})> isSmartAccount(EthAddress address_) async {
+  Future<({bool isSmartAccount, String xrplOwner})> isSmartAccount(
+    EthAddress address_,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: isSmartAccountFn,
@@ -758,17 +753,18 @@ class IMasterAccountControllerContract {
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
   Future<EthAddress> owner() async {
-    final out = await client.callFunction(
-      contract: address,
-      function: ownerFn,
-    );
+    final out = await client.callFunction(contract: address, function: ownerFn);
     return out[0]! as EthAddress;
   }
 
   /// Calls `reserveCollateral(string,bytes32,bytes32)`.
   ///
   /// Declared `payable` in Solidity; read via `eth_call`.
-  Future<BigInt> reserveCollateral(String xrplAddress, Uint8List paymentReference, Uint8List transactionId) async {
+  Future<BigInt> reserveCollateral(
+    String xrplAddress,
+    Uint8List paymentReference,
+    Uint8List transactionId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: reserveCollateralFn,
@@ -799,5 +795,4 @@ class IMasterAccountControllerContract {
     );
     return (out[0]! as List).cast<List<Object?>>();
   }
-
 }

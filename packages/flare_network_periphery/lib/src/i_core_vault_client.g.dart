@@ -28,18 +28,21 @@ class ICoreVaultClientContract {
     ContractRegistry? registry,
     String registryName = 'ICoreVaultClient',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return ICoreVaultClientContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `coreVaultAvailableAmount()`.
   static final AbiFunction coreVaultAvailableAmountFn = AbiFunction(
     name: 'coreVaultAvailableAmount',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_immediatelyAvailableUBA', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_immediatelyAvailableUBA',
+        type: AbiType.parse('uint256'),
+      ),
       AbiParameter(name: '_totalAvailableUBA', type: AbiType.parse('uint256')),
     ],
     stateMutability: StateMutability.view,
@@ -48,12 +51,13 @@ class ICoreVaultClientContract {
   /// ABI descriptor for `maximumTransferToCoreVault(address)`.
   static final AbiFunction maximumTransferToCoreVaultFn = AbiFunction(
     name: 'maximumTransferToCoreVault',
-    inputs: [
-      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
     outputs: [
       AbiParameter(name: '_maximumTransferUBA', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_minimumLeftAmountUBA', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_minimumLeftAmountUBA',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -61,24 +65,31 @@ class ICoreVaultClientContract {
   /// Calls `coreVaultAvailableAmount()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt immediatelyAvailableUBA, BigInt totalAvailableUBA})> coreVaultAvailableAmount() async {
+  Future<({BigInt immediatelyAvailableUBA, BigInt totalAvailableUBA})>
+  coreVaultAvailableAmount() async {
     final out = await client.callFunction(
       contract: address,
       function: coreVaultAvailableAmountFn,
     );
-    return (immediatelyAvailableUBA: out[0]! as BigInt, totalAvailableUBA: out[1]! as BigInt);
+    return (
+      immediatelyAvailableUBA: out[0]! as BigInt,
+      totalAvailableUBA: out[1]! as BigInt,
+    );
   }
 
   /// Calls `maximumTransferToCoreVault(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt maximumTransferUBA, BigInt minimumLeftAmountUBA})> maximumTransferToCoreVault(EthAddress agentVault) async {
+  Future<({BigInt maximumTransferUBA, BigInt minimumLeftAmountUBA})>
+  maximumTransferToCoreVault(EthAddress agentVault) async {
     final out = await client.callFunction(
       contract: address,
       function: maximumTransferToCoreVaultFn,
       args: [agentVault],
     );
-    return (maximumTransferUBA: out[0]! as BigInt, minimumLeftAmountUBA: out[1]! as BigInt);
+    return (
+      maximumTransferUBA: out[0]! as BigInt,
+      minimumLeftAmountUBA: out[1]! as BigInt,
+    );
   }
-
 }

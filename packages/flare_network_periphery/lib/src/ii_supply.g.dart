@@ -28,8 +28,9 @@ class IISupplyContract {
     ContractRegistry? registry,
     String registryName = 'IISupply',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IISupplyContract(client: client, address: resolved);
   }
 
@@ -40,7 +41,10 @@ class IISupplyContract {
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
     outputs: [
-      AbiParameter(name: '_circulatingSupplyWei', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_circulatingSupplyWei',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -48,10 +52,12 @@ class IISupplyContract {
   /// ABI descriptor for `getInflatableBalance()`.
   static final AbiFunction getInflatableBalanceFn = AbiFunction(
     name: 'getInflatableBalance',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_inflatableBalanceWei', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_inflatableBalanceWei',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -78,5 +84,4 @@ class IISupplyContract {
     );
     return out[0]! as BigInt;
   }
-
 }

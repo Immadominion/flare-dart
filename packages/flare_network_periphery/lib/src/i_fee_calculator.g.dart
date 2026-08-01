@@ -30,32 +30,25 @@ class IFeeCalculatorContract {
     ContractRegistry? registry,
     String registryName = 'IFeeCalculator',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IFeeCalculatorContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `calculateFeeByIds(bytes21[])`.
   static final AbiFunction calculateFeeByIdsFn = AbiFunction(
     name: 'calculateFeeByIds',
-    inputs: [
-      AbiParameter(name: '_feedIds', type: AbiType.parse('bytes21[]')),
-    ],
-    outputs: [
-      AbiParameter(name: '_fee', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_feedIds', type: AbiType.parse('bytes21[]'))],
+    outputs: [AbiParameter(name: '_fee', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `calculateFeeByIndices(uint256[])`.
   static final AbiFunction calculateFeeByIndicesFn = AbiFunction(
     name: 'calculateFeeByIndices',
-    inputs: [
-      AbiParameter(name: '_indices', type: AbiType.parse('uint256[]')),
-    ],
-    outputs: [
-      AbiParameter(name: '_fee', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_indices', type: AbiType.parse('uint256[]'))],
+    outputs: [AbiParameter(name: '_fee', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -82,5 +75,4 @@ class IFeeCalculatorContract {
     );
     return out[0]! as BigInt;
   }
-
 }

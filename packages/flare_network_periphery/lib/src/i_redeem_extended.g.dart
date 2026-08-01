@@ -28,8 +28,9 @@ class IRedeemExtendedContract {
     ContractRegistry? registry,
     String registryName = 'IRedeemExtended',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IRedeemExtendedContract(client: client, address: resolved);
   }
 
@@ -38,7 +39,10 @@ class IRedeemExtendedContract {
     name: 'redeemAmount',
     inputs: [
       AbiParameter(name: '_amountUBA', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_redeemerUnderlyingAddressString', type: AbiType.parse('string')),
+      AbiParameter(
+        name: '_redeemerUnderlyingAddressString',
+        type: AbiType.parse('string'),
+      ),
       AbiParameter(name: '_executor', type: AbiType.parse('address')),
     ],
     outputs: [
@@ -52,7 +56,10 @@ class IRedeemExtendedContract {
     name: 'redeemWithTag',
     inputs: [
       AbiParameter(name: '_amountUBA', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_redeemerUnderlyingAddressString', type: AbiType.parse('string')),
+      AbiParameter(
+        name: '_redeemerUnderlyingAddressString',
+        type: AbiType.parse('string'),
+      ),
       AbiParameter(name: '_executor', type: AbiType.parse('address')),
       AbiParameter(name: '_destinationTag', type: AbiType.parse('uint256')),
     ],
@@ -65,11 +72,8 @@ class IRedeemExtendedContract {
   /// ABI descriptor for `redeemWithTagSupported()`.
   static final AbiFunction redeemWithTagSupportedFn = AbiFunction(
     name: 'redeemWithTagSupported',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -77,10 +81,18 @@ class IRedeemExtendedContract {
   static final AbiFunction redemptionRequestInfoExtFn = AbiFunction(
     name: 'redemptionRequestInfoExt',
     inputs: [
-      AbiParameter(name: '_redemptionRequestId', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_redemptionRequestId',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(uint64,uint8,address,address,string,bytes32,uint128,uint128,uint16,uint64,uint64,uint64,uint64,bool,bool,address,uint256,bool,uint256)')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse(
+          '(uint64,uint8,address,address,string,bytes32,uint128,uint128,uint16,uint64,uint64,uint64,uint64,bool,bool,address,uint256,bool,uint256)',
+        ),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -88,7 +100,11 @@ class IRedeemExtendedContract {
   /// Calls `redeemAmount(uint256,string,address)`.
   ///
   /// Declared `payable` in Solidity; read via `eth_call`.
-  Future<BigInt> redeemAmount(BigInt amountUBA, String redeemerUnderlyingAddressString, EthAddress executor) async {
+  Future<BigInt> redeemAmount(
+    BigInt amountUBA,
+    String redeemerUnderlyingAddressString,
+    EthAddress executor,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: redeemAmountFn,
@@ -100,11 +116,21 @@ class IRedeemExtendedContract {
   /// Calls `redeemWithTag(uint256,string,address,uint256)`.
   ///
   /// Declared `payable` in Solidity; read via `eth_call`.
-  Future<BigInt> redeemWithTag(BigInt amountUBA, String redeemerUnderlyingAddressString, EthAddress executor, BigInt destinationTag) async {
+  Future<BigInt> redeemWithTag(
+    BigInt amountUBA,
+    String redeemerUnderlyingAddressString,
+    EthAddress executor,
+    BigInt destinationTag,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: redeemWithTagFn,
-      args: [amountUBA, redeemerUnderlyingAddressString, executor, destinationTag],
+      args: [
+        amountUBA,
+        redeemerUnderlyingAddressString,
+        executor,
+        destinationTag,
+      ],
     );
     return out[0]! as BigInt;
   }
@@ -123,7 +149,9 @@ class IRedeemExtendedContract {
   /// Calls `redemptionRequestInfoExt(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<Object?>> redemptionRequestInfoExt(BigInt redemptionRequestId) async {
+  Future<List<Object?>> redemptionRequestInfoExt(
+    BigInt redemptionRequestId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: redemptionRequestInfoExtFn,
@@ -131,5 +159,4 @@ class IRedeemExtendedContract {
     );
     return (out[0]! as List).cast<Object?>();
   }
-
 }

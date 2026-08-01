@@ -30,19 +30,21 @@ class ITimelockFacetContract {
     ContractRegistry? registry,
     String registryName = 'ITimelockFacet',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return ITimelockFacetContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getExecuteTimelockedCallTimestamp(bytes)`.
   static final AbiFunction getExecuteTimelockedCallTimestampFn = AbiFunction(
     name: 'getExecuteTimelockedCallTimestamp',
-    inputs: [
-      AbiParameter(name: '_encodedCall', type: AbiType.parse('bytes')),
-    ],
+    inputs: [AbiParameter(name: '_encodedCall', type: AbiType.parse('bytes'))],
     outputs: [
-      AbiParameter(name: '_allowedAfterTimestamp', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_allowedAfterTimestamp',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -50,10 +52,12 @@ class ITimelockFacetContract {
   /// ABI descriptor for `getTimelockDurationSeconds()`.
   static final AbiFunction getTimelockDurationSecondsFn = AbiFunction(
     name: 'getTimelockDurationSeconds',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_timelockDurationSeconds', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_timelockDurationSeconds',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -61,7 +65,9 @@ class ITimelockFacetContract {
   /// Calls `getExecuteTimelockedCallTimestamp(bytes)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> getExecuteTimelockedCallTimestamp(Uint8List encodedCall) async {
+  Future<BigInt> getExecuteTimelockedCallTimestamp(
+    Uint8List encodedCall,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getExecuteTimelockedCallTimestampFn,
@@ -80,5 +86,4 @@ class ITimelockFacetContract {
     );
     return out[0]! as BigInt;
   }
-
 }

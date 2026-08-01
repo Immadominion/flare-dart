@@ -20,7 +20,10 @@ class IIIncentivePoolReceiverContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IIIncentivePoolReceiverContract({required this.client, required this.address});
+  const IIIncentivePoolReceiverContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IIIncentivePoolReceiver` through the [ContractRegistry].
   static Future<IIIncentivePoolReceiverContract> resolve(
@@ -28,19 +31,17 @@ class IIIncentivePoolReceiverContract {
     ContractRegistry? registry,
     String registryName = 'IIIncentivePoolReceiver',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIIncentivePoolReceiverContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getContractName()`.
   static final AbiFunction getContractNameFn = AbiFunction(
     name: 'getContractName',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
@@ -54,5 +55,4 @@ class IIIncentivePoolReceiverContract {
     );
     return out[0]! as String;
   }
-
 }

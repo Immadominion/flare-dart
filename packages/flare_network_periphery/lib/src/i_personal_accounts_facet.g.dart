@@ -20,7 +20,10 @@ class IPersonalAccountsFacetContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IPersonalAccountsFacetContract({required this.client, required this.address});
+  const IPersonalAccountsFacetContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IPersonalAccountsFacet` through the [ContractRegistry].
   static Future<IPersonalAccountsFacetContract> resolve(
@@ -28,31 +31,25 @@ class IPersonalAccountsFacetContract {
     ContractRegistry? registry,
     String registryName = 'IPersonalAccountsFacet',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IPersonalAccountsFacetContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getPersonalAccount(string)`.
   static final AbiFunction getPersonalAccountFn = AbiFunction(
     name: 'getPersonalAccount',
-    inputs: [
-      AbiParameter(name: '_xrplOwner', type: AbiType.parse('string')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_xrplOwner', type: AbiType.parse('string'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `implementation()`.
   static final AbiFunction implementationFn = AbiFunction(
     name: 'implementation',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -78,5 +75,4 @@ class IPersonalAccountsFacetContract {
     );
     return out[0]! as EthAddress;
   }
-
 }

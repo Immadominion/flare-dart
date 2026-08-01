@@ -22,7 +22,10 @@ class IIPChainStakeMirrorVerifierContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IIPChainStakeMirrorVerifierContract({required this.client, required this.address});
+  const IIPChainStakeMirrorVerifierContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IIPChainStakeMirrorVerifier` through the [ContractRegistry].
   static Future<IIPChainStakeMirrorVerifierContract> resolve(
@@ -30,28 +33,38 @@ class IIPChainStakeMirrorVerifierContract {
     ContractRegistry? registry,
     String registryName = 'IIPChainStakeMirrorVerifier',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
-    return IIPChainStakeMirrorVerifierContract(client: client, address: resolved);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
+    return IIPChainStakeMirrorVerifierContract(
+      client: client,
+      address: resolved,
+    );
   }
 
   /// ABI descriptor for `verifyStake((bytes32,uint8,bytes20,bytes20,uint64,uint64,uint64),bytes32[])`.
   static final AbiFunction verifyStakeFn = AbiFunction(
     name: 'verifyStake',
     inputs: [
-      AbiParameter(name: '_stakeData', type: AbiType.parse('(bytes32,uint8,bytes20,bytes20,uint64,uint64,uint64)')),
+      AbiParameter(
+        name: '_stakeData',
+        type: AbiType.parse(
+          '(bytes32,uint8,bytes20,bytes20,uint64,uint64,uint64)',
+        ),
+      ),
       AbiParameter(name: '_merkleProof', type: AbiType.parse('bytes32[]')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// Calls `verifyStake((bytes32,uint8,bytes20,bytes20,uint64,uint64,uint64),bytes32[])`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<bool> verifyStake(List<Object?> stakeData, List<Uint8List> merkleProof) async {
+  Future<bool> verifyStake(
+    List<Object?> stakeData,
+    List<Uint8List> merkleProof,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: verifyStakeFn,
@@ -59,5 +72,4 @@ class IIPChainStakeMirrorVerifierContract {
     );
     return out[0]! as bool;
   }
-
 }

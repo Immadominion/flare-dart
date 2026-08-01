@@ -28,18 +28,21 @@ class IReaderFacetContract {
     ContractRegistry? registry,
     String registryName = 'IReaderFacet',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IReaderFacetContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `agentVaults()`.
   static final AbiFunction agentVaultsFn = AbiFunction(
     name: 'agentVaults',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_agentVaults', type: AbiType.parse('(uint256,address)[]')),
+      AbiParameter(
+        name: '_agentVaults',
+        type: AbiType.parse('(uint256,address)[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -47,11 +50,14 @@ class IReaderFacetContract {
   /// ABI descriptor for `getBalances(string)`.
   static final AbiFunction getBalancesFn = AbiFunction(
     name: 'getBalances',
-    inputs: [
-      AbiParameter(name: '_xrplOwner', type: AbiType.parse('string')),
-    ],
+    inputs: [AbiParameter(name: '_xrplOwner', type: AbiType.parse('string'))],
     outputs: [
-      AbiParameter(name: '_balances', type: AbiType.parse('(uint256,(address,uint256),(address,uint256),(uint256,address,uint8,uint256,uint256)[])')),
+      AbiParameter(
+        name: '_balances',
+        type: AbiType.parse(
+          '(uint256,(address,uint256),(address,uint256),(uint256,address,uint8,uint256,uint256)[])',
+        ),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -59,11 +65,14 @@ class IReaderFacetContract {
   /// ABI descriptor for `getBalances(address)`.
   static final AbiFunction getBalances2Fn = AbiFunction(
     name: 'getBalances',
-    inputs: [
-      AbiParameter(name: '_account', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_account', type: AbiType.parse('address'))],
     outputs: [
-      AbiParameter(name: '_balances', type: AbiType.parse('(uint256,(address,uint256),(address,uint256),(uint256,address,uint8,uint256,uint256)[])')),
+      AbiParameter(
+        name: '_balances',
+        type: AbiType.parse(
+          '(uint256,(address,uint256),(address,uint256),(uint256,address,uint8,uint256,uint256)[])',
+        ),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -71,9 +80,7 @@ class IReaderFacetContract {
   /// ABI descriptor for `isSmartAccount(address)`.
   static final AbiFunction isSmartAccountFn = AbiFunction(
     name: 'isSmartAccount',
-    inputs: [
-      AbiParameter(name: '_address', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_address', type: AbiType.parse('address'))],
     outputs: [
       AbiParameter(name: '_isSmartAccount', type: AbiType.parse('bool')),
       AbiParameter(name: '_xrplOwner', type: AbiType.parse('string')),
@@ -84,10 +91,12 @@ class IReaderFacetContract {
   /// ABI descriptor for `vaults()`.
   static final AbiFunction vaultsFn = AbiFunction(
     name: 'vaults',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_vaults', type: AbiType.parse('(uint256,address,uint8)[]')),
+      AbiParameter(
+        name: '_vaults',
+        type: AbiType.parse('(uint256,address,uint8)[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -130,7 +139,9 @@ class IReaderFacetContract {
   /// Calls `isSmartAccount(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({bool isSmartAccount, String xrplOwner})> isSmartAccount(EthAddress address_) async {
+  Future<({bool isSmartAccount, String xrplOwner})> isSmartAccount(
+    EthAddress address_,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: isSmartAccountFn,
@@ -149,5 +160,4 @@ class IReaderFacetContract {
     );
     return (out[0]! as List).cast<List<Object?>>();
   }
-
 }

@@ -28,41 +28,33 @@ class IFdcHubContract {
     ContractRegistry? registry,
     String registryName = 'IFdcHub',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IFdcHubContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `fdcInflationConfigurations()`.
   static final AbiFunction fdcInflationConfigurationsFn = AbiFunction(
     name: 'fdcInflationConfigurations',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `fdcRequestFeeConfigurations()`.
   static final AbiFunction fdcRequestFeeConfigurationsFn = AbiFunction(
     name: 'fdcRequestFeeConfigurations',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `requestsOffsetSeconds()`.
   static final AbiFunction requestsOffsetSecondsFn = AbiFunction(
     name: 'requestsOffsetSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint8')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint8'))],
     stateMutability: StateMutability.view,
   );
 
@@ -98,5 +90,4 @@ class IFdcHubContract {
     );
     return out[0]! as BigInt;
   }
-
 }

@@ -22,7 +22,10 @@ class IFAssetRedeemComposerContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IFAssetRedeemComposerContract({required this.client, required this.address});
+  const IFAssetRedeemComposerContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IFAssetRedeemComposer` through the [ContractRegistry].
   static Future<IFAssetRedeemComposerContract> resolve(
@@ -30,85 +33,71 @@ class IFAssetRedeemComposerContract {
     ContractRegistry? registry,
     String registryName = 'IFAssetRedeemComposer',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IFAssetRedeemComposerContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `assetManager()`.
   static final AbiFunction assetManagerFn = AbiFunction(
     name: 'assetManager',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `composerFeeRecipient()`.
   static final AbiFunction composerFeeRecipientFn = AbiFunction(
     name: 'composerFeeRecipient',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `defaultComposerFeePPM()`.
   static final AbiFunction defaultComposerFeePPMFn = AbiFunction(
     name: 'defaultComposerFeePPM',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `defaultExecutor()`.
   static final AbiFunction defaultExecutorFn = AbiFunction(
     name: 'defaultExecutor',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `endpoint()`.
   static final AbiFunction endpointFn = AbiFunction(
     name: 'endpoint',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `fAsset()`.
   static final AbiFunction fAssetFn = AbiFunction(
     name: 'fAsset',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getBalances(address)`.
   static final AbiFunction getBalancesFn = AbiFunction(
     name: 'getBalances',
-    inputs: [
-      AbiParameter(name: '_account', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_account', type: AbiType.parse('address'))],
     outputs: [
-      AbiParameter(name: '_balances', type: AbiType.parse('((address,uint256),(address,uint256),(address,uint256))')),
+      AbiParameter(
+        name: '_balances',
+        type: AbiType.parse(
+          '((address,uint256),(address,uint256),(address,uint256))',
+        ),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -116,9 +105,7 @@ class IFAssetRedeemComposerContract {
   /// ABI descriptor for `getComposerFeePPM(uint32)`.
   static final AbiFunction getComposerFeePPMFn = AbiFunction(
     name: 'getComposerFeePPM',
-    inputs: [
-      AbiParameter(name: '_srcEid', type: AbiType.parse('uint32')),
-    ],
+    inputs: [AbiParameter(name: '_srcEid', type: AbiType.parse('uint32'))],
     outputs: [
       AbiParameter(name: '_composerFeePPM', type: AbiType.parse('uint256')),
     ],
@@ -128,11 +115,12 @@ class IFAssetRedeemComposerContract {
   /// ABI descriptor for `getExecuteTimelockedCallTimestamp(bytes)`.
   static final AbiFunction getExecuteTimelockedCallTimestampFn = AbiFunction(
     name: 'getExecuteTimelockedCallTimestamp',
-    inputs: [
-      AbiParameter(name: '_encodedCall', type: AbiType.parse('bytes')),
-    ],
+    inputs: [AbiParameter(name: '_encodedCall', type: AbiType.parse('bytes'))],
     outputs: [
-      AbiParameter(name: '_allowedAfterTimestamp', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_allowedAfterTimestamp',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -140,43 +128,31 @@ class IFAssetRedeemComposerContract {
   /// ABI descriptor for `getRedeemerAccountAddress(address)`.
   static final AbiFunction getRedeemerAccountAddressFn = AbiFunction(
     name: 'getRedeemerAccountAddress',
-    inputs: [
-      AbiParameter(name: '_redeemer', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_redeemer', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getTimelockDurationSeconds()`.
   static final AbiFunction getTimelockDurationSecondsFn = AbiFunction(
     name: 'getTimelockDurationSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `implementation()`.
   static final AbiFunction implementationFn = AbiFunction(
     name: 'implementation',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `isRedeemerAccount(address)`.
   static final AbiFunction isRedeemerAccountFn = AbiFunction(
     name: 'isRedeemerAccount',
-    inputs: [
-      AbiParameter(name: '_address', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_address', type: AbiType.parse('address'))],
     outputs: [
       AbiParameter(name: '_isRedeemerAccount', type: AbiType.parse('bool')),
       AbiParameter(name: '_owner', type: AbiType.parse('address')),
@@ -187,44 +163,32 @@ class IFAssetRedeemComposerContract {
   /// ABI descriptor for `redeemerAccountImplementation()`.
   static final AbiFunction redeemerAccountImplementationFn = AbiFunction(
     name: 'redeemerAccountImplementation',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `stableCoin()`.
   static final AbiFunction stableCoinFn = AbiFunction(
     name: 'stableCoin',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `trustedSourceOApp()`.
   static final AbiFunction trustedSourceOAppFn = AbiFunction(
     name: 'trustedSourceOApp',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `wNat()`.
   static final AbiFunction wNatFn = AbiFunction(
     name: 'wNat',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -321,7 +285,9 @@ class IFAssetRedeemComposerContract {
   /// Calls `getExecuteTimelockedCallTimestamp(bytes)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> getExecuteTimelockedCallTimestamp(Uint8List encodedCall) async {
+  Future<BigInt> getExecuteTimelockedCallTimestamp(
+    Uint8List encodedCall,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getExecuteTimelockedCallTimestampFn,
@@ -367,7 +333,9 @@ class IFAssetRedeemComposerContract {
   /// Calls `isRedeemerAccount(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({bool isRedeemerAccount, EthAddress owner})> isRedeemerAccount(EthAddress address_) async {
+  Future<({bool isRedeemerAccount, EthAddress owner})> isRedeemerAccount(
+    EthAddress address_,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: isRedeemerAccountFn,
@@ -413,11 +381,7 @@ class IFAssetRedeemComposerContract {
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
   Future<EthAddress> wNat() async {
-    final out = await client.callFunction(
-      contract: address,
-      function: wNatFn,
-    );
+    final out = await client.callFunction(contract: address, function: wNatFn);
     return out[0]! as EthAddress;
   }
-
 }

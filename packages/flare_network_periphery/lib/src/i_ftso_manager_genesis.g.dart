@@ -20,7 +20,10 @@ class IFtsoManagerGenesisContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IFtsoManagerGenesisContract({required this.client, required this.address});
+  const IFtsoManagerGenesisContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IFtsoManagerGenesis` through the [ContractRegistry].
   static Future<IFtsoManagerGenesisContract> resolve(
@@ -28,16 +31,16 @@ class IFtsoManagerGenesisContract {
     ContractRegistry? registry,
     String registryName = 'IFtsoManagerGenesis',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IFtsoManagerGenesisContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getCurrentPriceEpochId()`.
   static final AbiFunction getCurrentPriceEpochIdFn = AbiFunction(
     name: 'getCurrentPriceEpochId',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_priceEpochId', type: AbiType.parse('uint256')),
     ],
@@ -54,5 +57,4 @@ class IFtsoManagerGenesisContract {
     );
     return out[0]! as BigInt;
   }
-
 }

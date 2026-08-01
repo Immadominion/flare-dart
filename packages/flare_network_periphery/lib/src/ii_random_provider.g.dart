@@ -28,16 +28,16 @@ class IIRandomProviderContract {
     ContractRegistry? registry,
     String registryName = 'IIRandomProvider',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIRandomProviderContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getCurrentRandom()`.
   static final AbiFunction getCurrentRandomFn = AbiFunction(
     name: 'getCurrentRandom',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_currentRandom', type: AbiType.parse('uint256')),
     ],
@@ -47,8 +47,7 @@ class IIRandomProviderContract {
   /// ABI descriptor for `getCurrentRandomWithQuality()`.
   static final AbiFunction getCurrentRandomWithQualityFn = AbiFunction(
     name: 'getCurrentRandomWithQuality',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_currentRandom', type: AbiType.parse('uint256')),
       AbiParameter(name: '_goodRandom', type: AbiType.parse('bool')),
@@ -70,12 +69,12 @@ class IIRandomProviderContract {
   /// Calls `getCurrentRandomWithQuality()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt currentRandom, bool goodRandom})> getCurrentRandomWithQuality() async {
+  Future<({BigInt currentRandom, bool goodRandom})>
+  getCurrentRandomWithQuality() async {
     final out = await client.callFunction(
       contract: address,
       function: getCurrentRandomWithQualityFn,
     );
     return (currentRandom: out[0]! as BigInt, goodRandom: out[1]! as bool);
   }
-
 }

@@ -28,52 +28,41 @@ class IRNatAccountContract {
     ContractRegistry? registry,
     String registryName = 'IRNatAccount',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IRNatAccountContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `owner()`.
   static final AbiFunction ownerFn = AbiFunction(
     name: 'owner',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `rNat()`.
   static final AbiFunction rNatFn = AbiFunction(
     name: 'rNat',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `receivedRewards()`.
   static final AbiFunction receivedRewardsFn = AbiFunction(
     name: 'receivedRewards',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint128')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint128'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `withdrawnRewards()`.
   static final AbiFunction withdrawnRewardsFn = AbiFunction(
     name: 'withdrawnRewards',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint128')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint128'))],
     stateMutability: StateMutability.view,
   );
 
@@ -81,10 +70,7 @@ class IRNatAccountContract {
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
   Future<EthAddress> owner() async {
-    final out = await client.callFunction(
-      contract: address,
-      function: ownerFn,
-    );
+    final out = await client.callFunction(contract: address, function: ownerFn);
     return out[0]! as EthAddress;
   }
 
@@ -92,10 +78,7 @@ class IRNatAccountContract {
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
   Future<EthAddress> rNat() async {
-    final out = await client.callFunction(
-      contract: address,
-      function: rNatFn,
-    );
+    final out = await client.callFunction(contract: address, function: rNatFn);
     return out[0]! as EthAddress;
   }
 
@@ -120,5 +103,4 @@ class IRNatAccountContract {
     );
     return out[0]! as BigInt;
   }
-
 }

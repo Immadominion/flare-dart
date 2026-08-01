@@ -28,19 +28,17 @@ class IICleanableContract {
     ContractRegistry? registry,
     String registryName = 'IICleanable',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IICleanableContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `cleanupBlockNumber()`.
   static final AbiFunction cleanupBlockNumberFn = AbiFunction(
     name: 'cleanupBlockNumber',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -54,5 +52,4 @@ class IICleanableContract {
     );
     return out[0]! as BigInt;
   }
-
 }

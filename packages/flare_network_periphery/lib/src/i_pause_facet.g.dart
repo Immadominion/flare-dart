@@ -28,65 +28,49 @@ class IPauseFacetContract {
     ContractRegistry? registry,
     String registryName = 'IPauseFacet',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IPauseFacetContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getPausers()`.
   static final AbiFunction getPausersFn = AbiFunction(
     name: 'getPausers',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getUnpausers()`.
   static final AbiFunction getUnpausersFn = AbiFunction(
     name: 'getUnpausers',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `isPaused()`.
   static final AbiFunction isPausedFn = AbiFunction(
     name: 'isPaused',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `isPauser(address)`.
   static final AbiFunction isPauserFn = AbiFunction(
     name: 'isPauser',
-    inputs: [
-      AbiParameter(name: '_account', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [AbiParameter(name: '_account', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `isUnpauser(address)`.
   static final AbiFunction isUnpauserFn = AbiFunction(
     name: 'isUnpauser',
-    inputs: [
-      AbiParameter(name: '_account', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [AbiParameter(name: '_account', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -146,5 +130,4 @@ class IPauseFacetContract {
     );
     return out[0]! as bool;
   }
-
 }

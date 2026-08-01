@@ -30,8 +30,9 @@ class IAssetManagerContract {
     ContractRegistry? registry,
     String registryName = 'IAssetManager',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IAssetManagerContract(client: client, address: resolved);
   }
 
@@ -40,12 +41,21 @@ class IAssetManagerContract {
     name: 'agentRedemptionQueue',
     inputs: [
       AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
-      AbiParameter(name: '_firstRedemptionTicketId', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_firstRedemptionTicketId',
+        type: AbiType.parse('uint256'),
+      ),
       AbiParameter(name: '_pageSize', type: AbiType.parse('uint256')),
     ],
     outputs: [
-      AbiParameter(name: '_queue', type: AbiType.parse('(uint256,address,uint256)[]')),
-      AbiParameter(name: '_nextRedemptionTicketId', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_queue',
+        type: AbiType.parse('(uint256,address,uint256)[]'),
+      ),
+      AbiParameter(
+        name: '_nextRedemptionTicketId',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -53,56 +63,44 @@ class IAssetManagerContract {
   /// ABI descriptor for `alwaysAllowedMintersForAgent(address)`.
   static final AbiFunction alwaysAllowedMintersForAgentFn = AbiFunction(
     name: 'alwaysAllowedMintersForAgent',
-    inputs: [
-      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `assetManagerController()`.
   static final AbiFunction assetManagerControllerFn = AbiFunction(
     name: 'assetManagerController',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `assetMintingDecimals()`.
   static final AbiFunction assetMintingDecimalsFn = AbiFunction(
     name: 'assetMintingDecimals',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `assetMintingGranularityUBA()`.
   static final AbiFunction assetMintingGranularityUBAFn = AbiFunction(
     name: 'assetMintingGranularityUBA',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `collateralReservationFee(uint256)`.
   static final AbiFunction collateralReservationFeeFn = AbiFunction(
     name: 'collateralReservationFee',
-    inputs: [
-      AbiParameter(name: '_lots', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_lots', type: AbiType.parse('uint256'))],
     outputs: [
-      AbiParameter(name: '_reservationFeeNATWei', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_reservationFeeNATWei',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -111,10 +109,18 @@ class IAssetManagerContract {
   static final AbiFunction collateralReservationInfoFn = AbiFunction(
     name: 'collateralReservationInfo',
     inputs: [
-      AbiParameter(name: '_collateralReservationId', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_collateralReservationId',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(uint64,address,address,string,bytes32,uint256,uint128,uint128,uint16,uint64,uint64,uint64,address,uint256,uint8)')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse(
+          '(uint64,address,address,string,bytes32,uint256,uint128,uint128,uint16,uint64,uint64,uint64,address,uint256,uint8)',
+        ),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -122,21 +128,20 @@ class IAssetManagerContract {
   /// ABI descriptor for `controllerAttached()`.
   static final AbiFunction controllerAttachedFn = AbiFunction(
     name: 'controllerAttached',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `coreVaultAvailableAmount()`.
   static final AbiFunction coreVaultAvailableAmountFn = AbiFunction(
     name: 'coreVaultAvailableAmount',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_immediatelyAvailableUBA', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_immediatelyAvailableUBA',
+        type: AbiType.parse('uint256'),
+      ),
       AbiParameter(name: '_totalAvailableUBA', type: AbiType.parse('uint256')),
     ],
     stateMutability: StateMutability.view,
@@ -145,8 +150,7 @@ class IAssetManagerContract {
   /// ABI descriptor for `currentUnderlyingBlock()`.
   static final AbiFunction currentUnderlyingBlockFn = AbiFunction(
     name: 'currentUnderlyingBlock',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
       AbiParameter(name: '_blockTimestamp', type: AbiType.parse('uint256')),
@@ -172,55 +176,40 @@ class IAssetManagerContract {
   /// ABI descriptor for `directMintingPaymentAddress()`.
   static final AbiFunction directMintingPaymentAddressFn = AbiFunction(
     name: 'directMintingPaymentAddress',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `emergencyPauseLevel()`.
   static final AbiFunction emergencyPauseLevelFn = AbiFunction(
     name: 'emergencyPauseLevel',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint8')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint8'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `emergencyPaused()`.
   static final AbiFunction emergencyPausedFn = AbiFunction(
     name: 'emergencyPaused',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `emergencyPausedUntil()`.
   static final AbiFunction emergencyPausedUntilFn = AbiFunction(
     name: 'emergencyPausedUntil',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `fAsset()`.
   static final AbiFunction fAssetFn = AbiFunction(
     name: 'fAsset',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -239,8 +228,7 @@ class IAssetManagerContract {
   /// ABI descriptor for `facetAddresses()`.
   static final AbiFunction facetAddressesFn = AbiFunction(
     name: 'facetAddresses',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: 'facetAddresses_', type: AbiType.parse('address[]')),
     ],
@@ -250,11 +238,12 @@ class IAssetManagerContract {
   /// ABI descriptor for `facetFunctionSelectors(address)`.
   static final AbiFunction facetFunctionSelectorsFn = AbiFunction(
     name: 'facetFunctionSelectors',
-    inputs: [
-      AbiParameter(name: '_facet', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_facet', type: AbiType.parse('address'))],
     outputs: [
-      AbiParameter(name: 'facetFunctionSelectors_', type: AbiType.parse('bytes4[]')),
+      AbiParameter(
+        name: 'facetFunctionSelectors_',
+        type: AbiType.parse('bytes4[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -262,10 +251,12 @@ class IAssetManagerContract {
   /// ABI descriptor for `facets()`.
   static final AbiFunction facetsFn = AbiFunction(
     name: 'facets',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: 'facets_', type: AbiType.parse('(address,bytes4[])[]')),
+      AbiParameter(
+        name: 'facets_',
+        type: AbiType.parse('(address,bytes4[])[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -273,74 +264,71 @@ class IAssetManagerContract {
   /// ABI descriptor for `getAgentFullPoolCollateral(address)`.
   static final AbiFunction getAgentFullPoolCollateralFn = AbiFunction(
     name: 'getAgentFullPoolCollateral',
-    inputs: [
-      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getAgentFullVaultCollateral(address)`.
   static final AbiFunction getAgentFullVaultCollateralFn = AbiFunction(
     name: 'getAgentFullVaultCollateral',
-    inputs: [
-      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getAgentInfo(address)`.
   static final AbiFunction getAgentInfoFn = AbiFunction(
     name: 'getAgentInfo',
-    inputs: [
-      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(uint8,address,address,address,address,string,bool,uint256,uint256,address,uint256,uint256,uint256,uint256,uint256,uint256,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,int256,uint256,int256,uint256,uint256,uint256,uint256)')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse(
+          '(uint8,address,address,address,address,string,bool,uint256,uint256,address,uint256,uint256,uint256,uint256,uint256,uint256,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,int256,uint256,int256,uint256,uint256,uint256,uint256)',
+        ),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getAgentLiquidationFactorsAndMaxAmount(address)`.
-  static final AbiFunction getAgentLiquidationFactorsAndMaxAmountFn = AbiFunction(
-    name: 'getAgentLiquidationFactorsAndMaxAmount',
-    inputs: [
-      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: 'liquidationPaymentFactorVaultBIPS', type: AbiType.parse('uint256')),
-      AbiParameter(name: 'liquidationPaymentFactorPoolBIPS', type: AbiType.parse('uint256')),
-      AbiParameter(name: 'maxLiquidationAmountUBA', type: AbiType.parse('uint256')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getAgentLiquidationFactorsAndMaxAmountFn =
+      AbiFunction(
+        name: 'getAgentLiquidationFactorsAndMaxAmount',
+        inputs: [
+          AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+        ],
+        outputs: [
+          AbiParameter(
+            name: 'liquidationPaymentFactorVaultBIPS',
+            type: AbiType.parse('uint256'),
+          ),
+          AbiParameter(
+            name: 'liquidationPaymentFactorPoolBIPS',
+            type: AbiType.parse('uint256'),
+          ),
+          AbiParameter(
+            name: 'maxLiquidationAmountUBA',
+            type: AbiType.parse('uint256'),
+          ),
+        ],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getAgentMinPoolCollateralRatioBIPS(address)`.
   static final AbiFunction getAgentMinPoolCollateralRatioBIPSFn = AbiFunction(
     name: 'getAgentMinPoolCollateralRatioBIPS',
-    inputs: [
-      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getAgentMinVaultCollateralRatioBIPS(address)`.
   static final AbiFunction getAgentMinVaultCollateralRatioBIPSFn = AbiFunction(
     name: 'getAgentMinVaultCollateralRatioBIPS',
-    inputs: [
-      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -351,32 +339,27 @@ class IAssetManagerContract {
       AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
       AbiParameter(name: '_name', type: AbiType.parse('string')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getAgentVaultCollateralToken(address)`.
   static final AbiFunction getAgentVaultCollateralTokenFn = AbiFunction(
     name: 'getAgentVaultCollateralToken',
-    inputs: [
-      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getAgentVaultOwner(address)`.
   static final AbiFunction getAgentVaultOwnerFn = AbiFunction(
     name: 'getAgentVaultOwner',
-    inputs: [
-      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
     outputs: [
-      AbiParameter(name: '_ownerManagementAddress', type: AbiType.parse('address')),
+      AbiParameter(
+        name: '_ownerManagementAddress',
+        type: AbiType.parse('address'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -403,7 +386,12 @@ class IAssetManagerContract {
       AbiParameter(name: '_end', type: AbiType.parse('uint256')),
     ],
     outputs: [
-      AbiParameter(name: '_agents', type: AbiType.parse('(address,address,uint256,uint256,uint256,uint256,uint8)[]')),
+      AbiParameter(
+        name: '_agents',
+        type: AbiType.parse(
+          '(address,address,uint256,uint256,uint256,uint256,uint8)[]',
+        ),
+      ),
       AbiParameter(name: '_totalLength', type: AbiType.parse('uint256')),
     ],
     stateMutability: StateMutability.view,
@@ -426,12 +414,8 @@ class IAssetManagerContract {
   /// ABI descriptor for `getCollateralPool(address)`.
   static final AbiFunction getCollateralPoolFn = AbiFunction(
     name: 'getCollateralPool',
-    inputs: [
-      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -443,7 +427,12 @@ class IAssetManagerContract {
       AbiParameter(name: '_token', type: AbiType.parse('address')),
     ],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(uint8,address,uint256,uint256,bool,string,string,uint256,uint256)')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse(
+          '(uint8,address,uint256,uint256,bool,string,string,uint256,uint256)',
+        ),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -451,10 +440,14 @@ class IAssetManagerContract {
   /// ABI descriptor for `getCollateralTypes()`.
   static final AbiFunction getCollateralTypesFn = AbiFunction(
     name: 'getCollateralTypes',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(uint8,address,uint256,uint256,bool,string,string,uint256,uint256)[]')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse(
+          '(uint8,address,uint256,uint256,bool,string,string,uint256,uint256)[]',
+        ),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -462,110 +455,90 @@ class IAssetManagerContract {
   /// ABI descriptor for `getCoreVaultDonationTag()`.
   static final AbiFunction getCoreVaultDonationTagFn = AbiFunction(
     name: 'getCoreVaultDonationTag',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCoreVaultManager()`.
   static final AbiFunction getCoreVaultManagerFn = AbiFunction(
     name: 'getCoreVaultManager',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCoreVaultMinimumAmountLeftBIPS()`.
   static final AbiFunction getCoreVaultMinimumAmountLeftBIPSFn = AbiFunction(
     name: 'getCoreVaultMinimumAmountLeftBIPS',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCoreVaultMinimumRedeemLots()`.
   static final AbiFunction getCoreVaultMinimumRedeemLotsFn = AbiFunction(
     name: 'getCoreVaultMinimumRedeemLots',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCoreVaultNativeAddress()`.
   static final AbiFunction getCoreVaultNativeAddressFn = AbiFunction(
     name: 'getCoreVaultNativeAddress',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCoreVaultRedemptionFeeBIPS()`.
   static final AbiFunction getCoreVaultRedemptionFeeBIPSFn = AbiFunction(
     name: 'getCoreVaultRedemptionFeeBIPS',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCoreVaultTransferDefaultPenaltyBIPS()`.
-  static final AbiFunction getCoreVaultTransferDefaultPenaltyBIPSFn = AbiFunction(
-    name: 'getCoreVaultTransferDefaultPenaltyBIPS',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getCoreVaultTransferDefaultPenaltyBIPSFn =
+      AbiFunction(
+        name: 'getCoreVaultTransferDefaultPenaltyBIPS',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getCoreVaultTransferTimeExtensionSeconds()`.
-  static final AbiFunction getCoreVaultTransferTimeExtensionSecondsFn = AbiFunction(
-    name: 'getCoreVaultTransferTimeExtensionSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getCoreVaultTransferTimeExtensionSecondsFn =
+      AbiFunction(
+        name: 'getCoreVaultTransferTimeExtensionSeconds',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getDirectMintingDailyLimitUBA()`.
   static final AbiFunction getDirectMintingDailyLimitUBAFn = AbiFunction(
     name: 'getDirectMintingDailyLimitUBA',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getDirectMintingDailyLimiterState()`.
   static final AbiFunction getDirectMintingDailyLimiterStateFn = AbiFunction(
     name: 'getDirectMintingDailyLimiterState',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_windowStartTimestamp', type: AbiType.parse('uint64')),
-      AbiParameter(name: '_mintedInCurrentWindow', type: AbiType.parse('uint64')),
+      AbiParameter(
+        name: '_windowStartTimestamp',
+        type: AbiType.parse('uint64'),
+      ),
+      AbiParameter(
+        name: '_mintedInCurrentWindow',
+        type: AbiType.parse('uint64'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -573,132 +546,115 @@ class IAssetManagerContract {
   /// ABI descriptor for `getDirectMintingExecutorFeeUBA()`.
   static final AbiFunction getDirectMintingExecutorFeeUBAFn = AbiFunction(
     name: 'getDirectMintingExecutorFeeUBA',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getDirectMintingFeeBIPS()`.
   static final AbiFunction getDirectMintingFeeBIPSFn = AbiFunction(
     name: 'getDirectMintingFeeBIPS',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getDirectMintingFeeReceiver()`.
   static final AbiFunction getDirectMintingFeeReceiverFn = AbiFunction(
     name: 'getDirectMintingFeeReceiver',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getDirectMintingHourlyLimitUBA()`.
   static final AbiFunction getDirectMintingHourlyLimitUBAFn = AbiFunction(
     name: 'getDirectMintingHourlyLimitUBA',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getDirectMintingHourlyLimiterState()`.
   static final AbiFunction getDirectMintingHourlyLimiterStateFn = AbiFunction(
     name: 'getDirectMintingHourlyLimiterState',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_windowStartTimestamp', type: AbiType.parse('uint64')),
-      AbiParameter(name: '_mintedInCurrentWindow', type: AbiType.parse('uint64')),
+      AbiParameter(
+        name: '_windowStartTimestamp',
+        type: AbiType.parse('uint64'),
+      ),
+      AbiParameter(
+        name: '_mintedInCurrentWindow',
+        type: AbiType.parse('uint64'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getDirectMintingLargeMintingDelaySeconds()`.
-  static final AbiFunction getDirectMintingLargeMintingDelaySecondsFn = AbiFunction(
-    name: 'getDirectMintingLargeMintingDelaySeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getDirectMintingLargeMintingDelaySecondsFn =
+      AbiFunction(
+        name: 'getDirectMintingLargeMintingDelaySeconds',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getDirectMintingLargeMintingThresholdUBA()`.
-  static final AbiFunction getDirectMintingLargeMintingThresholdUBAFn = AbiFunction(
-    name: 'getDirectMintingLargeMintingThresholdUBA',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getDirectMintingLargeMintingThresholdUBAFn =
+      AbiFunction(
+        name: 'getDirectMintingLargeMintingThresholdUBA',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getDirectMintingMinimumFeeUBA()`.
   static final AbiFunction getDirectMintingMinimumFeeUBAFn = AbiFunction(
     name: 'getDirectMintingMinimumFeeUBA',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getDirectMintingOthersCanExecuteAfterSeconds()`.
-  static final AbiFunction getDirectMintingOthersCanExecuteAfterSecondsFn = AbiFunction(
-    name: 'getDirectMintingOthersCanExecuteAfterSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getDirectMintingOthersCanExecuteAfterSecondsFn =
+      AbiFunction(
+        name: 'getDirectMintingOthersCanExecuteAfterSeconds',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getDirectMintingsUnblockUntilTimestamp()`.
-  static final AbiFunction getDirectMintingsUnblockUntilTimestampFn = AbiFunction(
-    name: 'getDirectMintingsUnblockUntilTimestamp',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getDirectMintingsUnblockUntilTimestampFn =
+      AbiFunction(
+        name: 'getDirectMintingsUnblockUntilTimestamp',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getMintingTagManager()`.
   static final AbiFunction getMintingTagManagerFn = AbiFunction(
     name: 'getMintingTagManager',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getSettings()`.
   static final AbiFunction getSettingsFn = AbiFunction(
     name: 'getSettings',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(address,address,address,address,address,string,address,address,address,address,address,uint8,uint8,bytes32,uint32,uint32,uint16,uint64,uint64,uint64,uint16,bool,uint64,uint64,uint64,uint16,uint32,uint32,uint64,uint128,uint16,uint16,uint128,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint32,uint64,uint64,uint64,uint64,uint64,uint32,uint64,uint256[],uint256[],uint64,uint64,uint64,uint64,uint16,uint64,uint64,uint32,uint32)')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse(
+          '(address,address,address,address,address,string,address,address,address,address,address,uint8,uint8,bytes32,uint32,uint32,uint16,uint64,uint64,uint64,uint16,bool,uint64,uint64,uint64,uint16,uint32,uint32,uint64,uint128,uint16,uint16,uint128,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint32,uint64,uint64,uint64,uint64,uint64,uint32,uint64,uint256[],uint256[],uint64,uint64,uint64,uint64,uint16,uint64,uint64,uint32,uint32)',
+        ),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -706,31 +662,23 @@ class IAssetManagerContract {
   /// ABI descriptor for `getSmartAccountManager()`.
   static final AbiFunction getSmartAccountManagerFn = AbiFunction(
     name: 'getSmartAccountManager',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `isPoolTokenSuffixReserved(string)`.
   static final AbiFunction isPoolTokenSuffixReservedFn = AbiFunction(
     name: 'isPoolTokenSuffixReserved',
-    inputs: [
-      AbiParameter(name: '_suffix', type: AbiType.parse('string')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [AbiParameter(name: '_suffix', type: AbiType.parse('string'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `lotSize()`.
   static final AbiFunction lotSizeFn = AbiFunction(
     name: 'lotSize',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_lotSizeUBA', type: AbiType.parse('uint256')),
     ],
@@ -740,12 +688,13 @@ class IAssetManagerContract {
   /// ABI descriptor for `maximumTransferToCoreVault(address)`.
   static final AbiFunction maximumTransferToCoreVaultFn = AbiFunction(
     name: 'maximumTransferToCoreVault',
-    inputs: [
-      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
     outputs: [
       AbiParameter(name: '_maximumTransferUBA', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_minimumLeftAmountUBA', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_minimumLeftAmountUBA',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -753,33 +702,24 @@ class IAssetManagerContract {
   /// ABI descriptor for `minimumRedeemAmountUBA()`.
   static final AbiFunction minimumRedeemAmountUBAFn = AbiFunction(
     name: 'minimumRedeemAmountUBA',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `mintingPaused()`.
   static final AbiFunction mintingPausedFn = AbiFunction(
     name: 'mintingPaused',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `priceReader()`.
   static final AbiFunction priceReaderFn = AbiFunction(
     name: 'priceReader',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -788,7 +728,10 @@ class IAssetManagerContract {
     name: 'redeem',
     inputs: [
       AbiParameter(name: '_lots', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_redeemerUnderlyingAddressString', type: AbiType.parse('string')),
+      AbiParameter(
+        name: '_redeemerUnderlyingAddressString',
+        type: AbiType.parse('string'),
+      ),
       AbiParameter(name: '_executor', type: AbiType.parse('address')),
     ],
     outputs: [
@@ -802,7 +745,10 @@ class IAssetManagerContract {
     name: 'redeemAmount',
     inputs: [
       AbiParameter(name: '_amountUBA', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_redeemerUnderlyingAddressString', type: AbiType.parse('string')),
+      AbiParameter(
+        name: '_redeemerUnderlyingAddressString',
+        type: AbiType.parse('string'),
+      ),
       AbiParameter(name: '_executor', type: AbiType.parse('address')),
     ],
     outputs: [
@@ -816,7 +762,10 @@ class IAssetManagerContract {
     name: 'redeemWithTag',
     inputs: [
       AbiParameter(name: '_amountUBA', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_redeemerUnderlyingAddressString', type: AbiType.parse('string')),
+      AbiParameter(
+        name: '_redeemerUnderlyingAddressString',
+        type: AbiType.parse('string'),
+      ),
       AbiParameter(name: '_executor', type: AbiType.parse('address')),
       AbiParameter(name: '_destinationTag', type: AbiType.parse('uint256')),
     ],
@@ -829,22 +778,16 @@ class IAssetManagerContract {
   /// ABI descriptor for `redeemWithTagSupported()`.
   static final AbiFunction redeemWithTagSupportedFn = AbiFunction(
     name: 'redeemWithTagSupported',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `redemptionPaymentExtensionSeconds()`.
   static final AbiFunction redemptionPaymentExtensionSecondsFn = AbiFunction(
     name: 'redemptionPaymentExtensionSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -852,12 +795,21 @@ class IAssetManagerContract {
   static final AbiFunction redemptionQueueFn = AbiFunction(
     name: 'redemptionQueue',
     inputs: [
-      AbiParameter(name: '_firstRedemptionTicketId', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_firstRedemptionTicketId',
+        type: AbiType.parse('uint256'),
+      ),
       AbiParameter(name: '_pageSize', type: AbiType.parse('uint256')),
     ],
     outputs: [
-      AbiParameter(name: '_queue', type: AbiType.parse('(uint256,address,uint256)[]')),
-      AbiParameter(name: '_nextRedemptionTicketId', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_queue',
+        type: AbiType.parse('(uint256,address,uint256)[]'),
+      ),
+      AbiParameter(
+        name: '_nextRedemptionTicketId',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -866,10 +818,18 @@ class IAssetManagerContract {
   static final AbiFunction redemptionRequestInfoFn = AbiFunction(
     name: 'redemptionRequestInfo',
     inputs: [
-      AbiParameter(name: '_redemptionRequestId', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_redemptionRequestId',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(uint64,uint8,address,address,string,bytes32,uint128,uint128,uint16,uint64,uint64,uint64,uint64,bool,bool,address,uint256)')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse(
+          '(uint64,uint8,address,address,string,bytes32,uint128,uint128,uint16,uint64,uint64,uint64,uint64,bool,bool,address,uint256)',
+        ),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -878,10 +838,18 @@ class IAssetManagerContract {
   static final AbiFunction redemptionRequestInfoExtFn = AbiFunction(
     name: 'redemptionRequestInfoExt',
     inputs: [
-      AbiParameter(name: '_redemptionRequestId', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_redemptionRequestId',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(uint64,uint8,address,address,string,bytes32,uint128,uint128,uint16,uint64,uint64,uint64,uint64,bool,bool,address,uint256,bool,uint256)')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse(
+          '(uint64,uint8,address,address,string,bytes32,uint128,uint128,uint16,uint64,uint64,uint64,uint64,bool,bool,address,uint256,bool,uint256)',
+        ),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -896,7 +864,10 @@ class IAssetManagerContract {
       AbiParameter(name: '_executor', type: AbiType.parse('address')),
     ],
     outputs: [
-      AbiParameter(name: '_collateralReservationId', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_collateralReservationId',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.payable,
   );
@@ -904,53 +875,53 @@ class IAssetManagerContract {
   /// ABI descriptor for `supportsInterface(bytes4)`.
   static final AbiFunction supportsInterfaceFn = AbiFunction(
     name: 'supportsInterface',
-    inputs: [
-      AbiParameter(name: 'interfaceId', type: AbiType.parse('bytes4')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [AbiParameter(name: 'interfaceId', type: AbiType.parse('bytes4'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `systemRedemptionFeeBIPS()`.
   static final AbiFunction systemRedemptionFeeBIPSFn = AbiFunction(
     name: 'systemRedemptionFeeBIPS',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `systemRedemptionFeeReceiver()`.
   static final AbiFunction systemRedemptionFeeReceiverFn = AbiFunction(
     name: 'systemRedemptionFeeReceiver',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// Calls `agentRedemptionQueue(address,uint256,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<List<Object?>> queue, BigInt nextRedemptionTicketId})> agentRedemptionQueue(EthAddress agentVault, BigInt firstRedemptionTicketId, BigInt pageSize) async {
+  Future<({List<List<Object?>> queue, BigInt nextRedemptionTicketId})>
+  agentRedemptionQueue(
+    EthAddress agentVault,
+    BigInt firstRedemptionTicketId,
+    BigInt pageSize,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: agentRedemptionQueueFn,
       args: [agentVault, firstRedemptionTicketId, pageSize],
     );
-    return (queue: (out[0]! as List).cast<List<Object?>>(), nextRedemptionTicketId: out[1]! as BigInt);
+    return (
+      queue: (out[0]! as List).cast<List<Object?>>(),
+      nextRedemptionTicketId: out[1]! as BigInt,
+    );
   }
 
   /// Calls `alwaysAllowedMintersForAgent(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<EthAddress>> alwaysAllowedMintersForAgent(EthAddress agentVault) async {
+  Future<List<EthAddress>> alwaysAllowedMintersForAgent(
+    EthAddress agentVault,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: alwaysAllowedMintersForAgentFn,
@@ -1007,7 +978,9 @@ class IAssetManagerContract {
   /// Calls `collateralReservationInfo(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<Object?>> collateralReservationInfo(BigInt collateralReservationId) async {
+  Future<List<Object?>> collateralReservationInfo(
+    BigInt collateralReservationId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: collateralReservationInfoFn,
@@ -1030,35 +1003,49 @@ class IAssetManagerContract {
   /// Calls `coreVaultAvailableAmount()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt immediatelyAvailableUBA, BigInt totalAvailableUBA})> coreVaultAvailableAmount() async {
+  Future<({BigInt immediatelyAvailableUBA, BigInt totalAvailableUBA})>
+  coreVaultAvailableAmount() async {
     final out = await client.callFunction(
       contract: address,
       function: coreVaultAvailableAmountFn,
     );
-    return (immediatelyAvailableUBA: out[0]! as BigInt, totalAvailableUBA: out[1]! as BigInt);
+    return (
+      immediatelyAvailableUBA: out[0]! as BigInt,
+      totalAvailableUBA: out[1]! as BigInt,
+    );
   }
 
   /// Calls `currentUnderlyingBlock()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt blockNumber, BigInt blockTimestamp, BigInt lastUpdateTs})> currentUnderlyingBlock() async {
+  Future<({BigInt blockNumber, BigInt blockTimestamp, BigInt lastUpdateTs})>
+  currentUnderlyingBlock() async {
     final out = await client.callFunction(
       contract: address,
       function: currentUnderlyingBlockFn,
     );
-    return (blockNumber: out[0]! as BigInt, blockTimestamp: out[1]! as BigInt, lastUpdateTs: out[2]! as BigInt);
+    return (
+      blockNumber: out[0]! as BigInt,
+      blockTimestamp: out[1]! as BigInt,
+      lastUpdateTs: out[2]! as BigInt,
+    );
   }
 
   /// Calls `directMintingDelayState(bytes32)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt delayState, BigInt allowedAt, BigInt startedAt})> directMintingDelayState(Uint8List transactionId) async {
+  Future<({BigInt delayState, BigInt allowedAt, BigInt startedAt})>
+  directMintingDelayState(Uint8List transactionId) async {
     final out = await client.callFunction(
       contract: address,
       function: directMintingDelayStateFn,
       args: [transactionId],
     );
-    return (delayState: out[0]! as BigInt, allowedAt: out[1]! as BigInt, startedAt: out[2]! as BigInt);
+    return (
+      delayState: out[0]! as BigInt,
+      allowedAt: out[1]! as BigInt,
+      startedAt: out[2]! as BigInt,
+    );
   }
 
   /// Calls `directMintingPaymentAddress()`.
@@ -1201,19 +1188,32 @@ class IAssetManagerContract {
   /// Calls `getAgentLiquidationFactorsAndMaxAmount(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt liquidationPaymentFactorVaultBIPS, BigInt liquidationPaymentFactorPoolBIPS, BigInt maxLiquidationAmountUBA})> getAgentLiquidationFactorsAndMaxAmount(EthAddress agentVault) async {
+  Future<
+    ({
+      BigInt liquidationPaymentFactorVaultBIPS,
+      BigInt liquidationPaymentFactorPoolBIPS,
+      BigInt maxLiquidationAmountUBA,
+    })
+  >
+  getAgentLiquidationFactorsAndMaxAmount(EthAddress agentVault) async {
     final out = await client.callFunction(
       contract: address,
       function: getAgentLiquidationFactorsAndMaxAmountFn,
       args: [agentVault],
     );
-    return (liquidationPaymentFactorVaultBIPS: out[0]! as BigInt, liquidationPaymentFactorPoolBIPS: out[1]! as BigInt, maxLiquidationAmountUBA: out[2]! as BigInt);
+    return (
+      liquidationPaymentFactorVaultBIPS: out[0]! as BigInt,
+      liquidationPaymentFactorPoolBIPS: out[1]! as BigInt,
+      maxLiquidationAmountUBA: out[2]! as BigInt,
+    );
   }
 
   /// Calls `getAgentMinPoolCollateralRatioBIPS(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> getAgentMinPoolCollateralRatioBIPS(EthAddress agentVault) async {
+  Future<BigInt> getAgentMinPoolCollateralRatioBIPS(
+    EthAddress agentVault,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getAgentMinPoolCollateralRatioBIPSFn,
@@ -1225,7 +1225,9 @@ class IAssetManagerContract {
   /// Calls `getAgentMinVaultCollateralRatioBIPS(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> getAgentMinVaultCollateralRatioBIPS(EthAddress agentVault) async {
+  Future<BigInt> getAgentMinVaultCollateralRatioBIPS(
+    EthAddress agentVault,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getAgentMinVaultCollateralRatioBIPSFn,
@@ -1273,37 +1275,51 @@ class IAssetManagerContract {
   /// Calls `getAllAgents(uint256,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<EthAddress> agents, BigInt totalLength})> getAllAgents(BigInt start, BigInt end) async {
+  Future<({List<EthAddress> agents, BigInt totalLength})> getAllAgents(
+    BigInt start,
+    BigInt end,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getAllAgentsFn,
       args: [start, end],
     );
-    return (agents: (out[0]! as List).cast<EthAddress>(), totalLength: out[1]! as BigInt);
+    return (
+      agents: (out[0]! as List).cast<EthAddress>(),
+      totalLength: out[1]! as BigInt,
+    );
   }
 
   /// Calls `getAvailableAgentsDetailedList(uint256,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<List<Object?>> agents, BigInt totalLength})> getAvailableAgentsDetailedList(BigInt start, BigInt end) async {
+  Future<({List<List<Object?>> agents, BigInt totalLength})>
+  getAvailableAgentsDetailedList(BigInt start, BigInt end) async {
     final out = await client.callFunction(
       contract: address,
       function: getAvailableAgentsDetailedListFn,
       args: [start, end],
     );
-    return (agents: (out[0]! as List).cast<List<Object?>>(), totalLength: out[1]! as BigInt);
+    return (
+      agents: (out[0]! as List).cast<List<Object?>>(),
+      totalLength: out[1]! as BigInt,
+    );
   }
 
   /// Calls `getAvailableAgentsList(uint256,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<EthAddress> agents, BigInt totalLength})> getAvailableAgentsList(BigInt start, BigInt end) async {
+  Future<({List<EthAddress> agents, BigInt totalLength})>
+  getAvailableAgentsList(BigInt start, BigInt end) async {
     final out = await client.callFunction(
       contract: address,
       function: getAvailableAgentsListFn,
       args: [start, end],
     );
-    return (agents: (out[0]! as List).cast<EthAddress>(), totalLength: out[1]! as BigInt);
+    return (
+      agents: (out[0]! as List).cast<EthAddress>(),
+      totalLength: out[1]! as BigInt,
+    );
   }
 
   /// Calls `getCollateralPool(address)`.
@@ -1321,7 +1337,10 @@ class IAssetManagerContract {
   /// Calls `getCollateralType(uint8,address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<Object?>> getCollateralType(BigInt collateralClass, EthAddress token) async {
+  Future<List<Object?>> getCollateralType(
+    BigInt collateralClass,
+    EthAddress token,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getCollateralTypeFn,
@@ -1443,12 +1462,16 @@ class IAssetManagerContract {
   /// Calls `getDirectMintingDailyLimiterState()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt windowStartTimestamp, BigInt mintedInCurrentWindow})> getDirectMintingDailyLimiterState() async {
+  Future<({BigInt windowStartTimestamp, BigInt mintedInCurrentWindow})>
+  getDirectMintingDailyLimiterState() async {
     final out = await client.callFunction(
       contract: address,
       function: getDirectMintingDailyLimiterStateFn,
     );
-    return (windowStartTimestamp: out[0]! as BigInt, mintedInCurrentWindow: out[1]! as BigInt);
+    return (
+      windowStartTimestamp: out[0]! as BigInt,
+      mintedInCurrentWindow: out[1]! as BigInt,
+    );
   }
 
   /// Calls `getDirectMintingExecutorFeeUBA()`.
@@ -1498,12 +1521,16 @@ class IAssetManagerContract {
   /// Calls `getDirectMintingHourlyLimiterState()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt windowStartTimestamp, BigInt mintedInCurrentWindow})> getDirectMintingHourlyLimiterState() async {
+  Future<({BigInt windowStartTimestamp, BigInt mintedInCurrentWindow})>
+  getDirectMintingHourlyLimiterState() async {
     final out = await client.callFunction(
       contract: address,
       function: getDirectMintingHourlyLimiterStateFn,
     );
-    return (windowStartTimestamp: out[0]! as BigInt, mintedInCurrentWindow: out[1]! as BigInt);
+    return (
+      windowStartTimestamp: out[0]! as BigInt,
+      mintedInCurrentWindow: out[1]! as BigInt,
+    );
   }
 
   /// Calls `getDirectMintingLargeMintingDelaySeconds()`.
@@ -1620,13 +1647,17 @@ class IAssetManagerContract {
   /// Calls `maximumTransferToCoreVault(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt maximumTransferUBA, BigInt minimumLeftAmountUBA})> maximumTransferToCoreVault(EthAddress agentVault) async {
+  Future<({BigInt maximumTransferUBA, BigInt minimumLeftAmountUBA})>
+  maximumTransferToCoreVault(EthAddress agentVault) async {
     final out = await client.callFunction(
       contract: address,
       function: maximumTransferToCoreVaultFn,
       args: [agentVault],
     );
-    return (maximumTransferUBA: out[0]! as BigInt, minimumLeftAmountUBA: out[1]! as BigInt);
+    return (
+      maximumTransferUBA: out[0]! as BigInt,
+      minimumLeftAmountUBA: out[1]! as BigInt,
+    );
   }
 
   /// Calls `minimumRedeemAmountUBA()`.
@@ -1665,7 +1696,11 @@ class IAssetManagerContract {
   /// Calls `redeem(uint256,string,address)`.
   ///
   /// Declared `payable` in Solidity; read via `eth_call`.
-  Future<BigInt> redeem(BigInt lots, String redeemerUnderlyingAddressString, EthAddress executor) async {
+  Future<BigInt> redeem(
+    BigInt lots,
+    String redeemerUnderlyingAddressString,
+    EthAddress executor,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: redeemFn,
@@ -1677,7 +1712,11 @@ class IAssetManagerContract {
   /// Calls `redeemAmount(uint256,string,address)`.
   ///
   /// Declared `payable` in Solidity; read via `eth_call`.
-  Future<BigInt> redeemAmount(BigInt amountUBA, String redeemerUnderlyingAddressString, EthAddress executor) async {
+  Future<BigInt> redeemAmount(
+    BigInt amountUBA,
+    String redeemerUnderlyingAddressString,
+    EthAddress executor,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: redeemAmountFn,
@@ -1689,11 +1728,21 @@ class IAssetManagerContract {
   /// Calls `redeemWithTag(uint256,string,address,uint256)`.
   ///
   /// Declared `payable` in Solidity; read via `eth_call`.
-  Future<BigInt> redeemWithTag(BigInt amountUBA, String redeemerUnderlyingAddressString, EthAddress executor, BigInt destinationTag) async {
+  Future<BigInt> redeemWithTag(
+    BigInt amountUBA,
+    String redeemerUnderlyingAddressString,
+    EthAddress executor,
+    BigInt destinationTag,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: redeemWithTagFn,
-      args: [amountUBA, redeemerUnderlyingAddressString, executor, destinationTag],
+      args: [
+        amountUBA,
+        redeemerUnderlyingAddressString,
+        executor,
+        destinationTag,
+      ],
     );
     return out[0]! as BigInt;
   }
@@ -1723,19 +1772,25 @@ class IAssetManagerContract {
   /// Calls `redemptionQueue(uint256,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<List<Object?>> queue, BigInt nextRedemptionTicketId})> redemptionQueue(BigInt firstRedemptionTicketId, BigInt pageSize) async {
+  Future<({List<List<Object?>> queue, BigInt nextRedemptionTicketId})>
+  redemptionQueue(BigInt firstRedemptionTicketId, BigInt pageSize) async {
     final out = await client.callFunction(
       contract: address,
       function: redemptionQueueFn,
       args: [firstRedemptionTicketId, pageSize],
     );
-    return (queue: (out[0]! as List).cast<List<Object?>>(), nextRedemptionTicketId: out[1]! as BigInt);
+    return (
+      queue: (out[0]! as List).cast<List<Object?>>(),
+      nextRedemptionTicketId: out[1]! as BigInt,
+    );
   }
 
   /// Calls `redemptionRequestInfo(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<Object?>> redemptionRequestInfo(BigInt redemptionRequestId) async {
+  Future<List<Object?>> redemptionRequestInfo(
+    BigInt redemptionRequestId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: redemptionRequestInfoFn,
@@ -1747,7 +1802,9 @@ class IAssetManagerContract {
   /// Calls `redemptionRequestInfoExt(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<Object?>> redemptionRequestInfoExt(BigInt redemptionRequestId) async {
+  Future<List<Object?>> redemptionRequestInfoExt(
+    BigInt redemptionRequestId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: redemptionRequestInfoExtFn,
@@ -1759,7 +1816,12 @@ class IAssetManagerContract {
   /// Calls `reserveCollateral(address,uint256,uint256,address)`.
   ///
   /// Declared `payable` in Solidity; read via `eth_call`.
-  Future<BigInt> reserveCollateral(EthAddress agentVault, BigInt lots, BigInt maxMintingFeeBIPS, EthAddress executor) async {
+  Future<BigInt> reserveCollateral(
+    EthAddress agentVault,
+    BigInt lots,
+    BigInt maxMintingFeeBIPS,
+    EthAddress executor,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: reserveCollateralFn,
@@ -1801,5 +1863,4 @@ class IAssetManagerContract {
     );
     return out[0]! as EthAddress;
   }
-
 }

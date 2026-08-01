@@ -22,7 +22,10 @@ class IOwnableWithTimelockContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IOwnableWithTimelockContract({required this.client, required this.address});
+  const IOwnableWithTimelockContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IOwnableWithTimelock` through the [ContractRegistry].
   static Future<IOwnableWithTimelockContract> resolve(
@@ -30,19 +33,21 @@ class IOwnableWithTimelockContract {
     ContractRegistry? registry,
     String registryName = 'IOwnableWithTimelock',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IOwnableWithTimelockContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getExecuteTimelockedCallTimestamp(bytes)`.
   static final AbiFunction getExecuteTimelockedCallTimestampFn = AbiFunction(
     name: 'getExecuteTimelockedCallTimestamp',
-    inputs: [
-      AbiParameter(name: '_encodedCall', type: AbiType.parse('bytes')),
-    ],
+    inputs: [AbiParameter(name: '_encodedCall', type: AbiType.parse('bytes'))],
     outputs: [
-      AbiParameter(name: '_allowedAfterTimestamp', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_allowedAfterTimestamp',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -50,18 +55,17 @@ class IOwnableWithTimelockContract {
   /// ABI descriptor for `getTimelockDurationSeconds()`.
   static final AbiFunction getTimelockDurationSecondsFn = AbiFunction(
     name: 'getTimelockDurationSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// Calls `getExecuteTimelockedCallTimestamp(bytes)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> getExecuteTimelockedCallTimestamp(Uint8List encodedCall) async {
+  Future<BigInt> getExecuteTimelockedCallTimestamp(
+    Uint8List encodedCall,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getExecuteTimelockedCallTimestampFn,
@@ -80,5 +84,4 @@ class IOwnableWithTimelockContract {
     );
     return out[0]! as BigInt;
   }
-
 }

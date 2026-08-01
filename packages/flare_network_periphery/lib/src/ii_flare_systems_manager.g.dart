@@ -22,7 +22,10 @@ class IIFlareSystemsManagerContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IIFlareSystemsManagerContract({required this.client, required this.address});
+  const IIFlareSystemsManagerContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IIFlareSystemsManager` through the [ContractRegistry].
   static Future<IIFlareSystemsManagerContract> resolve(
@@ -30,18 +33,21 @@ class IIFlareSystemsManagerContract {
     ContractRegistry? registry,
     String registryName = 'IIFlareSystemsManager',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIFlareSystemsManagerContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `currentRewardEpochExpectedEndTs()`.
   static final AbiFunction currentRewardEpochExpectedEndTsFn = AbiFunction(
     name: 'currentRewardEpochExpectedEndTs',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_currentRewardEpochExpectedEndTs', type: AbiType.parse('uint64')),
+      AbiParameter(
+        name: '_currentRewardEpochExpectedEndTs',
+        type: AbiType.parse('uint64'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -49,55 +55,40 @@ class IIFlareSystemsManagerContract {
   /// ABI descriptor for `firstRewardEpochStartTs()`.
   static final AbiFunction firstRewardEpochStartTsFn = AbiFunction(
     name: 'firstRewardEpochStartTs',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `firstVotingRoundStartTs()`.
   static final AbiFunction firstVotingRoundStartTsFn = AbiFunction(
     name: 'firstVotingRoundStartTs',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCurrentRewardEpoch()`.
   static final AbiFunction getCurrentRewardEpochFn = AbiFunction(
     name: 'getCurrentRewardEpoch',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCurrentRewardEpochId()`.
   static final AbiFunction getCurrentRewardEpochIdFn = AbiFunction(
     name: 'getCurrentRewardEpochId',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint24')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint24'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCurrentVotingEpochId()`.
   static final AbiFunction getCurrentVotingEpochIdFn = AbiFunction(
     name: 'getCurrentVotingEpochId',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint32')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint32'))],
     stateMutability: StateMutability.view,
   );
 
@@ -108,10 +99,22 @@ class IIFlareSystemsManagerContract {
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint24')),
     ],
     outputs: [
-      AbiParameter(name: '_randomAcquisitionStartTs', type: AbiType.parse('uint64')),
-      AbiParameter(name: '_randomAcquisitionStartBlock', type: AbiType.parse('uint64')),
-      AbiParameter(name: '_randomAcquisitionEndTs', type: AbiType.parse('uint64')),
-      AbiParameter(name: '_randomAcquisitionEndBlock', type: AbiType.parse('uint64')),
+      AbiParameter(
+        name: '_randomAcquisitionStartTs',
+        type: AbiType.parse('uint64'),
+      ),
+      AbiParameter(
+        name: '_randomAcquisitionStartBlock',
+        type: AbiType.parse('uint64'),
+      ),
+      AbiParameter(
+        name: '_randomAcquisitionEndTs',
+        type: AbiType.parse('uint64'),
+      ),
+      AbiParameter(
+        name: '_randomAcquisitionEndBlock',
+        type: AbiType.parse('uint64'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -124,7 +127,10 @@ class IIFlareSystemsManagerContract {
     ],
     outputs: [
       AbiParameter(name: '_rewardEpochStartTs', type: AbiType.parse('uint64')),
-      AbiParameter(name: '_rewardEpochStartBlock', type: AbiType.parse('uint64')),
+      AbiParameter(
+        name: '_rewardEpochStartBlock',
+        type: AbiType.parse('uint64'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -137,7 +143,10 @@ class IIFlareSystemsManagerContract {
     ],
     outputs: [
       AbiParameter(name: '_rewardsSignStartTs', type: AbiType.parse('uint64')),
-      AbiParameter(name: '_rewardsSignStartBlock', type: AbiType.parse('uint64')),
+      AbiParameter(
+        name: '_rewardsSignStartBlock',
+        type: AbiType.parse('uint64'),
+      ),
       AbiParameter(name: '_rewardsSignEndTs', type: AbiType.parse('uint64')),
       AbiParameter(name: '_rewardsSignEndBlock', type: AbiType.parse('uint64')),
     ],
@@ -150,9 +159,7 @@ class IIFlareSystemsManagerContract {
     inputs: [
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -163,10 +170,22 @@ class IIFlareSystemsManagerContract {
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint24')),
     ],
     outputs: [
-      AbiParameter(name: '_signingPolicySignStartTs', type: AbiType.parse('uint64')),
-      AbiParameter(name: '_signingPolicySignStartBlock', type: AbiType.parse('uint64')),
-      AbiParameter(name: '_signingPolicySignEndTs', type: AbiType.parse('uint64')),
-      AbiParameter(name: '_signingPolicySignEndBlock', type: AbiType.parse('uint64')),
+      AbiParameter(
+        name: '_signingPolicySignStartTs',
+        type: AbiType.parse('uint64'),
+      ),
+      AbiParameter(
+        name: '_signingPolicySignStartBlock',
+        type: AbiType.parse('uint64'),
+      ),
+      AbiParameter(
+        name: '_signingPolicySignEndTs',
+        type: AbiType.parse('uint64'),
+      ),
+      AbiParameter(
+        name: '_signingPolicySignEndBlock',
+        type: AbiType.parse('uint64'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -177,9 +196,7 @@ class IIFlareSystemsManagerContract {
     inputs: [
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint32')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint32'))],
     stateMutability: StateMutability.view,
   );
 
@@ -189,9 +206,7 @@ class IIFlareSystemsManagerContract {
     inputs: [
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint16')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint16'))],
     stateMutability: StateMutability.view,
   );
 
@@ -202,8 +217,14 @@ class IIFlareSystemsManagerContract {
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint24')),
     ],
     outputs: [
-      AbiParameter(name: '_uptimeVoteSignStartTs', type: AbiType.parse('uint64')),
-      AbiParameter(name: '_uptimeVoteSignStartBlock', type: AbiType.parse('uint64')),
+      AbiParameter(
+        name: '_uptimeVoteSignStartTs',
+        type: AbiType.parse('uint64'),
+      ),
+      AbiParameter(
+        name: '_uptimeVoteSignStartBlock',
+        type: AbiType.parse('uint64'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -256,7 +277,10 @@ class IIFlareSystemsManagerContract {
     ],
     outputs: [
       AbiParameter(name: '_signingPolicySignTs', type: AbiType.parse('uint64')),
-      AbiParameter(name: '_signingPolicySignBlock', type: AbiType.parse('uint64')),
+      AbiParameter(
+        name: '_signingPolicySignBlock',
+        type: AbiType.parse('uint64'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -284,7 +308,10 @@ class IIFlareSystemsManagerContract {
     ],
     outputs: [
       AbiParameter(name: '_uptimeVoteSubmitTs', type: AbiType.parse('uint64')),
-      AbiParameter(name: '_uptimeVoteSubmitBlock', type: AbiType.parse('uint64')),
+      AbiParameter(
+        name: '_uptimeVoteSubmitBlock',
+        type: AbiType.parse('uint64'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -292,46 +319,41 @@ class IIFlareSystemsManagerContract {
   /// ABI descriptor for `isVoterRegistrationEnabled()`.
   static final AbiFunction isVoterRegistrationEnabledFn = AbiFunction(
     name: 'isVoterRegistrationEnabled',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `lastInitializedVotingRoundId()`.
   static final AbiFunction lastInitializedVotingRoundIdFn = AbiFunction(
     name: 'lastInitializedVotingRoundId',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_lastInitializedVotingRoundId', type: AbiType.parse('uint32')),
+      AbiParameter(
+        name: '_lastInitializedVotingRoundId',
+        type: AbiType.parse('uint32'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `newSigningPolicyInitializationStartSeconds()`.
-  static final AbiFunction newSigningPolicyInitializationStartSecondsFn = AbiFunction(
-    name: 'newSigningPolicyInitializationStartSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction newSigningPolicyInitializationStartSecondsFn =
+      AbiFunction(
+        name: 'newSigningPolicyInitializationStartSeconds',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `newSigningPolicyMinNumberOfVotingRoundsDelay()`.
-  static final AbiFunction newSigningPolicyMinNumberOfVotingRoundsDelayFn = AbiFunction(
-    name: 'newSigningPolicyMinNumberOfVotingRoundsDelay',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint32')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction newSigningPolicyMinNumberOfVotingRoundsDelayFn =
+      AbiFunction(
+        name: 'newSigningPolicyMinNumberOfVotingRoundsDelay',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint32'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `noOfWeightBasedClaims(uint256,uint256)`.
   static final AbiFunction noOfWeightBasedClaimsFn = AbiFunction(
@@ -340,9 +362,7 @@ class IIFlareSystemsManagerContract {
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
       AbiParameter(name: '_rewardManagerId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -352,52 +372,43 @@ class IIFlareSystemsManagerContract {
     inputs: [
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bytes32')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bytes32'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `randomAcquisitionMaxDurationBlocks()`.
   static final AbiFunction randomAcquisitionMaxDurationBlocksFn = AbiFunction(
     name: 'randomAcquisitionMaxDurationBlocks',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `randomAcquisitionMaxDurationSeconds()`.
   static final AbiFunction randomAcquisitionMaxDurationSecondsFn = AbiFunction(
     name: 'randomAcquisitionMaxDurationSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `rewardEpochDurationSeconds()`.
   static final AbiFunction rewardEpochDurationSecondsFn = AbiFunction(
     name: 'rewardEpochDurationSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `rewardEpochIdToExpireNext()`.
   static final AbiFunction rewardEpochIdToExpireNextFn = AbiFunction(
     name: 'rewardEpochIdToExpireNext',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_rewardEpochIdToExpireNext', type: AbiType.parse('uint24')),
+      AbiParameter(
+        name: '_rewardEpochIdToExpireNext',
+        type: AbiType.parse('uint24'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -405,11 +416,8 @@ class IIFlareSystemsManagerContract {
   /// ABI descriptor for `rewardExpiryOffsetSeconds()`.
   static final AbiFunction rewardExpiryOffsetSecondsFn = AbiFunction(
     name: 'rewardExpiryOffsetSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint32')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint32'))],
     stateMutability: StateMutability.view,
   );
 
@@ -419,53 +427,39 @@ class IIFlareSystemsManagerContract {
     inputs: [
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bytes32')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bytes32'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `signingPolicyMinNumberOfVoters()`.
   static final AbiFunction signingPolicyMinNumberOfVotersFn = AbiFunction(
     name: 'signingPolicyMinNumberOfVoters',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint16')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint16'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `signingPolicyThresholdPPM()`.
   static final AbiFunction signingPolicyThresholdPPMFn = AbiFunction(
     name: 'signingPolicyThresholdPPM',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint24')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint24'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `submitUptimeVoteMinDurationBlocks()`.
   static final AbiFunction submitUptimeVoteMinDurationBlocksFn = AbiFunction(
     name: 'submitUptimeVoteMinDurationBlocks',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `submitUptimeVoteMinDurationSeconds()`.
   static final AbiFunction submitUptimeVoteMinDurationSecondsFn = AbiFunction(
     name: 'submitUptimeVoteMinDurationSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
     stateMutability: StateMutability.view,
   );
 
@@ -475,42 +469,31 @@ class IIFlareSystemsManagerContract {
     inputs: [
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bytes32')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bytes32'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `voterRegistrationMinDurationBlocks()`.
   static final AbiFunction voterRegistrationMinDurationBlocksFn = AbiFunction(
     name: 'voterRegistrationMinDurationBlocks',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `voterRegistrationMinDurationSeconds()`.
   static final AbiFunction voterRegistrationMinDurationSecondsFn = AbiFunction(
     name: 'voterRegistrationMinDurationSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `votingEpochDurationSeconds()`.
   static final AbiFunction votingEpochDurationSecondsFn = AbiFunction(
     name: 'votingEpochDurationSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
     stateMutability: StateMutability.view,
   );
 
@@ -583,37 +566,67 @@ class IIFlareSystemsManagerContract {
   /// Calls `getRandomAcquisitionInfo(uint24)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt randomAcquisitionStartTs, BigInt randomAcquisitionStartBlock, BigInt randomAcquisitionEndTs, BigInt randomAcquisitionEndBlock})> getRandomAcquisitionInfo(BigInt rewardEpochId) async {
+  Future<
+    ({
+      BigInt randomAcquisitionStartTs,
+      BigInt randomAcquisitionStartBlock,
+      BigInt randomAcquisitionEndTs,
+      BigInt randomAcquisitionEndBlock,
+    })
+  >
+  getRandomAcquisitionInfo(BigInt rewardEpochId) async {
     final out = await client.callFunction(
       contract: address,
       function: getRandomAcquisitionInfoFn,
       args: [rewardEpochId],
     );
-    return (randomAcquisitionStartTs: out[0]! as BigInt, randomAcquisitionStartBlock: out[1]! as BigInt, randomAcquisitionEndTs: out[2]! as BigInt, randomAcquisitionEndBlock: out[3]! as BigInt);
+    return (
+      randomAcquisitionStartTs: out[0]! as BigInt,
+      randomAcquisitionStartBlock: out[1]! as BigInt,
+      randomAcquisitionEndTs: out[2]! as BigInt,
+      randomAcquisitionEndBlock: out[3]! as BigInt,
+    );
   }
 
   /// Calls `getRewardEpochStartInfo(uint24)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt rewardEpochStartTs, BigInt rewardEpochStartBlock})> getRewardEpochStartInfo(BigInt rewardEpochId) async {
+  Future<({BigInt rewardEpochStartTs, BigInt rewardEpochStartBlock})>
+  getRewardEpochStartInfo(BigInt rewardEpochId) async {
     final out = await client.callFunction(
       contract: address,
       function: getRewardEpochStartInfoFn,
       args: [rewardEpochId],
     );
-    return (rewardEpochStartTs: out[0]! as BigInt, rewardEpochStartBlock: out[1]! as BigInt);
+    return (
+      rewardEpochStartTs: out[0]! as BigInt,
+      rewardEpochStartBlock: out[1]! as BigInt,
+    );
   }
 
   /// Calls `getRewardsSignInfo(uint24)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt rewardsSignStartTs, BigInt rewardsSignStartBlock, BigInt rewardsSignEndTs, BigInt rewardsSignEndBlock})> getRewardsSignInfo(BigInt rewardEpochId) async {
+  Future<
+    ({
+      BigInt rewardsSignStartTs,
+      BigInt rewardsSignStartBlock,
+      BigInt rewardsSignEndTs,
+      BigInt rewardsSignEndBlock,
+    })
+  >
+  getRewardsSignInfo(BigInt rewardEpochId) async {
     final out = await client.callFunction(
       contract: address,
       function: getRewardsSignInfoFn,
       args: [rewardEpochId],
     );
-    return (rewardsSignStartTs: out[0]! as BigInt, rewardsSignStartBlock: out[1]! as BigInt, rewardsSignEndTs: out[2]! as BigInt, rewardsSignEndBlock: out[3]! as BigInt);
+    return (
+      rewardsSignStartTs: out[0]! as BigInt,
+      rewardsSignStartBlock: out[1]! as BigInt,
+      rewardsSignEndTs: out[2]! as BigInt,
+      rewardsSignEndBlock: out[3]! as BigInt,
+    );
   }
 
   /// Calls `getSeed(uint256)`.
@@ -631,13 +644,26 @@ class IIFlareSystemsManagerContract {
   /// Calls `getSigningPolicySignInfo(uint24)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt signingPolicySignStartTs, BigInt signingPolicySignStartBlock, BigInt signingPolicySignEndTs, BigInt signingPolicySignEndBlock})> getSigningPolicySignInfo(BigInt rewardEpochId) async {
+  Future<
+    ({
+      BigInt signingPolicySignStartTs,
+      BigInt signingPolicySignStartBlock,
+      BigInt signingPolicySignEndTs,
+      BigInt signingPolicySignEndBlock,
+    })
+  >
+  getSigningPolicySignInfo(BigInt rewardEpochId) async {
     final out = await client.callFunction(
       contract: address,
       function: getSigningPolicySignInfoFn,
       args: [rewardEpochId],
     );
-    return (signingPolicySignStartTs: out[0]! as BigInt, signingPolicySignStartBlock: out[1]! as BigInt, signingPolicySignEndTs: out[2]! as BigInt, signingPolicySignEndBlock: out[3]! as BigInt);
+    return (
+      signingPolicySignStartTs: out[0]! as BigInt,
+      signingPolicySignStartBlock: out[1]! as BigInt,
+      signingPolicySignEndTs: out[2]! as BigInt,
+      signingPolicySignEndBlock: out[3]! as BigInt,
+    );
   }
 
   /// Calls `getStartVotingRoundId(uint256)`.
@@ -667,13 +693,17 @@ class IIFlareSystemsManagerContract {
   /// Calls `getUptimeVoteSignStartInfo(uint24)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt uptimeVoteSignStartTs, BigInt uptimeVoteSignStartBlock})> getUptimeVoteSignStartInfo(BigInt rewardEpochId) async {
+  Future<({BigInt uptimeVoteSignStartTs, BigInt uptimeVoteSignStartBlock})>
+  getUptimeVoteSignStartInfo(BigInt rewardEpochId) async {
     final out = await client.callFunction(
       contract: address,
       function: getUptimeVoteSignStartInfoFn,
       args: [rewardEpochId],
     );
-    return (uptimeVoteSignStartTs: out[0]! as BigInt, uptimeVoteSignStartBlock: out[1]! as BigInt);
+    return (
+      uptimeVoteSignStartTs: out[0]! as BigInt,
+      uptimeVoteSignStartBlock: out[1]! as BigInt,
+    );
   }
 
   /// Calls `getVotePowerBlock(uint256)`.
@@ -691,7 +721,9 @@ class IIFlareSystemsManagerContract {
   /// Calls `getVoterRegistrationData(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt votePowerBlock, bool enabled})> getVoterRegistrationData(BigInt rewardEpochId) async {
+  Future<({BigInt votePowerBlock, bool enabled})> getVoterRegistrationData(
+    BigInt rewardEpochId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getVoterRegistrationDataFn,
@@ -703,49 +735,65 @@ class IIFlareSystemsManagerContract {
   /// Calls `getVoterRewardsSignInfo(uint24,address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt rewardsSignTs, BigInt rewardsSignBlock})> getVoterRewardsSignInfo(BigInt rewardEpochId, EthAddress voter) async {
+  Future<({BigInt rewardsSignTs, BigInt rewardsSignBlock})>
+  getVoterRewardsSignInfo(BigInt rewardEpochId, EthAddress voter) async {
     final out = await client.callFunction(
       contract: address,
       function: getVoterRewardsSignInfoFn,
       args: [rewardEpochId, voter],
     );
-    return (rewardsSignTs: out[0]! as BigInt, rewardsSignBlock: out[1]! as BigInt);
+    return (
+      rewardsSignTs: out[0]! as BigInt,
+      rewardsSignBlock: out[1]! as BigInt,
+    );
   }
 
   /// Calls `getVoterSigningPolicySignInfo(uint24,address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt signingPolicySignTs, BigInt signingPolicySignBlock})> getVoterSigningPolicySignInfo(BigInt rewardEpochId, EthAddress voter) async {
+  Future<({BigInt signingPolicySignTs, BigInt signingPolicySignBlock})>
+  getVoterSigningPolicySignInfo(BigInt rewardEpochId, EthAddress voter) async {
     final out = await client.callFunction(
       contract: address,
       function: getVoterSigningPolicySignInfoFn,
       args: [rewardEpochId, voter],
     );
-    return (signingPolicySignTs: out[0]! as BigInt, signingPolicySignBlock: out[1]! as BigInt);
+    return (
+      signingPolicySignTs: out[0]! as BigInt,
+      signingPolicySignBlock: out[1]! as BigInt,
+    );
   }
 
   /// Calls `getVoterUptimeVoteSignInfo(uint24,address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt uptimeVoteSignTs, BigInt uptimeVoteSignBlock})> getVoterUptimeVoteSignInfo(BigInt rewardEpochId, EthAddress voter) async {
+  Future<({BigInt uptimeVoteSignTs, BigInt uptimeVoteSignBlock})>
+  getVoterUptimeVoteSignInfo(BigInt rewardEpochId, EthAddress voter) async {
     final out = await client.callFunction(
       contract: address,
       function: getVoterUptimeVoteSignInfoFn,
       args: [rewardEpochId, voter],
     );
-    return (uptimeVoteSignTs: out[0]! as BigInt, uptimeVoteSignBlock: out[1]! as BigInt);
+    return (
+      uptimeVoteSignTs: out[0]! as BigInt,
+      uptimeVoteSignBlock: out[1]! as BigInt,
+    );
   }
 
   /// Calls `getVoterUptimeVoteSubmitInfo(uint24,address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt uptimeVoteSubmitTs, BigInt uptimeVoteSubmitBlock})> getVoterUptimeVoteSubmitInfo(BigInt rewardEpochId, EthAddress voter) async {
+  Future<({BigInt uptimeVoteSubmitTs, BigInt uptimeVoteSubmitBlock})>
+  getVoterUptimeVoteSubmitInfo(BigInt rewardEpochId, EthAddress voter) async {
     final out = await client.callFunction(
       contract: address,
       function: getVoterUptimeVoteSubmitInfoFn,
       args: [rewardEpochId, voter],
     );
-    return (uptimeVoteSubmitTs: out[0]! as BigInt, uptimeVoteSubmitBlock: out[1]! as BigInt);
+    return (
+      uptimeVoteSubmitTs: out[0]! as BigInt,
+      uptimeVoteSubmitBlock: out[1]! as BigInt,
+    );
   }
 
   /// Calls `isVoterRegistrationEnabled()`.
@@ -795,7 +843,10 @@ class IIFlareSystemsManagerContract {
   /// Calls `noOfWeightBasedClaims(uint256,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> noOfWeightBasedClaims(BigInt rewardEpochId, BigInt rewardManagerId) async {
+  Future<BigInt> noOfWeightBasedClaims(
+    BigInt rewardEpochId,
+    BigInt rewardManagerId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: noOfWeightBasedClaimsFn,
@@ -971,5 +1022,4 @@ class IIFlareSystemsManagerContract {
     );
     return out[0]! as BigInt;
   }
-
 }

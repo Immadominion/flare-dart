@@ -30,27 +30,24 @@ class IRelayContract {
     ContractRegistry? registry,
     String registryName = 'IRelay',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IRelayContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `feeCollectionAddress()`.
   static final AbiFunction feeCollectionAddressFn = AbiFunction(
     name: 'feeCollectionAddress',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getRandomNumber()`.
   static final AbiFunction getRandomNumberFn = AbiFunction(
     name: 'getRandomNumber',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_randomNumber', type: AbiType.parse('uint256')),
       AbiParameter(name: '_isSecureRandom', type: AbiType.parse('bool')),
@@ -76,9 +73,7 @@ class IRelayContract {
   /// ABI descriptor for `getVotingRoundId(uint256)`.
   static final AbiFunction getVotingRoundIdFn = AbiFunction(
     name: 'getVotingRoundId',
-    inputs: [
-      AbiParameter(name: '_timestamp', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_timestamp', type: AbiType.parse('uint256'))],
     outputs: [
       AbiParameter(name: '_votingRoundId', type: AbiType.parse('uint256')),
     ],
@@ -92,20 +87,23 @@ class IRelayContract {
       AbiParameter(name: '_protocolId', type: AbiType.parse('uint256')),
       AbiParameter(name: '_votingRoundId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `lastInitializedRewardEpochData()`.
   static final AbiFunction lastInitializedRewardEpochDataFn = AbiFunction(
     name: 'lastInitializedRewardEpochData',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_lastInitializedRewardEpoch', type: AbiType.parse('uint32')),
-      AbiParameter(name: '_startingVotingRoundIdForLastInitializedRewardEpoch', type: AbiType.parse('uint32')),
+      AbiParameter(
+        name: '_lastInitializedRewardEpoch',
+        type: AbiType.parse('uint32'),
+      ),
+      AbiParameter(
+        name: '_startingVotingRoundIdForLastInitializedRewardEpoch',
+        type: AbiType.parse('uint32'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -126,23 +124,16 @@ class IRelayContract {
   /// ABI descriptor for `protocolFeeInWei(uint256)`.
   static final AbiFunction protocolFeeInWeiFn = AbiFunction(
     name: 'protocolFeeInWei',
-    inputs: [
-      AbiParameter(name: '_protocolId', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_protocolId', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `signingPolicySetter()`.
   static final AbiFunction signingPolicySetterFn = AbiFunction(
     name: 'signingPolicySetter',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -153,7 +144,10 @@ class IRelayContract {
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
     outputs: [
-      AbiParameter(name: '_startingVotingRoundId', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_startingVotingRoundId',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -161,20 +155,43 @@ class IRelayContract {
   /// ABI descriptor for `stateData()`.
   static final AbiFunction stateDataFn = AbiFunction(
     name: 'stateData',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: 'randomNumberProtocolId', type: AbiType.parse('uint8')),
-      AbiParameter(name: 'firstVotingRoundStartTs', type: AbiType.parse('uint32')),
-      AbiParameter(name: 'votingEpochDurationSeconds', type: AbiType.parse('uint8')),
-      AbiParameter(name: 'firstRewardEpochStartVotingRoundId', type: AbiType.parse('uint32')),
-      AbiParameter(name: 'rewardEpochDurationInVotingEpochs', type: AbiType.parse('uint16')),
-      AbiParameter(name: 'thresholdIncreaseBIPS', type: AbiType.parse('uint16')),
+      AbiParameter(
+        name: 'randomNumberProtocolId',
+        type: AbiType.parse('uint8'),
+      ),
+      AbiParameter(
+        name: 'firstVotingRoundStartTs',
+        type: AbiType.parse('uint32'),
+      ),
+      AbiParameter(
+        name: 'votingEpochDurationSeconds',
+        type: AbiType.parse('uint8'),
+      ),
+      AbiParameter(
+        name: 'firstRewardEpochStartVotingRoundId',
+        type: AbiType.parse('uint32'),
+      ),
+      AbiParameter(
+        name: 'rewardEpochDurationInVotingEpochs',
+        type: AbiType.parse('uint16'),
+      ),
+      AbiParameter(
+        name: 'thresholdIncreaseBIPS',
+        type: AbiType.parse('uint16'),
+      ),
       AbiParameter(name: 'randomVotingRoundId', type: AbiType.parse('uint32')),
       AbiParameter(name: 'isSecureRandom', type: AbiType.parse('bool')),
-      AbiParameter(name: 'lastInitializedRewardEpoch', type: AbiType.parse('uint32')),
+      AbiParameter(
+        name: 'lastInitializedRewardEpoch',
+        type: AbiType.parse('uint32'),
+      ),
       AbiParameter(name: 'noSigningPolicyRelay', type: AbiType.parse('bool')),
-      AbiParameter(name: 'messageFinalizationWindowInRewardEpochs', type: AbiType.parse('uint32')),
+      AbiParameter(
+        name: 'messageFinalizationWindowInRewardEpochs',
+        type: AbiType.parse('uint32'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -200,9 +217,7 @@ class IRelayContract {
       AbiParameter(name: '_leaf', type: AbiType.parse('bytes32')),
       AbiParameter(name: '_proof', type: AbiType.parse('bytes32[]')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.payable,
   );
 
@@ -220,24 +235,34 @@ class IRelayContract {
   /// Calls `getRandomNumber()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt randomNumber, bool isSecureRandom, BigInt randomTimestamp})> getRandomNumber() async {
+  Future<({BigInt randomNumber, bool isSecureRandom, BigInt randomTimestamp})>
+  getRandomNumber() async {
     final out = await client.callFunction(
       contract: address,
       function: getRandomNumberFn,
     );
-    return (randomNumber: out[0]! as BigInt, isSecureRandom: out[1]! as bool, randomTimestamp: out[2]! as BigInt);
+    return (
+      randomNumber: out[0]! as BigInt,
+      isSecureRandom: out[1]! as bool,
+      randomTimestamp: out[2]! as BigInt,
+    );
   }
 
   /// Calls `getRandomNumberHistorical(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt randomNumber, bool isSecureRandom, BigInt randomTimestamp})> getRandomNumberHistorical(BigInt votingRoundId) async {
+  Future<({BigInt randomNumber, bool isSecureRandom, BigInt randomTimestamp})>
+  getRandomNumberHistorical(BigInt votingRoundId) async {
     final out = await client.callFunction(
       contract: address,
       function: getRandomNumberHistoricalFn,
       args: [votingRoundId],
     );
-    return (randomNumber: out[0]! as BigInt, isSecureRandom: out[1]! as bool, randomTimestamp: out[2]! as BigInt);
+    return (
+      randomNumber: out[0]! as BigInt,
+      isSecureRandom: out[1]! as bool,
+      randomTimestamp: out[2]! as BigInt,
+    );
   }
 
   /// Calls `getVotingRoundId(uint256)`.
@@ -267,12 +292,21 @@ class IRelayContract {
   /// Calls `lastInitializedRewardEpochData()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt lastInitializedRewardEpoch, BigInt startingVotingRoundIdForLastInitializedRewardEpoch})> lastInitializedRewardEpochData() async {
+  Future<
+    ({
+      BigInt lastInitializedRewardEpoch,
+      BigInt startingVotingRoundIdForLastInitializedRewardEpoch,
+    })
+  >
+  lastInitializedRewardEpochData() async {
     final out = await client.callFunction(
       contract: address,
       function: lastInitializedRewardEpochDataFn,
     );
-    return (lastInitializedRewardEpoch: out[0]! as BigInt, startingVotingRoundIdForLastInitializedRewardEpoch: out[1]! as BigInt);
+    return (
+      lastInitializedRewardEpoch: out[0]! as BigInt,
+      startingVotingRoundIdForLastInitializedRewardEpoch: out[1]! as BigInt,
+    );
   }
 
   /// Calls `merkleRoots(uint256,uint256)`.
@@ -325,12 +359,39 @@ class IRelayContract {
   /// Calls `stateData()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt randomNumberProtocolId, BigInt firstVotingRoundStartTs, BigInt votingEpochDurationSeconds, BigInt firstRewardEpochStartVotingRoundId, BigInt rewardEpochDurationInVotingEpochs, BigInt thresholdIncreaseBIPS, BigInt randomVotingRoundId, bool isSecureRandom, BigInt lastInitializedRewardEpoch, bool noSigningPolicyRelay, BigInt messageFinalizationWindowInRewardEpochs})> stateData() async {
+  Future<
+    ({
+      BigInt randomNumberProtocolId,
+      BigInt firstVotingRoundStartTs,
+      BigInt votingEpochDurationSeconds,
+      BigInt firstRewardEpochStartVotingRoundId,
+      BigInt rewardEpochDurationInVotingEpochs,
+      BigInt thresholdIncreaseBIPS,
+      BigInt randomVotingRoundId,
+      bool isSecureRandom,
+      BigInt lastInitializedRewardEpoch,
+      bool noSigningPolicyRelay,
+      BigInt messageFinalizationWindowInRewardEpochs,
+    })
+  >
+  stateData() async {
     final out = await client.callFunction(
       contract: address,
       function: stateDataFn,
     );
-    return (randomNumberProtocolId: out[0]! as BigInt, firstVotingRoundStartTs: out[1]! as BigInt, votingEpochDurationSeconds: out[2]! as BigInt, firstRewardEpochStartVotingRoundId: out[3]! as BigInt, rewardEpochDurationInVotingEpochs: out[4]! as BigInt, thresholdIncreaseBIPS: out[5]! as BigInt, randomVotingRoundId: out[6]! as BigInt, isSecureRandom: out[7]! as bool, lastInitializedRewardEpoch: out[8]! as BigInt, noSigningPolicyRelay: out[9]! as bool, messageFinalizationWindowInRewardEpochs: out[10]! as BigInt);
+    return (
+      randomNumberProtocolId: out[0]! as BigInt,
+      firstVotingRoundStartTs: out[1]! as BigInt,
+      votingEpochDurationSeconds: out[2]! as BigInt,
+      firstRewardEpochStartVotingRoundId: out[3]! as BigInt,
+      rewardEpochDurationInVotingEpochs: out[4]! as BigInt,
+      thresholdIncreaseBIPS: out[5]! as BigInt,
+      randomVotingRoundId: out[6]! as BigInt,
+      isSecureRandom: out[7]! as bool,
+      lastInitializedRewardEpoch: out[8]! as BigInt,
+      noSigningPolicyRelay: out[9]! as bool,
+      messageFinalizationWindowInRewardEpochs: out[10]! as BigInt,
+    );
   }
 
   /// Calls `toSigningPolicyHash(uint256)`.
@@ -348,7 +409,12 @@ class IRelayContract {
   /// Calls `verify(uint256,uint256,bytes32,bytes32[])`.
   ///
   /// Declared `payable` in Solidity; read via `eth_call`.
-  Future<bool> verify(BigInt protocolId, BigInt votingRoundId, Uint8List leaf, List<Uint8List> proof) async {
+  Future<bool> verify(
+    BigInt protocolId,
+    BigInt votingRoundId,
+    Uint8List leaf,
+    List<Uint8List> proof,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: verifyFn,
@@ -356,5 +422,4 @@ class IRelayContract {
     );
     return out[0]! as bool;
   }
-
 }

@@ -20,7 +20,10 @@ class IDirectMintingSettingsContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IDirectMintingSettingsContract({required this.client, required this.address});
+  const IDirectMintingSettingsContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IDirectMintingSettings` through the [ContractRegistry].
   static Future<IDirectMintingSettingsContract> resolve(
@@ -28,30 +31,33 @@ class IDirectMintingSettingsContract {
     ContractRegistry? registry,
     String registryName = 'IDirectMintingSettings',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IDirectMintingSettingsContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getDirectMintingDailyLimitUBA()`.
   static final AbiFunction getDirectMintingDailyLimitUBAFn = AbiFunction(
     name: 'getDirectMintingDailyLimitUBA',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getDirectMintingDailyLimiterState()`.
   static final AbiFunction getDirectMintingDailyLimiterStateFn = AbiFunction(
     name: 'getDirectMintingDailyLimiterState',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_windowStartTimestamp', type: AbiType.parse('uint64')),
-      AbiParameter(name: '_mintedInCurrentWindow', type: AbiType.parse('uint64')),
+      AbiParameter(
+        name: '_windowStartTimestamp',
+        type: AbiType.parse('uint64'),
+      ),
+      AbiParameter(
+        name: '_mintedInCurrentWindow',
+        type: AbiType.parse('uint64'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -59,133 +65,109 @@ class IDirectMintingSettingsContract {
   /// ABI descriptor for `getDirectMintingExecutorFeeUBA()`.
   static final AbiFunction getDirectMintingExecutorFeeUBAFn = AbiFunction(
     name: 'getDirectMintingExecutorFeeUBA',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getDirectMintingFeeBIPS()`.
   static final AbiFunction getDirectMintingFeeBIPSFn = AbiFunction(
     name: 'getDirectMintingFeeBIPS',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getDirectMintingFeeReceiver()`.
   static final AbiFunction getDirectMintingFeeReceiverFn = AbiFunction(
     name: 'getDirectMintingFeeReceiver',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getDirectMintingHourlyLimitUBA()`.
   static final AbiFunction getDirectMintingHourlyLimitUBAFn = AbiFunction(
     name: 'getDirectMintingHourlyLimitUBA',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getDirectMintingHourlyLimiterState()`.
   static final AbiFunction getDirectMintingHourlyLimiterStateFn = AbiFunction(
     name: 'getDirectMintingHourlyLimiterState',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_windowStartTimestamp', type: AbiType.parse('uint64')),
-      AbiParameter(name: '_mintedInCurrentWindow', type: AbiType.parse('uint64')),
+      AbiParameter(
+        name: '_windowStartTimestamp',
+        type: AbiType.parse('uint64'),
+      ),
+      AbiParameter(
+        name: '_mintedInCurrentWindow',
+        type: AbiType.parse('uint64'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getDirectMintingLargeMintingDelaySeconds()`.
-  static final AbiFunction getDirectMintingLargeMintingDelaySecondsFn = AbiFunction(
-    name: 'getDirectMintingLargeMintingDelaySeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getDirectMintingLargeMintingDelaySecondsFn =
+      AbiFunction(
+        name: 'getDirectMintingLargeMintingDelaySeconds',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getDirectMintingLargeMintingThresholdUBA()`.
-  static final AbiFunction getDirectMintingLargeMintingThresholdUBAFn = AbiFunction(
-    name: 'getDirectMintingLargeMintingThresholdUBA',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getDirectMintingLargeMintingThresholdUBAFn =
+      AbiFunction(
+        name: 'getDirectMintingLargeMintingThresholdUBA',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getDirectMintingMinimumFeeUBA()`.
   static final AbiFunction getDirectMintingMinimumFeeUBAFn = AbiFunction(
     name: 'getDirectMintingMinimumFeeUBA',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getDirectMintingOthersCanExecuteAfterSeconds()`.
-  static final AbiFunction getDirectMintingOthersCanExecuteAfterSecondsFn = AbiFunction(
-    name: 'getDirectMintingOthersCanExecuteAfterSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getDirectMintingOthersCanExecuteAfterSecondsFn =
+      AbiFunction(
+        name: 'getDirectMintingOthersCanExecuteAfterSeconds',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getDirectMintingsUnblockUntilTimestamp()`.
-  static final AbiFunction getDirectMintingsUnblockUntilTimestampFn = AbiFunction(
-    name: 'getDirectMintingsUnblockUntilTimestamp',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getDirectMintingsUnblockUntilTimestampFn =
+      AbiFunction(
+        name: 'getDirectMintingsUnblockUntilTimestamp',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getMintingTagManager()`.
   static final AbiFunction getMintingTagManagerFn = AbiFunction(
     name: 'getMintingTagManager',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getSmartAccountManager()`.
   static final AbiFunction getSmartAccountManagerFn = AbiFunction(
     name: 'getSmartAccountManager',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -203,12 +185,16 @@ class IDirectMintingSettingsContract {
   /// Calls `getDirectMintingDailyLimiterState()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt windowStartTimestamp, BigInt mintedInCurrentWindow})> getDirectMintingDailyLimiterState() async {
+  Future<({BigInt windowStartTimestamp, BigInt mintedInCurrentWindow})>
+  getDirectMintingDailyLimiterState() async {
     final out = await client.callFunction(
       contract: address,
       function: getDirectMintingDailyLimiterStateFn,
     );
-    return (windowStartTimestamp: out[0]! as BigInt, mintedInCurrentWindow: out[1]! as BigInt);
+    return (
+      windowStartTimestamp: out[0]! as BigInt,
+      mintedInCurrentWindow: out[1]! as BigInt,
+    );
   }
 
   /// Calls `getDirectMintingExecutorFeeUBA()`.
@@ -258,12 +244,16 @@ class IDirectMintingSettingsContract {
   /// Calls `getDirectMintingHourlyLimiterState()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt windowStartTimestamp, BigInt mintedInCurrentWindow})> getDirectMintingHourlyLimiterState() async {
+  Future<({BigInt windowStartTimestamp, BigInt mintedInCurrentWindow})>
+  getDirectMintingHourlyLimiterState() async {
     final out = await client.callFunction(
       contract: address,
       function: getDirectMintingHourlyLimiterStateFn,
     );
-    return (windowStartTimestamp: out[0]! as BigInt, mintedInCurrentWindow: out[1]! as BigInt);
+    return (
+      windowStartTimestamp: out[0]! as BigInt,
+      mintedInCurrentWindow: out[1]! as BigInt,
+    );
   }
 
   /// Calls `getDirectMintingLargeMintingDelaySeconds()`.
@@ -342,5 +332,4 @@ class IDirectMintingSettingsContract {
     );
     return out[0]! as EthAddress;
   }
-
 }

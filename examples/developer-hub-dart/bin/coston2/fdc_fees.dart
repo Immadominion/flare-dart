@@ -31,8 +31,10 @@ Future<void> main() async {
     print('Attestation fees on ${chain.name}:');
     for (final (type, source) in pairs) {
       final fee = await fdc.getRequestFee(type, source);
-      print('  ${type.id.padRight(30)} ${source.id.padRight(12)} '
-          '${fee.toString().padLeft(22)} wei');
+      print(
+        '  ${type.id.padRight(30)} ${source.id.padRight(12)} '
+        '${fee.toString().padLeft(22)} wei',
+      );
     }
 
     // Voting round timing must be read at runtime — a hardcoded constant does
@@ -46,7 +48,9 @@ Future<void> main() async {
     print('  round duration    ${timing.votingEpochDurationSeconds}s');
     print('  current (onchain) $current');
     print('  current (derived) $derived');
-    print('  round $current began ${timing.startOf(current).toIso8601String()}');
+    print(
+      '  round $current began ${timing.startOf(current).toIso8601String()}',
+    );
   } finally {
     client.close();
   }

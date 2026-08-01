@@ -20,7 +20,10 @@ class IIGovernanceVotePowerContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IIGovernanceVotePowerContract({required this.client, required this.address});
+  const IIGovernanceVotePowerContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IIGovernanceVotePower` through the [ContractRegistry].
   static Future<IIGovernanceVotePowerContract> resolve(
@@ -28,19 +31,17 @@ class IIGovernanceVotePowerContract {
     ContractRegistry? registry,
     String registryName = 'IIGovernanceVotePower',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIGovernanceVotePowerContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getCleanupBlockNumber()`.
   static final AbiFunction getCleanupBlockNumberFn = AbiFunction(
     name: 'getCleanupBlockNumber',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -51,55 +52,39 @@ class IIGovernanceVotePowerContract {
       AbiParameter(name: '_who', type: AbiType.parse('address')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getDelegateOfAtNow(address)`.
   static final AbiFunction getDelegateOfAtNowFn = AbiFunction(
     name: 'getDelegateOfAtNow',
-    inputs: [
-      AbiParameter(name: '_who', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_who', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getVotes(address)`.
   static final AbiFunction getVotesFn = AbiFunction(
     name: 'getVotes',
-    inputs: [
-      AbiParameter(name: '_who', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_who', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `ownerToken()`.
   static final AbiFunction ownerTokenFn = AbiFunction(
     name: 'ownerToken',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `pChainStakeMirror()`.
   static final AbiFunction pChainStakeMirrorFn = AbiFunction(
     name: 'pChainStakeMirror',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -110,9 +95,7 @@ class IIGovernanceVotePowerContract {
       AbiParameter(name: '_who', type: AbiType.parse('address')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -196,5 +179,4 @@ class IIGovernanceVotePowerContract {
     );
     return out[0]! as BigInt;
   }
-
 }

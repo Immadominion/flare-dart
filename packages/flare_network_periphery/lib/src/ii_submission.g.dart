@@ -28,16 +28,16 @@ class IISubmissionContract {
     ContractRegistry? registry,
     String registryName = 'IISubmission',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IISubmissionContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getCurrentRandom()`.
   static final AbiFunction getCurrentRandomFn = AbiFunction(
     name: 'getCurrentRandom',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_randomNumber', type: AbiType.parse('uint256')),
     ],
@@ -47,8 +47,7 @@ class IISubmissionContract {
   /// ABI descriptor for `getCurrentRandomWithQuality()`.
   static final AbiFunction getCurrentRandomWithQualityFn = AbiFunction(
     name: 'getCurrentRandomWithQuality',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_randomNumber', type: AbiType.parse('uint256')),
       AbiParameter(name: '_isSecureRandom', type: AbiType.parse('bool')),
@@ -57,17 +56,20 @@ class IISubmissionContract {
   );
 
   /// ABI descriptor for `getCurrentRandomWithQualityAndTimestamp()`.
-  static final AbiFunction getCurrentRandomWithQualityAndTimestampFn = AbiFunction(
-    name: 'getCurrentRandomWithQualityAndTimestamp',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '_randomNumber', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_isSecureRandom', type: AbiType.parse('bool')),
-      AbiParameter(name: '_randomTimestamp', type: AbiType.parse('uint256')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getCurrentRandomWithQualityAndTimestampFn =
+      AbiFunction(
+        name: 'getCurrentRandomWithQualityAndTimestamp',
+        inputs: [],
+        outputs: [
+          AbiParameter(name: '_randomNumber', type: AbiType.parse('uint256')),
+          AbiParameter(name: '_isSecureRandom', type: AbiType.parse('bool')),
+          AbiParameter(
+            name: '_randomTimestamp',
+            type: AbiType.parse('uint256'),
+          ),
+        ],
+        stateMutability: StateMutability.view,
+      );
 
   /// Calls `getCurrentRandom()`.
   ///
@@ -83,7 +85,8 @@ class IISubmissionContract {
   /// Calls `getCurrentRandomWithQuality()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt randomNumber, bool isSecureRandom})> getCurrentRandomWithQuality() async {
+  Future<({BigInt randomNumber, bool isSecureRandom})>
+  getCurrentRandomWithQuality() async {
     final out = await client.callFunction(
       contract: address,
       function: getCurrentRandomWithQualityFn,
@@ -94,12 +97,16 @@ class IISubmissionContract {
   /// Calls `getCurrentRandomWithQualityAndTimestamp()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt randomNumber, bool isSecureRandom, BigInt randomTimestamp})> getCurrentRandomWithQualityAndTimestamp() async {
+  Future<({BigInt randomNumber, bool isSecureRandom, BigInt randomTimestamp})>
+  getCurrentRandomWithQualityAndTimestamp() async {
     final out = await client.callFunction(
       contract: address,
       function: getCurrentRandomWithQualityAndTimestampFn,
     );
-    return (randomNumber: out[0]! as BigInt, isSecureRandom: out[1]! as bool, randomTimestamp: out[2]! as BigInt);
+    return (
+      randomNumber: out[0]! as BigInt,
+      isSecureRandom: out[1]! as bool,
+      randomTimestamp: out[2]! as BigInt,
+    );
   }
-
 }

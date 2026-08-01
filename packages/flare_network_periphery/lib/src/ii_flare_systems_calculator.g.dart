@@ -20,7 +20,10 @@ class IIFlareSystemsCalculatorContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IIFlareSystemsCalculatorContract({required this.client, required this.address});
+  const IIFlareSystemsCalculatorContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IIFlareSystemsCalculator` through the [ContractRegistry].
   static Future<IIFlareSystemsCalculatorContract> resolve(
@@ -28,8 +31,9 @@ class IIFlareSystemsCalculatorContract {
     ContractRegistry? registry,
     String registryName = 'IIFlareSystemsCalculator',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIFlareSystemsCalculatorContract(client: client, address: resolved);
   }
 
@@ -40,60 +44,52 @@ class IIFlareSystemsCalculatorContract {
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint24')),
       AbiParameter(name: '_voter', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `signingPolicySignNoRewardsDurationBlocks()`.
-  static final AbiFunction signingPolicySignNoRewardsDurationBlocksFn = AbiFunction(
-    name: 'signingPolicySignNoRewardsDurationBlocks',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction signingPolicySignNoRewardsDurationBlocksFn =
+      AbiFunction(
+        name: 'signingPolicySignNoRewardsDurationBlocks',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `signingPolicySignNonPunishableDurationBlocks()`.
-  static final AbiFunction signingPolicySignNonPunishableDurationBlocksFn = AbiFunction(
-    name: 'signingPolicySignNonPunishableDurationBlocks',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction signingPolicySignNonPunishableDurationBlocksFn =
+      AbiFunction(
+        name: 'signingPolicySignNonPunishableDurationBlocks',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `signingPolicySignNonPunishableDurationSeconds()`.
-  static final AbiFunction signingPolicySignNonPunishableDurationSecondsFn = AbiFunction(
-    name: 'signingPolicySignNonPunishableDurationSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction signingPolicySignNonPunishableDurationSecondsFn =
+      AbiFunction(
+        name: 'signingPolicySignNonPunishableDurationSeconds',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `wNatCapPPM()`.
   static final AbiFunction wNatCapPPMFn = AbiFunction(
     name: 'wNatCapPPM',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint24')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint24'))],
     stateMutability: StateMutability.view,
   );
 
   /// Calls `calculateBurnFactorPPM(uint24,address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> calculateBurnFactorPPM(BigInt rewardEpochId, EthAddress voter) async {
+  Future<BigInt> calculateBurnFactorPPM(
+    BigInt rewardEpochId,
+    EthAddress voter,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: calculateBurnFactorPPMFn,
@@ -145,5 +141,4 @@ class IIFlareSystemsCalculatorContract {
     );
     return out[0]! as BigInt;
   }
-
 }

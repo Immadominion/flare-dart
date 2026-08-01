@@ -20,7 +20,10 @@ class IConfirmedBlockHeightExistsVerificationContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IConfirmedBlockHeightExistsVerificationContract({required this.client, required this.address});
+  const IConfirmedBlockHeightExistsVerificationContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IConfirmedBlockHeightExistsVerification` through the [ContractRegistry].
   static Future<IConfirmedBlockHeightExistsVerificationContract> resolve(
@@ -28,20 +31,27 @@ class IConfirmedBlockHeightExistsVerificationContract {
     ContractRegistry? registry,
     String registryName = 'IConfirmedBlockHeightExistsVerification',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
-    return IConfirmedBlockHeightExistsVerificationContract(client: client, address: resolved);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
+    return IConfirmedBlockHeightExistsVerificationContract(
+      client: client,
+      address: resolved,
+    );
   }
 
   /// ABI descriptor for `verifyConfirmedBlockHeightExists((bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64),(uint64,uint64,uint64,uint64))))`.
   static final AbiFunction verifyConfirmedBlockHeightExistsFn = AbiFunction(
     name: 'verifyConfirmedBlockHeightExists',
     inputs: [
-      AbiParameter(name: '_proof', type: AbiType.parse('(bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64),(uint64,uint64,uint64,uint64)))')),
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64),(uint64,uint64,uint64,uint64)))',
+        ),
+      ),
     ],
-    outputs: [
-      AbiParameter(name: '_proved', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '_proved', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -56,5 +66,4 @@ class IConfirmedBlockHeightExistsVerificationContract {
     );
     return out[0]! as bool;
   }
-
 }

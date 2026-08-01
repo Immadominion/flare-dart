@@ -30,8 +30,9 @@ class IDirectMintingContract {
     ContractRegistry? registry,
     String registryName = 'IDirectMinting',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IDirectMintingContract(client: client, address: resolved);
   }
 
@@ -52,24 +53,26 @@ class IDirectMintingContract {
   /// ABI descriptor for `directMintingPaymentAddress()`.
   static final AbiFunction directMintingPaymentAddressFn = AbiFunction(
     name: 'directMintingPaymentAddress',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
   /// Calls `directMintingDelayState(bytes32)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt delayState, BigInt allowedAt, BigInt startedAt})> directMintingDelayState(Uint8List transactionId) async {
+  Future<({BigInt delayState, BigInt allowedAt, BigInt startedAt})>
+  directMintingDelayState(Uint8List transactionId) async {
     final out = await client.callFunction(
       contract: address,
       function: directMintingDelayStateFn,
       args: [transactionId],
     );
-    return (delayState: out[0]! as BigInt, allowedAt: out[1]! as BigInt, startedAt: out[2]! as BigInt);
+    return (
+      delayState: out[0]! as BigInt,
+      allowedAt: out[1]! as BigInt,
+      startedAt: out[2]! as BigInt,
+    );
   }
 
   /// Calls `directMintingPaymentAddress()`.
@@ -82,5 +85,4 @@ class IDirectMintingContract {
     );
     return out[0]! as String;
   }
-
 }

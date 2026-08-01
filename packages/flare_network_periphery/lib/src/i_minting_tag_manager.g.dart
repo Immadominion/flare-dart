@@ -22,7 +22,10 @@ class IMintingTagManagerContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IMintingTagManagerContract({required this.client, required this.address});
+  const IMintingTagManagerContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IMintingTagManager` through the [ContractRegistry].
   static Future<IMintingTagManagerContract> resolve(
@@ -30,55 +33,41 @@ class IMintingTagManagerContract {
     ContractRegistry? registry,
     String registryName = 'IMintingTagManager',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IMintingTagManagerContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `allowedExecutor(uint256)`.
   static final AbiFunction allowedExecutorFn = AbiFunction(
     name: 'allowedExecutor',
-    inputs: [
-      AbiParameter(name: '_mintingTag', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_mintingTag', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `balanceOf(address)`.
   static final AbiFunction balanceOfFn = AbiFunction(
     name: 'balanceOf',
-    inputs: [
-      AbiParameter(name: 'owner', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: 'balance', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: 'owner', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: 'balance', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `executorChangeAfterSeconds()`.
   static final AbiFunction executorChangeAfterSecondsFn = AbiFunction(
     name: 'executorChangeAfterSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getApproved(uint256)`.
   static final AbiFunction getApprovedFn = AbiFunction(
     name: 'getApproved',
-    inputs: [
-      AbiParameter(name: 'tokenId', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: 'operator', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: 'tokenId', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: 'operator', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -89,53 +78,38 @@ class IMintingTagManagerContract {
       AbiParameter(name: 'owner', type: AbiType.parse('address')),
       AbiParameter(name: 'operator', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `mintingRecipient(uint256)`.
   static final AbiFunction mintingRecipientFn = AbiFunction(
     name: 'mintingRecipient',
-    inputs: [
-      AbiParameter(name: '_mintingTag', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_mintingTag', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `nextAvailableTag()`.
   static final AbiFunction nextAvailableTagFn = AbiFunction(
     name: 'nextAvailableTag',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `ownerOf(uint256)`.
   static final AbiFunction ownerOfFn = AbiFunction(
     name: 'ownerOf',
-    inputs: [
-      AbiParameter(name: 'tokenId', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: 'owner', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: 'tokenId', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: 'owner', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `pendingAllowedExecutorChange(uint256)`.
   static final AbiFunction pendingAllowedExecutorChangeFn = AbiFunction(
     name: 'pendingAllowedExecutorChange',
-    inputs: [
-      AbiParameter(name: '_mintingTag', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_mintingTag', type: AbiType.parse('uint256'))],
     outputs: [
       AbiParameter(name: '_pending', type: AbiType.parse('bool')),
       AbiParameter(name: '_newExecutor', type: AbiType.parse('address')),
@@ -147,69 +121,48 @@ class IMintingTagManagerContract {
   /// ABI descriptor for `reservationFee()`.
   static final AbiFunction reservationFeeFn = AbiFunction(
     name: 'reservationFee',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `reservationFeeRecipient()`.
   static final AbiFunction reservationFeeRecipientFn = AbiFunction(
     name: 'reservationFeeRecipient',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `reserve()`.
   static final AbiFunction reserveFn = AbiFunction(
     name: 'reserve',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.payable,
   );
 
   /// ABI descriptor for `reservedTagsForOwner(address)`.
   static final AbiFunction reservedTagsForOwnerFn = AbiFunction(
     name: 'reservedTagsForOwner',
-    inputs: [
-      AbiParameter(name: '_owner', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256[]')),
-    ],
+    inputs: [AbiParameter(name: '_owner', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `supportsInterface(bytes4)`.
   static final AbiFunction supportsInterfaceFn = AbiFunction(
     name: 'supportsInterface',
-    inputs: [
-      AbiParameter(name: 'interfaceId', type: AbiType.parse('bytes4')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [AbiParameter(name: 'interfaceId', type: AbiType.parse('bytes4'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `tokenByIndex(uint256)`.
   static final AbiFunction tokenByIndexFn = AbiFunction(
     name: 'tokenByIndex',
-    inputs: [
-      AbiParameter(name: 'index', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: 'index', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -220,20 +173,15 @@ class IMintingTagManagerContract {
       AbiParameter(name: 'owner', type: AbiType.parse('address')),
       AbiParameter(name: 'index', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `totalSupply()`.
   static final AbiFunction totalSupplyFn = AbiFunction(
     name: 'totalSupply',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -287,7 +235,10 @@ class IMintingTagManagerContract {
   /// Calls `isApprovedForAll(address,address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<bool> isApprovedForAll(EthAddress owner, EthAddress operatorValue) async {
+  Future<bool> isApprovedForAll(
+    EthAddress owner,
+    EthAddress operatorValue,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: isApprovedForAllFn,
@@ -334,13 +285,18 @@ class IMintingTagManagerContract {
   /// Calls `pendingAllowedExecutorChange(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({bool pending, EthAddress newExecutor, BigInt activeAfterTs})> pendingAllowedExecutorChange(BigInt mintingTag) async {
+  Future<({bool pending, EthAddress newExecutor, BigInt activeAfterTs})>
+  pendingAllowedExecutorChange(BigInt mintingTag) async {
     final out = await client.callFunction(
       contract: address,
       function: pendingAllowedExecutorChangeFn,
       args: [mintingTag],
     );
-    return (pending: out[0]! as bool, newExecutor: out[1]! as EthAddress, activeAfterTs: out[2]! as BigInt);
+    return (
+      pending: out[0]! as bool,
+      newExecutor: out[1]! as EthAddress,
+      activeAfterTs: out[2]! as BigInt,
+    );
   }
 
   /// Calls `reservationFee()`.
@@ -434,5 +390,4 @@ class IMintingTagManagerContract {
     );
     return out[0]! as BigInt;
   }
-
 }

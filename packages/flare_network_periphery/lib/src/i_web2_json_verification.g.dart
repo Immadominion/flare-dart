@@ -20,7 +20,10 @@ class IWeb2JsonVerificationContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IWeb2JsonVerificationContract({required this.client, required this.address});
+  const IWeb2JsonVerificationContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IWeb2JsonVerification` through the [ContractRegistry].
   static Future<IWeb2JsonVerificationContract> resolve(
@@ -28,8 +31,9 @@ class IWeb2JsonVerificationContract {
     ContractRegistry? registry,
     String registryName = 'IWeb2JsonVerification',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IWeb2JsonVerificationContract(client: client, address: resolved);
   }
 
@@ -37,11 +41,14 @@ class IWeb2JsonVerificationContract {
   static final AbiFunction verifyWeb2JsonFn = AbiFunction(
     name: 'verifyWeb2Json',
     inputs: [
-      AbiParameter(name: '_proof', type: AbiType.parse('(bytes32[],(bytes32,bytes32,uint64,uint64,(string,string,string,string,string,string,string),(bytes)))')),
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(string,string,string,string,string,string,string),(bytes)))',
+        ),
+      ),
     ],
-    outputs: [
-      AbiParameter(name: '_proved', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '_proved', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -56,5 +63,4 @@ class IWeb2JsonVerificationContract {
     );
     return out[0]! as bool;
   }
-
 }

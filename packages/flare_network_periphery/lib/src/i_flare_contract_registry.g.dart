@@ -22,7 +22,10 @@ class IFlareContractRegistryContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IFlareContractRegistryContract({required this.client, required this.address});
+  const IFlareContractRegistryContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IFlareContractRegistry` through the [ContractRegistry].
   static Future<IFlareContractRegistryContract> resolve(
@@ -30,16 +33,16 @@ class IFlareContractRegistryContract {
     ContractRegistry? registry,
     String registryName = 'IFlareContractRegistry',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IFlareContractRegistryContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getAllContracts()`.
   static final AbiFunction getAllContractsFn = AbiFunction(
     name: 'getAllContracts',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_names', type: AbiType.parse('string[]')),
       AbiParameter(name: '_addresses', type: AbiType.parse('address[]')),
@@ -50,24 +53,16 @@ class IFlareContractRegistryContract {
   /// ABI descriptor for `getContractAddressByHash(bytes32)`.
   static final AbiFunction getContractAddressByHashFn = AbiFunction(
     name: 'getContractAddressByHash',
-    inputs: [
-      AbiParameter(name: '_nameHash', type: AbiType.parse('bytes32')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_nameHash', type: AbiType.parse('bytes32'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getContractAddressByName(string)`.
   static final AbiFunction getContractAddressByNameFn = AbiFunction(
     name: 'getContractAddressByName',
-    inputs: [
-      AbiParameter(name: '_name', type: AbiType.parse('string')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_name', type: AbiType.parse('string'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -77,33 +72,31 @@ class IFlareContractRegistryContract {
     inputs: [
       AbiParameter(name: '_nameHashes', type: AbiType.parse('bytes32[]')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getContractAddressesByName(string[])`.
   static final AbiFunction getContractAddressesByNameFn = AbiFunction(
     name: 'getContractAddressesByName',
-    inputs: [
-      AbiParameter(name: '_names', type: AbiType.parse('string[]')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    inputs: [AbiParameter(name: '_names', type: AbiType.parse('string[]'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// Calls `getAllContracts()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<String> names, List<EthAddress> addresses})> getAllContracts() async {
+  Future<({List<String> names, List<EthAddress> addresses})>
+  getAllContracts() async {
     final out = await client.callFunction(
       contract: address,
       function: getAllContractsFn,
     );
-    return (names: (out[0]! as List).cast<String>(), addresses: (out[1]! as List).cast<EthAddress>());
+    return (
+      names: (out[0]! as List).cast<String>(),
+      addresses: (out[1]! as List).cast<EthAddress>(),
+    );
   }
 
   /// Calls `getContractAddressByHash(bytes32)`.
@@ -133,7 +126,9 @@ class IFlareContractRegistryContract {
   /// Calls `getContractAddressesByHash(bytes32[])`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<EthAddress>> getContractAddressesByHash(List<Uint8List> nameHashes) async {
+  Future<List<EthAddress>> getContractAddressesByHash(
+    List<Uint8List> nameHashes,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getContractAddressesByHashFn,
@@ -145,7 +140,9 @@ class IFlareContractRegistryContract {
   /// Calls `getContractAddressesByName(string[])`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<EthAddress>> getContractAddressesByName(List<String> names) async {
+  Future<List<EthAddress>> getContractAddressesByName(
+    List<String> names,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getContractAddressesByNameFn,
@@ -153,5 +150,4 @@ class IFlareContractRegistryContract {
     );
     return (out[0]! as List).cast<EthAddress>();
   }
-
 }

@@ -20,7 +20,10 @@ class IIGenericRewardManagerContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IIGenericRewardManagerContract({required this.client, required this.address});
+  const IIGenericRewardManagerContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IIGenericRewardManager` through the [ContractRegistry].
   static Future<IIGenericRewardManagerContract> resolve(
@@ -28,19 +31,17 @@ class IIGenericRewardManagerContract {
     ContractRegistry? registry,
     String registryName = 'IIGenericRewardManager',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIGenericRewardManagerContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `active()`.
   static final AbiFunction activeFn = AbiFunction(
     name: 'active',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -50,9 +51,7 @@ class IIGenericRewardManagerContract {
     inputs: [
       AbiParameter(name: '_rewardOwner', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
@@ -62,20 +61,15 @@ class IIGenericRewardManagerContract {
     inputs: [
       AbiParameter(name: '_rewardOwner', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getContractName()`.
   static final AbiFunction getContractNameFn = AbiFunction(
     name: 'getContractName',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
@@ -95,15 +89,26 @@ class IIGenericRewardManagerContract {
   /// ABI descriptor for `getTotals()`.
   static final AbiFunction getTotalsFn = AbiFunction(
     name: 'getTotals',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_totalAwardedWei', type: AbiType.parse('uint256')),
       AbiParameter(name: '_totalClaimedWei', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_totalInflationAuthorizedWei', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_totalInflationReceivedWei', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_lastInflationAuthorizationReceivedTs', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_dailyAuthorizedInflation', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_totalInflationAuthorizedWei',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_totalInflationReceivedWei',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_lastInflationAuthorizationReceivedTs',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_dailyAuthorizedInflation',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -122,7 +127,9 @@ class IIGenericRewardManagerContract {
   /// Calls `allowedClaimRecipients(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<EthAddress>> allowedClaimRecipients(EthAddress rewardOwner) async {
+  Future<List<EthAddress>> allowedClaimRecipients(
+    EthAddress rewardOwner,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: allowedClaimRecipientsFn,
@@ -157,7 +164,9 @@ class IIGenericRewardManagerContract {
   /// Calls `getStateOfRewards(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt totalReward, BigInt claimedReward})> getStateOfRewards(EthAddress beneficiary) async {
+  Future<({BigInt totalReward, BigInt claimedReward})> getStateOfRewards(
+    EthAddress beneficiary,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getStateOfRewardsFn,
@@ -169,12 +178,28 @@ class IIGenericRewardManagerContract {
   /// Calls `getTotals()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt totalAwardedWei, BigInt totalClaimedWei, BigInt totalInflationAuthorizedWei, BigInt totalInflationReceivedWei, BigInt lastInflationAuthorizationReceivedTs, BigInt dailyAuthorizedInflation})> getTotals() async {
+  Future<
+    ({
+      BigInt totalAwardedWei,
+      BigInt totalClaimedWei,
+      BigInt totalInflationAuthorizedWei,
+      BigInt totalInflationReceivedWei,
+      BigInt lastInflationAuthorizationReceivedTs,
+      BigInt dailyAuthorizedInflation,
+    })
+  >
+  getTotals() async {
     final out = await client.callFunction(
       contract: address,
       function: getTotalsFn,
     );
-    return (totalAwardedWei: out[0]! as BigInt, totalClaimedWei: out[1]! as BigInt, totalInflationAuthorizedWei: out[2]! as BigInt, totalInflationReceivedWei: out[3]! as BigInt, lastInflationAuthorizationReceivedTs: out[4]! as BigInt, dailyAuthorizedInflation: out[5]! as BigInt);
+    return (
+      totalAwardedWei: out[0]! as BigInt,
+      totalClaimedWei: out[1]! as BigInt,
+      totalInflationAuthorizedWei: out[2]! as BigInt,
+      totalInflationReceivedWei: out[3]! as BigInt,
+      lastInflationAuthorizationReceivedTs: out[4]! as BigInt,
+      dailyAuthorizedInflation: out[5]! as BigInt,
+    );
   }
-
 }

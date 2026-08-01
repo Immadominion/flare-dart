@@ -20,7 +20,10 @@ class RewardsV2InterfaceContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const RewardsV2InterfaceContract({required this.client, required this.address});
+  const RewardsV2InterfaceContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `RewardsV2Interface` through the [ContractRegistry].
   static Future<RewardsV2InterfaceContract> resolve(
@@ -28,19 +31,17 @@ class RewardsV2InterfaceContract {
     ContractRegistry? registry,
     String registryName = 'RewardsV2Interface',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return RewardsV2InterfaceContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `active()`.
   static final AbiFunction activeFn = AbiFunction(
     name: 'active',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -50,23 +51,21 @@ class RewardsV2InterfaceContract {
     inputs: [
       AbiParameter(name: '_rewardOwner', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getRewardEpochIdsWithClaimableRewards()`.
-  static final AbiFunction getRewardEpochIdsWithClaimableRewardsFn = AbiFunction(
-    name: 'getRewardEpochIdsWithClaimableRewards',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '_startEpochId', type: AbiType.parse('uint24')),
-      AbiParameter(name: '_endEpochId', type: AbiType.parse('uint24')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getRewardEpochIdsWithClaimableRewardsFn =
+      AbiFunction(
+        name: 'getRewardEpochIdsWithClaimableRewards',
+        inputs: [],
+        outputs: [
+          AbiParameter(name: '_startEpochId', type: AbiType.parse('uint24')),
+          AbiParameter(name: '_endEpochId', type: AbiType.parse('uint24')),
+        ],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getStateOfRewards(address)`.
   static final AbiFunction getStateOfRewardsFn = AbiFunction(
@@ -75,7 +74,10 @@ class RewardsV2InterfaceContract {
       AbiParameter(name: '_rewardOwner', type: AbiType.parse('address')),
     ],
     outputs: [
-      AbiParameter(name: '_rewardStates', type: AbiType.parse('(uint24,bytes20,uint120,uint8,bool)[][]')),
+      AbiParameter(
+        name: '_rewardStates',
+        type: AbiType.parse('(uint24,bytes20,uint120,uint8,bool)[][]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -106,7 +108,8 @@ class RewardsV2InterfaceContract {
   /// Calls `getRewardEpochIdsWithClaimableRewards()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt startEpochId, BigInt endEpochId})> getRewardEpochIdsWithClaimableRewards() async {
+  Future<({BigInt startEpochId, BigInt endEpochId})>
+  getRewardEpochIdsWithClaimableRewards() async {
     final out = await client.callFunction(
       contract: address,
       function: getRewardEpochIdsWithClaimableRewardsFn,
@@ -117,7 +120,9 @@ class RewardsV2InterfaceContract {
   /// Calls `getStateOfRewards(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<List<List<Object?>>>> getStateOfRewards(EthAddress rewardOwner) async {
+  Future<List<List<List<Object?>>>> getStateOfRewards(
+    EthAddress rewardOwner,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getStateOfRewardsFn,
@@ -125,5 +130,4 @@ class RewardsV2InterfaceContract {
     );
     return (out[0]! as List).cast<List<List<Object?>>>();
   }
-
 }

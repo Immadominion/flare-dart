@@ -28,19 +28,23 @@ class IIInflationV1Contract {
     ContractRegistry? registry,
     String registryName = 'IIInflationV1',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIInflationV1Contract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getAnnum(uint256)`.
   static final AbiFunction getAnnumFn = AbiFunction(
     name: 'getAnnum',
-    inputs: [
-      AbiParameter(name: '_index', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_index', type: AbiType.parse('uint256'))],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(uint256,uint256,uint256,((address,uint256,uint256,uint256,uint256,uint256)[],uint256,uint256,uint256,uint256))')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse(
+          '(uint256,uint256,uint256,((address,uint256,uint256,uint256,uint256,uint256)[],uint256,uint256,uint256,uint256))',
+        ),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -56,5 +60,4 @@ class IIInflationV1Contract {
     );
     return (out[0]! as List).cast<Object?>();
   }
-
 }

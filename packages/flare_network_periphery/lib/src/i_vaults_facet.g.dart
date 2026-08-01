@@ -28,16 +28,16 @@ class IVaultsFacetContract {
     ContractRegistry? registry,
     String registryName = 'IVaultsFacet',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IVaultsFacetContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getVaults()`.
   static final AbiFunction getVaultsFn = AbiFunction(
     name: 'getVaults',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_vaultIds', type: AbiType.parse('uint256[]')),
       AbiParameter(name: '_vaultAddresses', type: AbiType.parse('address[]')),
@@ -49,12 +49,22 @@ class IVaultsFacetContract {
   /// Calls `getVaults()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<BigInt> vaultIds, List<EthAddress> vaultAddresses, List<BigInt> vaultTypes})> getVaults() async {
+  Future<
+    ({
+      List<BigInt> vaultIds,
+      List<EthAddress> vaultAddresses,
+      List<BigInt> vaultTypes,
+    })
+  >
+  getVaults() async {
     final out = await client.callFunction(
       contract: address,
       function: getVaultsFn,
     );
-    return (vaultIds: (out[0]! as List).cast<BigInt>(), vaultAddresses: (out[1]! as List).cast<EthAddress>(), vaultTypes: (out[2]! as List).cast<BigInt>());
+    return (
+      vaultIds: (out[0]! as List).cast<BigInt>(),
+      vaultAddresses: (out[1]! as List).cast<EthAddress>(),
+      vaultTypes: (out[2]! as List).cast<BigInt>(),
+    );
   }
-
 }

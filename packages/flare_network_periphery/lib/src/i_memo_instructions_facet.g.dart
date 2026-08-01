@@ -22,7 +22,10 @@ class IMemoInstructionsFacetContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IMemoInstructionsFacetContract({required this.client, required this.address});
+  const IMemoInstructionsFacetContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IMemoInstructionsFacet` through the [ContractRegistry].
   static Future<IMemoInstructionsFacetContract> resolve(
@@ -30,8 +33,9 @@ class IMemoInstructionsFacetContract {
     ContractRegistry? registry,
     String registryName = 'IMemoInstructionsFacet',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IMemoInstructionsFacetContract(client: client, address: resolved);
   }
 
@@ -41,9 +45,7 @@ class IMemoInstructionsFacetContract {
     inputs: [
       AbiParameter(name: '_personalAccount', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -53,9 +55,7 @@ class IMemoInstructionsFacetContract {
     inputs: [
       AbiParameter(name: '_personalAccount', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -65,9 +65,7 @@ class IMemoInstructionsFacetContract {
     inputs: [
       AbiParameter(name: '_transactionId', type: AbiType.parse('bytes32')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -106,5 +104,4 @@ class IMemoInstructionsFacetContract {
     );
     return out[0]! as bool;
   }
-
 }

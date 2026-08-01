@@ -20,7 +20,10 @@ class IFdcInflationConfigurationsContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IFdcInflationConfigurationsContract({required this.client, required this.address});
+  const IFdcInflationConfigurationsContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IFdcInflationConfigurations` through the [ContractRegistry].
   static Future<IFdcInflationConfigurationsContract> resolve(
@@ -28,19 +31,24 @@ class IFdcInflationConfigurationsContract {
     ContractRegistry? registry,
     String registryName = 'IFdcInflationConfigurations',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
-    return IFdcInflationConfigurationsContract(client: client, address: resolved);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
+    return IFdcInflationConfigurationsContract(
+      client: client,
+      address: resolved,
+    );
   }
 
   /// ABI descriptor for `getFdcConfiguration(uint256)`.
   static final AbiFunction getFdcConfigurationFn = AbiFunction(
     name: 'getFdcConfiguration',
-    inputs: [
-      AbiParameter(name: '_index', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_index', type: AbiType.parse('uint256'))],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(bytes32,bytes32,uint24,uint8,uint224)')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse('(bytes32,bytes32,uint24,uint8,uint224)'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -48,10 +56,12 @@ class IFdcInflationConfigurationsContract {
   /// ABI descriptor for `getFdcConfigurations()`.
   static final AbiFunction getFdcConfigurationsFn = AbiFunction(
     name: 'getFdcConfigurations',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(bytes32,bytes32,uint24,uint8,uint224)[]')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse('(bytes32,bytes32,uint24,uint8,uint224)[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -78,5 +88,4 @@ class IFdcInflationConfigurationsContract {
     );
     return (out[0]! as List).cast<List<Object?>>();
   }
-
 }

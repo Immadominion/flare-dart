@@ -22,7 +22,10 @@ class IFdcRequestFeeConfigurationsContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IFdcRequestFeeConfigurationsContract({required this.client, required this.address});
+  const IFdcRequestFeeConfigurationsContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IFdcRequestFeeConfigurations` through the [ContractRegistry].
   static Future<IFdcRequestFeeConfigurationsContract> resolve(
@@ -30,20 +33,20 @@ class IFdcRequestFeeConfigurationsContract {
     ContractRegistry? registry,
     String registryName = 'IFdcRequestFeeConfigurations',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
-    return IFdcRequestFeeConfigurationsContract(client: client, address: resolved);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
+    return IFdcRequestFeeConfigurationsContract(
+      client: client,
+      address: resolved,
+    );
   }
 
   /// ABI descriptor for `getRequestFee(bytes)`.
   static final AbiFunction getRequestFeeFn = AbiFunction(
     name: 'getRequestFee',
-    inputs: [
-      AbiParameter(name: '_data', type: AbiType.parse('bytes')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_data', type: AbiType.parse('bytes'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -58,5 +61,4 @@ class IFdcRequestFeeConfigurationsContract {
     );
     return out[0]! as BigInt;
   }
-
 }

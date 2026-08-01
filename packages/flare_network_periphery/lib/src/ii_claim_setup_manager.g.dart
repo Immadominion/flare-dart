@@ -20,7 +20,10 @@ class IIClaimSetupManagerContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IIClaimSetupManagerContract({required this.client, required this.address});
+  const IIClaimSetupManagerContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IIClaimSetupManager` through the [ContractRegistry].
   static Future<IIClaimSetupManagerContract> resolve(
@@ -28,20 +31,17 @@ class IIClaimSetupManagerContract {
     ContractRegistry? registry,
     String registryName = 'IIClaimSetupManager',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIClaimSetupManagerContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `accountToDelegationAccount(address)`.
   static final AbiFunction accountToDelegationAccountFn = AbiFunction(
     name: 'accountToDelegationAccount',
-    inputs: [
-      AbiParameter(name: '_owner', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_owner', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -51,21 +51,15 @@ class IIClaimSetupManagerContract {
     inputs: [
       AbiParameter(name: '_rewardOwner', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `claimExecutors(address)`.
   static final AbiFunction claimExecutorsFn = AbiFunction(
     name: 'claimExecutors',
-    inputs: [
-      AbiParameter(name: '_owner', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    inputs: [AbiParameter(name: '_owner', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
@@ -86,9 +80,7 @@ class IIClaimSetupManagerContract {
   /// ABI descriptor for `getDelegationAccountData(address)`.
   static final AbiFunction getDelegationAccountDataFn = AbiFunction(
     name: 'getDelegationAccountData',
-    inputs: [
-      AbiParameter(name: '_owner', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_owner', type: AbiType.parse('address'))],
     outputs: [
       AbiParameter(name: '_delegationAccount', type: AbiType.parse('address')),
       AbiParameter(name: '_enabled', type: AbiType.parse('bool')),
@@ -99,12 +91,8 @@ class IIClaimSetupManagerContract {
   /// ABI descriptor for `getExecutorCurrentFeeValue(address)`.
   static final AbiFunction getExecutorCurrentFeeValueFn = AbiFunction(
     name: 'getExecutorCurrentFeeValue',
-    inputs: [
-      AbiParameter(name: '_executor', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_executor', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -115,18 +103,14 @@ class IIClaimSetupManagerContract {
       AbiParameter(name: '_executor', type: AbiType.parse('address')),
       AbiParameter(name: '_rewardEpoch', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getExecutorInfo(address)`.
   static final AbiFunction getExecutorInfoFn = AbiFunction(
     name: 'getExecutorInfo',
-    inputs: [
-      AbiParameter(name: '_executor', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_executor', type: AbiType.parse('address'))],
     outputs: [
       AbiParameter(name: '_registered', type: AbiType.parse('bool')),
       AbiParameter(name: '_currentFeeValue', type: AbiType.parse('uint256')),
@@ -137,9 +121,7 @@ class IIClaimSetupManagerContract {
   /// ABI descriptor for `getExecutorScheduledFeeValueChanges(address)`.
   static final AbiFunction getExecutorScheduledFeeValueChangesFn = AbiFunction(
     name: 'getExecutorScheduledFeeValueChanges',
-    inputs: [
-      AbiParameter(name: '_executor', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_executor', type: AbiType.parse('address'))],
     outputs: [
       AbiParameter(name: '_feeValue', type: AbiType.parse('uint256[]')),
       AbiParameter(name: '_validFromEpoch', type: AbiType.parse('uint256[]')),
@@ -156,7 +138,10 @@ class IIClaimSetupManagerContract {
       AbiParameter(name: '_end', type: AbiType.parse('uint256')),
     ],
     outputs: [
-      AbiParameter(name: '_registeredExecutors', type: AbiType.parse('address[]')),
+      AbiParameter(
+        name: '_registeredExecutors',
+        type: AbiType.parse('address[]'),
+      ),
       AbiParameter(name: '_totalLength', type: AbiType.parse('uint256')),
     ],
     stateMutability: StateMutability.view,
@@ -169,32 +154,23 @@ class IIClaimSetupManagerContract {
       AbiParameter(name: '_owner', type: AbiType.parse('address')),
       AbiParameter(name: '_executor', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `registerExecutor(uint256)`.
   static final AbiFunction registerExecutorFn = AbiFunction(
     name: 'registerExecutor',
-    inputs: [
-      AbiParameter(name: '_feeValue', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_feeValue', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.payable,
   );
 
   /// ABI descriptor for `wNat()`.
   static final AbiFunction wNatFn = AbiFunction(
     name: 'wNat',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -213,7 +189,9 @@ class IIClaimSetupManagerContract {
   /// Calls `allowedClaimRecipients(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<EthAddress>> allowedClaimRecipients(EthAddress rewardOwner) async {
+  Future<List<EthAddress>> allowedClaimRecipients(
+    EthAddress rewardOwner,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: allowedClaimRecipientsFn,
@@ -237,19 +215,27 @@ class IIClaimSetupManagerContract {
   /// Calls `getAutoClaimAddressesAndExecutorFee(address,address[])`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<EthAddress> recipients, BigInt executorFeeValue})> getAutoClaimAddressesAndExecutorFee(EthAddress executor, List<EthAddress> owners) async {
+  Future<({List<EthAddress> recipients, BigInt executorFeeValue})>
+  getAutoClaimAddressesAndExecutorFee(
+    EthAddress executor,
+    List<EthAddress> owners,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getAutoClaimAddressesAndExecutorFeeFn,
       args: [executor, owners],
     );
-    return (recipients: (out[0]! as List).cast<EthAddress>(), executorFeeValue: out[1]! as BigInt);
+    return (
+      recipients: (out[0]! as List).cast<EthAddress>(),
+      executorFeeValue: out[1]! as BigInt,
+    );
   }
 
   /// Calls `getDelegationAccountData(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({EthAddress delegationAccount, bool enabled})> getDelegationAccountData(EthAddress owner) async {
+  Future<({EthAddress delegationAccount, bool enabled})>
+  getDelegationAccountData(EthAddress owner) async {
     final out = await client.callFunction(
       contract: address,
       function: getDelegationAccountDataFn,
@@ -273,7 +259,10 @@ class IIClaimSetupManagerContract {
   /// Calls `getExecutorFeeValue(address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> getExecutorFeeValue(EthAddress executor, BigInt rewardEpoch) async {
+  Future<BigInt> getExecutorFeeValue(
+    EthAddress executor,
+    BigInt rewardEpoch,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getExecutorFeeValueFn,
@@ -285,7 +274,9 @@ class IIClaimSetupManagerContract {
   /// Calls `getExecutorInfo(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({bool registered, BigInt currentFeeValue})> getExecutorInfo(EthAddress executor) async {
+  Future<({bool registered, BigInt currentFeeValue})> getExecutorInfo(
+    EthAddress executor,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getExecutorInfoFn,
@@ -297,25 +288,36 @@ class IIClaimSetupManagerContract {
   /// Calls `getExecutorScheduledFeeValueChanges(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<BigInt> feeValue, List<BigInt> validFromEpoch, List<bool> fixed})> getExecutorScheduledFeeValueChanges(EthAddress executor) async {
+  Future<
+    ({List<BigInt> feeValue, List<BigInt> validFromEpoch, List<bool> fixed})
+  >
+  getExecutorScheduledFeeValueChanges(EthAddress executor) async {
     final out = await client.callFunction(
       contract: address,
       function: getExecutorScheduledFeeValueChangesFn,
       args: [executor],
     );
-    return (feeValue: (out[0]! as List).cast<BigInt>(), validFromEpoch: (out[1]! as List).cast<BigInt>(), fixed: (out[2]! as List).cast<bool>());
+    return (
+      feeValue: (out[0]! as List).cast<BigInt>(),
+      validFromEpoch: (out[1]! as List).cast<BigInt>(),
+      fixed: (out[2]! as List).cast<bool>(),
+    );
   }
 
   /// Calls `getRegisteredExecutors(uint256,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<EthAddress> registeredExecutors, BigInt totalLength})> getRegisteredExecutors(BigInt start, BigInt end) async {
+  Future<({List<EthAddress> registeredExecutors, BigInt totalLength})>
+  getRegisteredExecutors(BigInt start, BigInt end) async {
     final out = await client.callFunction(
       contract: address,
       function: getRegisteredExecutorsFn,
       args: [start, end],
     );
-    return (registeredExecutors: (out[0]! as List).cast<EthAddress>(), totalLength: out[1]! as BigInt);
+    return (
+      registeredExecutors: (out[0]! as List).cast<EthAddress>(),
+      totalLength: out[1]! as BigInt,
+    );
   }
 
   /// Calls `isClaimExecutor(address,address)`.
@@ -346,11 +348,7 @@ class IIClaimSetupManagerContract {
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
   Future<EthAddress> wNat() async {
-    final out = await client.callFunction(
-      contract: address,
-      function: wNatFn,
-    );
+    final out = await client.callFunction(contract: address, function: wNatFn);
     return out[0]! as EthAddress;
   }
-
 }

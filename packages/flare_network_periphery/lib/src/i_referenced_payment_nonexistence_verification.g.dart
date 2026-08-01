@@ -20,7 +20,10 @@ class IReferencedPaymentNonexistenceVerificationContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IReferencedPaymentNonexistenceVerificationContract({required this.client, required this.address});
+  const IReferencedPaymentNonexistenceVerificationContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IReferencedPaymentNonexistenceVerification` through the [ContractRegistry].
   static Future<IReferencedPaymentNonexistenceVerificationContract> resolve(
@@ -28,20 +31,27 @@ class IReferencedPaymentNonexistenceVerificationContract {
     ContractRegistry? registry,
     String registryName = 'IReferencedPaymentNonexistenceVerification',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
-    return IReferencedPaymentNonexistenceVerificationContract(client: client, address: resolved);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
+    return IReferencedPaymentNonexistenceVerificationContract(
+      client: client,
+      address: resolved,
+    );
   }
 
   /// ABI descriptor for `verifyReferencedPaymentNonexistence((bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bytes32,bool,bytes32),(uint64,uint64,uint64))))`.
   static final AbiFunction verifyReferencedPaymentNonexistenceFn = AbiFunction(
     name: 'verifyReferencedPaymentNonexistence',
     inputs: [
-      AbiParameter(name: '_proof', type: AbiType.parse('(bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bytes32,bool,bytes32),(uint64,uint64,uint64)))')),
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bytes32,bool,bytes32),(uint64,uint64,uint64)))',
+        ),
+      ),
     ],
-    outputs: [
-      AbiParameter(name: '_proved', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '_proved', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -56,5 +66,4 @@ class IReferencedPaymentNonexistenceVerificationContract {
     );
     return out[0]! as bool;
   }
-
 }

@@ -20,7 +20,10 @@ class IRedeemExtendedSettingsContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IRedeemExtendedSettingsContract({required this.client, required this.address});
+  const IRedeemExtendedSettingsContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IRedeemExtendedSettings` through the [ContractRegistry].
   static Future<IRedeemExtendedSettingsContract> resolve(
@@ -28,41 +31,33 @@ class IRedeemExtendedSettingsContract {
     ContractRegistry? registry,
     String registryName = 'IRedeemExtendedSettings',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IRedeemExtendedSettingsContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `minimumRedeemAmountUBA()`.
   static final AbiFunction minimumRedeemAmountUBAFn = AbiFunction(
     name: 'minimumRedeemAmountUBA',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `systemRedemptionFeeBIPS()`.
   static final AbiFunction systemRedemptionFeeBIPSFn = AbiFunction(
     name: 'systemRedemptionFeeBIPS',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `systemRedemptionFeeReceiver()`.
   static final AbiFunction systemRedemptionFeeReceiverFn = AbiFunction(
     name: 'systemRedemptionFeeReceiver',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -98,5 +93,4 @@ class IRedeemExtendedSettingsContract {
     );
     return out[0]! as EthAddress;
   }
-
 }

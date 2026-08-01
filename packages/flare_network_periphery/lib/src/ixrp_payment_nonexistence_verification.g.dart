@@ -20,7 +20,10 @@ class IXRPPaymentNonexistenceVerificationContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IXRPPaymentNonexistenceVerificationContract({required this.client, required this.address});
+  const IXRPPaymentNonexistenceVerificationContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IXRPPaymentNonexistenceVerification` through the [ContractRegistry].
   static Future<IXRPPaymentNonexistenceVerificationContract> resolve(
@@ -28,20 +31,27 @@ class IXRPPaymentNonexistenceVerificationContract {
     ContractRegistry? registry,
     String registryName = 'IXRPPaymentNonexistenceVerification',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
-    return IXRPPaymentNonexistenceVerificationContract(client: client, address: resolved);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
+    return IXRPPaymentNonexistenceVerificationContract(
+      client: client,
+      address: resolved,
+    );
   }
 
   /// ABI descriptor for `verifyXRPPaymentNonexistence((bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bool,bytes32,bool,uint256,address),(uint64,uint64,uint64))))`.
   static final AbiFunction verifyXRPPaymentNonexistenceFn = AbiFunction(
     name: 'verifyXRPPaymentNonexistence',
     inputs: [
-      AbiParameter(name: '_proof', type: AbiType.parse('(bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bool,bytes32,bool,uint256,address),(uint64,uint64,uint64)))')),
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bool,bytes32,bool,uint256,address),(uint64,uint64,uint64)))',
+        ),
+      ),
     ],
-    outputs: [
-      AbiParameter(name: '_proved', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '_proved', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -56,5 +66,4 @@ class IXRPPaymentNonexistenceVerificationContract {
     );
     return out[0]! as bool;
   }
-
 }

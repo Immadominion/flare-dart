@@ -20,7 +20,10 @@ class IWNatDelegationFeeContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IWNatDelegationFeeContract({required this.client, required this.address});
+  const IWNatDelegationFeeContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IWNatDelegationFee` through the [ContractRegistry].
   static Future<IWNatDelegationFeeContract> resolve(
@@ -28,42 +31,33 @@ class IWNatDelegationFeeContract {
     ContractRegistry? registry,
     String registryName = 'IWNatDelegationFee',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IWNatDelegationFeeContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `defaultFeePercentageBIPS()`.
   static final AbiFunction defaultFeePercentageBIPSFn = AbiFunction(
     name: 'defaultFeePercentageBIPS',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint16')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint16'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `feePercentageUpdateOffset()`.
   static final AbiFunction feePercentageUpdateOffsetFn = AbiFunction(
     name: 'feePercentageUpdateOffset',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint24')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint24'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getVoterCurrentFeePercentage(address)`.
   static final AbiFunction getVoterCurrentFeePercentageFn = AbiFunction(
     name: 'getVoterCurrentFeePercentage',
-    inputs: [
-      AbiParameter(name: '_voter', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint16')),
-    ],
+    inputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint16'))],
     stateMutability: StateMutability.view,
   );
 
@@ -74,25 +68,28 @@ class IWNatDelegationFeeContract {
       AbiParameter(name: '_voter', type: AbiType.parse('address')),
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint16')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint16'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getVoterScheduledFeePercentageChanges(address)`.
-  static final AbiFunction getVoterScheduledFeePercentageChangesFn = AbiFunction(
-    name: 'getVoterScheduledFeePercentageChanges',
-    inputs: [
-      AbiParameter(name: '_voter', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '_feePercentageBIPS', type: AbiType.parse('uint256[]')),
-      AbiParameter(name: '_validFromEpochId', type: AbiType.parse('uint256[]')),
-      AbiParameter(name: '_fixed', type: AbiType.parse('bool[]')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getVoterScheduledFeePercentageChangesFn =
+      AbiFunction(
+        name: 'getVoterScheduledFeePercentageChanges',
+        inputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
+        outputs: [
+          AbiParameter(
+            name: '_feePercentageBIPS',
+            type: AbiType.parse('uint256[]'),
+          ),
+          AbiParameter(
+            name: '_validFromEpochId',
+            type: AbiType.parse('uint256[]'),
+          ),
+          AbiParameter(name: '_fixed', type: AbiType.parse('bool[]')),
+        ],
+        stateMutability: StateMutability.view,
+      );
 
   /// Calls `defaultFeePercentageBIPS()`.
   ///
@@ -131,7 +128,10 @@ class IWNatDelegationFeeContract {
   /// Calls `getVoterFeePercentage(address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> getVoterFeePercentage(EthAddress voter, BigInt rewardEpochId) async {
+  Future<BigInt> getVoterFeePercentage(
+    EthAddress voter,
+    BigInt rewardEpochId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getVoterFeePercentageFn,
@@ -143,13 +143,23 @@ class IWNatDelegationFeeContract {
   /// Calls `getVoterScheduledFeePercentageChanges(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<BigInt> feePercentageBIPS, List<BigInt> validFromEpochId, List<bool> fixed})> getVoterScheduledFeePercentageChanges(EthAddress voter) async {
+  Future<
+    ({
+      List<BigInt> feePercentageBIPS,
+      List<BigInt> validFromEpochId,
+      List<bool> fixed,
+    })
+  >
+  getVoterScheduledFeePercentageChanges(EthAddress voter) async {
     final out = await client.callFunction(
       contract: address,
       function: getVoterScheduledFeePercentageChangesFn,
       args: [voter],
     );
-    return (feePercentageBIPS: (out[0]! as List).cast<BigInt>(), validFromEpochId: (out[1]! as List).cast<BigInt>(), fixed: (out[2]! as List).cast<bool>());
+    return (
+      feePercentageBIPS: (out[0]! as List).cast<BigInt>(),
+      validFromEpochId: (out[1]! as List).cast<BigInt>(),
+      fixed: (out[2]! as List).cast<bool>(),
+    );
   }
-
 }

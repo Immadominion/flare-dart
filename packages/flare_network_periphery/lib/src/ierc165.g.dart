@@ -30,20 +30,17 @@ class IERC165Contract {
     ContractRegistry? registry,
     String registryName = 'IERC165',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IERC165Contract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `supportsInterface(bytes4)`.
   static final AbiFunction supportsInterfaceFn = AbiFunction(
     name: 'supportsInterface',
-    inputs: [
-      AbiParameter(name: 'interfaceId', type: AbiType.parse('bytes4')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [AbiParameter(name: 'interfaceId', type: AbiType.parse('bytes4'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -58,5 +55,4 @@ class IERC165Contract {
     );
     return out[0]! as bool;
   }
-
 }

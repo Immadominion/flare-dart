@@ -22,7 +22,10 @@ class IPChainStakeMirrorMultiSigVotingContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IPChainStakeMirrorMultiSigVotingContract({required this.client, required this.address});
+  const IPChainStakeMirrorMultiSigVotingContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IPChainStakeMirrorMultiSigVoting` through the [ContractRegistry].
   static Future<IPChainStakeMirrorMultiSigVotingContract> resolve(
@@ -30,30 +33,33 @@ class IPChainStakeMirrorMultiSigVotingContract {
     ContractRegistry? registry,
     String registryName = 'IPChainStakeMirrorMultiSigVoting',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
-    return IPChainStakeMirrorMultiSigVotingContract(client: client, address: resolved);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
+    return IPChainStakeMirrorMultiSigVotingContract(
+      client: client,
+      address: resolved,
+    );
   }
 
   /// ABI descriptor for `getCurrentEpochId()`.
   static final AbiFunction getCurrentEpochIdFn = AbiFunction(
     name: 'getCurrentEpochId',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getEpochConfiguration()`.
   static final AbiFunction getEpochConfigurationFn = AbiFunction(
     name: 'getEpochConfiguration',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_firstEpochStartTs', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_epochDurationSeconds', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_epochDurationSeconds',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -61,44 +67,31 @@ class IPChainStakeMirrorMultiSigVotingContract {
   /// ABI descriptor for `getEpochId(uint256)`.
   static final AbiFunction getEpochIdFn = AbiFunction(
     name: 'getEpochId',
-    inputs: [
-      AbiParameter(name: '_timestamp', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_timestamp', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getMerkleRoot(uint256)`.
   static final AbiFunction getMerkleRootFn = AbiFunction(
     name: 'getMerkleRoot',
-    inputs: [
-      AbiParameter(name: '_epochId', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bytes32')),
-    ],
+    inputs: [AbiParameter(name: '_epochId', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bytes32'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getVoters()`.
   static final AbiFunction getVotersFn = AbiFunction(
     name: 'getVoters',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getVotes(uint256)`.
   static final AbiFunction getVotesFn = AbiFunction(
     name: 'getVotes',
-    inputs: [
-      AbiParameter(name: '_epochId', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_epochId', type: AbiType.parse('uint256'))],
     outputs: [
       AbiParameter(name: '', type: AbiType.parse('(bytes32,address[])[]')),
     ],
@@ -108,11 +101,8 @@ class IPChainStakeMirrorMultiSigVotingContract {
   /// ABI descriptor for `getVotingThreshold()`.
   static final AbiFunction getVotingThresholdFn = AbiFunction(
     name: 'getVotingThreshold',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -123,9 +113,7 @@ class IPChainStakeMirrorMultiSigVotingContract {
       AbiParameter(name: '_epochId', type: AbiType.parse('uint256')),
       AbiParameter(name: '_voter', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -143,12 +131,16 @@ class IPChainStakeMirrorMultiSigVotingContract {
   /// Calls `getEpochConfiguration()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt firstEpochStartTs, BigInt epochDurationSeconds})> getEpochConfiguration() async {
+  Future<({BigInt firstEpochStartTs, BigInt epochDurationSeconds})>
+  getEpochConfiguration() async {
     final out = await client.callFunction(
       contract: address,
       function: getEpochConfigurationFn,
     );
-    return (firstEpochStartTs: out[0]! as BigInt, epochDurationSeconds: out[1]! as BigInt);
+    return (
+      firstEpochStartTs: out[0]! as BigInt,
+      epochDurationSeconds: out[1]! as BigInt,
+    );
   }
 
   /// Calls `getEpochId(uint256)`.
@@ -220,5 +212,4 @@ class IPChainStakeMirrorMultiSigVotingContract {
     );
     return out[0]! as bool;
   }
-
 }

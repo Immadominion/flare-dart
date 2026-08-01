@@ -21,11 +21,11 @@ class FlarePulseApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        title: 'Flare Pulse',
-        debugShowCheckedModeBanner: false,
-        theme: PulseTheme.dark,
-        home: const PulseScreen(),
-      );
+    title: 'Flare Pulse',
+    debugShowCheckedModeBanner: false,
+    theme: PulseTheme.dark,
+    home: const PulseScreen(),
+  );
 }
 
 class PulseScreen extends StatefulWidget {
@@ -46,20 +46,20 @@ class _PulseScreenState extends State<PulseScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: SafeArea(
-          child: ListenableBuilder(
-            listenable: _controller,
-            builder: (context, _) => Column(
-              children: [
-                _Header(controller: _controller),
-                const Divider(height: 1),
-                Expanded(child: _Body(controller: _controller)),
-                _Footer(controller: _controller),
-              ],
-            ),
-          ),
+    body: SafeArea(
+      child: ListenableBuilder(
+        listenable: _controller,
+        builder: (context, _) => Column(
+          children: [
+            _Header(controller: _controller),
+            const Divider(height: 1),
+            Expanded(child: _Body(controller: _controller)),
+            _Footer(controller: _controller),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 }
 
 class _Header extends StatelessWidget {
@@ -69,53 +69,50 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.fromLTRB(20, 16, 12, 16),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    padding: const EdgeInsets.fromLTRB(20, 16, 12, 16),
+    child: Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      const Text(
-                        'Flare Pulse',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: -0.4,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      _StatusDot(status: controller.status),
-                    ],
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'FTSOv2 · ${controller.chain.name}',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: PulseTheme.muted,
+                  const Text(
+                    'Flare Pulse',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.4,
                     ),
                   ),
+                  const SizedBox(width: 10),
+                  _StatusDot(status: controller.status),
                 ],
               ),
-            ),
-            PopupMenuButton<FlareChain>(
-              tooltip: 'Switch network',
-              icon: const Icon(Icons.swap_horiz, color: PulseTheme.muted),
-              onSelected: controller.switchChain,
-              itemBuilder: (context) => [
-                for (final chain in FlareChain.values)
-                  PopupMenuItem(
-                    value: chain,
-                    child: Text('${chain.name}  ·  ${chain.chainId}'),
-                  ),
-              ],
-            ),
+              const SizedBox(height: 2),
+              Text(
+                'FTSOv2 · ${controller.chain.name}',
+                style: const TextStyle(fontSize: 13, color: PulseTheme.muted),
+              ),
+            ],
+          ),
+        ),
+        PopupMenuButton<FlareChain>(
+          tooltip: 'Switch network',
+          icon: const Icon(Icons.swap_horiz, color: PulseTheme.muted),
+          onSelected: controller.switchChain,
+          itemBuilder: (context) => [
+            for (final chain in FlareChain.values)
+              PopupMenuItem(
+                value: chain,
+                child: Text('${chain.name}  ·  ${chain.chainId}'),
+              ),
           ],
         ),
-      );
+      ],
+    ),
+  );
 }
 
 class _StatusDot extends StatelessWidget {
@@ -244,8 +241,8 @@ class _Footer extends StatelessWidget {
             controller.updateCount == 0
                 ? 'Reads are free — no wallet, no gas.'
                 : '${controller.updateCount} update'
-                    '${controller.updateCount == 1 ? '' : 's'} · '
-                    'reads are free — no wallet, no gas.',
+                      '${controller.updateCount == 1 ? '' : 's'} · '
+                      'reads are free — no wallet, no gas.',
             style: const TextStyle(fontSize: 11, color: PulseTheme.muted),
           ),
           if (controller.status == PulseStatus.retrying) ...[

@@ -20,7 +20,10 @@ class IXrplProviderWalletsFacetContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IXrplProviderWalletsFacetContract({required this.client, required this.address});
+  const IXrplProviderWalletsFacetContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IXrplProviderWalletsFacet` through the [ContractRegistry].
   static Future<IXrplProviderWalletsFacetContract> resolve(
@@ -28,19 +31,17 @@ class IXrplProviderWalletsFacetContract {
     ContractRegistry? registry,
     String registryName = 'IXrplProviderWalletsFacet',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IXrplProviderWalletsFacetContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getXrplProviderWallets()`.
   static final AbiFunction getXrplProviderWalletsFn = AbiFunction(
     name: 'getXrplProviderWallets',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string[]'))],
     stateMutability: StateMutability.view,
   );
 
@@ -54,5 +55,4 @@ class IXrplProviderWalletsFacetContract {
     );
     return (out[0]! as List).cast<String>();
   }
-
 }

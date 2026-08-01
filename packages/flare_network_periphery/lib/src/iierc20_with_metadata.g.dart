@@ -20,7 +20,10 @@ class IIERC20WithMetadataContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IIERC20WithMetadataContract({required this.client, required this.address});
+  const IIERC20WithMetadataContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IIERC20WithMetadata` through the [ContractRegistry].
   static Future<IIERC20WithMetadataContract> resolve(
@@ -28,8 +31,9 @@ class IIERC20WithMetadataContract {
     ContractRegistry? registry,
     String registryName = 'IIERC20WithMetadata',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIERC20WithMetadataContract(client: client, address: resolved);
   }
 
@@ -40,65 +44,47 @@ class IIERC20WithMetadataContract {
       AbiParameter(name: 'owner', type: AbiType.parse('address')),
       AbiParameter(name: 'spender', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `balanceOf(address)`.
   static final AbiFunction balanceOfFn = AbiFunction(
     name: 'balanceOf',
-    inputs: [
-      AbiParameter(name: 'account', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: 'account', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `decimals()`.
   static final AbiFunction decimalsFn = AbiFunction(
     name: 'decimals',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint8')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint8'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `name()`.
   static final AbiFunction nameFn = AbiFunction(
     name: 'name',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `symbol()`.
   static final AbiFunction symbolFn = AbiFunction(
     name: 'symbol',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `totalSupply()`.
   static final AbiFunction totalSupplyFn = AbiFunction(
     name: 'totalSupply',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -141,10 +127,7 @@ class IIERC20WithMetadataContract {
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
   Future<String> name() async {
-    final out = await client.callFunction(
-      contract: address,
-      function: nameFn,
-    );
+    final out = await client.callFunction(contract: address, function: nameFn);
     return out[0]! as String;
   }
 
@@ -169,5 +152,4 @@ class IIERC20WithMetadataContract {
     );
     return out[0]! as BigInt;
   }
-
 }

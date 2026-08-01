@@ -6,16 +6,21 @@ class AbiParam {
   final String type;
   final List<AbiParam> components;
 
-  AbiParam({required this.name, required this.type, this.components = const []});
+  AbiParam({
+    required this.name,
+    required this.type,
+    this.components = const [],
+  });
 
   factory AbiParam.fromJson(Map<String, Object?> json) => AbiParam(
-        name: (json['name'] as String?) ?? '',
-        type: (json['type'] as String?) ?? '',
-        components: ((json['components'] as List<Object?>?) ?? const [])
+    name: (json['name'] as String?) ?? '',
+    type: (json['type'] as String?) ?? '',
+    components:
+        ((json['components'] as List<Object?>?) ?? const [])
             .cast<Map<String, Object?>>()
             .map(AbiParam.fromJson)
             .toList(),
-      );
+  );
 
   /// The canonical Solidity type, with `tuple` expanded to its components.
   ///
@@ -35,7 +40,8 @@ abstract final class TypeMapper {
   /// Integers all map to [BigInt], including narrow ones such as `int8`. A
   /// uniform rule cannot silently overflow, and it keeps every narrowing
   /// explicit and greppable at the call site.
-  static String dartType(AbiParam param) => _dartTypeFor(param.canonicalType, param);
+  static String dartType(AbiParam param) =>
+      _dartTypeFor(param.canonicalType, param);
 
   static String _dartTypeFor(String solidityType, AbiParam param) {
     final t = solidityType;
@@ -87,11 +93,13 @@ abstract final class TypeMapper {
     if (outputs.isEmpty) return 'void';
     if (outputs.length == 1) return dartType(outputs.single);
 
-    final names = outputs
-        .map((o) => o.name.isEmpty ? '' : toDartIdentifier(o.name))
-        .toList();
+    final names =
+        outputs
+            .map((o) => o.name.isEmpty ? '' : toDartIdentifier(o.name))
+            .toList();
     final usable =
-        names.every((n) => n.isNotEmpty) && names.toSet().length == names.length;
+        names.every((n) => n.isNotEmpty) &&
+        names.toSet().length == names.length;
 
     if (usable) {
       final fields = [

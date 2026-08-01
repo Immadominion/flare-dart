@@ -22,7 +22,10 @@ class IPChainStakeMirrorContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IPChainStakeMirrorContract({required this.client, required this.address});
+  const IPChainStakeMirrorContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IPChainStakeMirror` through the [ContractRegistry].
   static Future<IPChainStakeMirrorContract> resolve(
@@ -30,20 +33,17 @@ class IPChainStakeMirrorContract {
     ContractRegistry? registry,
     String registryName = 'IPChainStakeMirror',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IPChainStakeMirrorContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `balanceOf(address)`.
   static final AbiFunction balanceOfFn = AbiFunction(
     name: 'balanceOf',
-    inputs: [
-      AbiParameter(name: '_owner', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_owner', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -54,9 +54,7 @@ class IPChainStakeMirrorContract {
       AbiParameter(name: '_owner', type: AbiType.parse('address')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -67,9 +65,7 @@ class IPChainStakeMirrorContract {
       AbiParameter(name: '_nodeIds', type: AbiType.parse('bytes20[]')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256[]')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256[]'))],
     stateMutability: StateMutability.view,
   );
 
@@ -80,18 +76,14 @@ class IPChainStakeMirrorContract {
       AbiParameter(name: '_txId', type: AbiType.parse('bytes32')),
       AbiParameter(name: '_inputAddress', type: AbiType.parse('bytes20')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `stakesOf(address)`.
   static final AbiFunction stakesOfFn = AbiFunction(
     name: 'stakesOf',
-    inputs: [
-      AbiParameter(name: '_owner', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_owner', type: AbiType.parse('address'))],
     outputs: [
       AbiParameter(name: '_nodeIds', type: AbiType.parse('bytes20[]')),
       AbiParameter(name: '_amounts', type: AbiType.parse('uint256[]')),
@@ -116,11 +108,8 @@ class IPChainStakeMirrorContract {
   /// ABI descriptor for `totalSupply()`.
   static final AbiFunction totalSupplyFn = AbiFunction(
     name: 'totalSupply',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -130,20 +119,15 @@ class IPChainStakeMirrorContract {
     inputs: [
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `totalVotePower()`.
   static final AbiFunction totalVotePowerFn = AbiFunction(
     name: 'totalVotePower',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -153,9 +137,7 @@ class IPChainStakeMirrorContract {
     inputs: [
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -166,9 +148,7 @@ class IPChainStakeMirrorContract {
       AbiParameter(name: '_owner', type: AbiType.parse('address')),
       AbiParameter(name: '_nodeId', type: AbiType.parse('bytes20')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -180,21 +160,15 @@ class IPChainStakeMirrorContract {
       AbiParameter(name: '_nodeId', type: AbiType.parse('bytes20')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `votePowerOf(bytes20)`.
   static final AbiFunction votePowerOfFn = AbiFunction(
     name: 'votePowerOf',
-    inputs: [
-      AbiParameter(name: '_nodeId', type: AbiType.parse('bytes20')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_nodeId', type: AbiType.parse('bytes20'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -205,9 +179,7 @@ class IPChainStakeMirrorContract {
       AbiParameter(name: '_nodeId', type: AbiType.parse('bytes20')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -238,7 +210,10 @@ class IPChainStakeMirrorContract {
   /// Calls `batchVotePowerOfAt(bytes20[],uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<BigInt>> batchVotePowerOfAt(List<Uint8List> nodeIds, BigInt blockNumber) async {
+  Future<List<BigInt>> batchVotePowerOfAt(
+    List<Uint8List> nodeIds,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: batchVotePowerOfAtFn,
@@ -250,7 +225,10 @@ class IPChainStakeMirrorContract {
   /// Calls `isActiveStakeMirrored(bytes32,bytes20)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<bool> isActiveStakeMirrored(Uint8List txId, Uint8List inputAddress) async {
+  Future<bool> isActiveStakeMirrored(
+    Uint8List txId,
+    Uint8List inputAddress,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: isActiveStakeMirroredFn,
@@ -262,25 +240,36 @@ class IPChainStakeMirrorContract {
   /// Calls `stakesOf(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<Uint8List> nodeIds, List<BigInt> amounts})> stakesOf(EthAddress owner) async {
+  Future<({List<Uint8List> nodeIds, List<BigInt> amounts})> stakesOf(
+    EthAddress owner,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: stakesOfFn,
       args: [owner],
     );
-    return (nodeIds: (out[0]! as List).cast<Uint8List>(), amounts: (out[1]! as List).cast<BigInt>());
+    return (
+      nodeIds: (out[0]! as List).cast<Uint8List>(),
+      amounts: (out[1]! as List).cast<BigInt>(),
+    );
   }
 
   /// Calls `stakesOfAt(address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<Uint8List> nodeIds, List<BigInt> amounts})> stakesOfAt(EthAddress owner, BigInt blockNumber) async {
+  Future<({List<Uint8List> nodeIds, List<BigInt> amounts})> stakesOfAt(
+    EthAddress owner,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: stakesOfAtFn,
       args: [owner, blockNumber],
     );
-    return (nodeIds: (out[0]! as List).cast<Uint8List>(), amounts: (out[1]! as List).cast<BigInt>());
+    return (
+      nodeIds: (out[0]! as List).cast<Uint8List>(),
+      amounts: (out[1]! as List).cast<BigInt>(),
+    );
   }
 
   /// Calls `totalSupply()`.
@@ -344,7 +333,11 @@ class IPChainStakeMirrorContract {
   /// Calls `votePowerFromToAt(address,bytes20,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> votePowerFromToAt(EthAddress owner, Uint8List nodeId, BigInt blockNumber) async {
+  Future<BigInt> votePowerFromToAt(
+    EthAddress owner,
+    Uint8List nodeId,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: votePowerFromToAtFn,
@@ -376,5 +369,4 @@ class IPChainStakeMirrorContract {
     );
     return out[0]! as BigInt;
   }
-
 }

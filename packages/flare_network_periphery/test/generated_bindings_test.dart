@@ -35,31 +35,34 @@ void main() {
       ftso = FtsoV2InterfaceContract(client: client, address: address);
     });
 
-    test('getFeedsById returns a named record of values, decimals, timestamp',
-        () async {
-      final result = await ftso.getFeedsById([
-        FeedId.crypto('FLR/USD').bytes,
-        FeedId.crypto('BTC/USD').bytes,
-        FeedId.crypto('XRP/USD').bytes,
-      ]);
+    test(
+      'getFeedsById returns a named record of values, decimals, timestamp',
+      () async {
+        final result = await ftso.getFeedsById([
+          FeedId.crypto('FLR/USD').bytes,
+          FeedId.crypto('BTC/USD').bytes,
+          FeedId.crypto('XRP/USD').bytes,
+        ]);
 
-      // Multi-output functions generate a NAMED record, so these read as
-      // fields rather than positional $1/$2/$3.
-      expect(result.values, hasLength(3));
-      expect(result.decimals, hasLength(3));
-      expect(result.timestamp, greaterThan(BigInt.zero));
-      for (final v in result.values) {
-        expect(v, greaterThan(BigInt.zero));
-      }
-      // The decimals-vary invariant, seen through the generated path too.
-      expect(result.decimals.toSet().length, greaterThan(1));
-    });
+        // Multi-output functions generate a NAMED record, so these read as
+        // fields rather than positional $1/$2/$3.
+        expect(result.values, hasLength(3));
+        expect(result.decimals, hasLength(3));
+        expect(result.timestamp, greaterThan(BigInt.zero));
+        for (final v in result.values) {
+          expect(v, greaterThan(BigInt.zero));
+        }
+        // The decimals-vary invariant, seen through the generated path too.
+        expect(result.decimals.toSet().length, greaterThan(1));
+      },
+    );
 
     test('agrees with the hand-written FtsoV2 client on scale', () async {
       final handWritten = FtsoV2(client: client, address: ftso.address);
       final viaHand = await handWritten.getFeedById(Feeds.flrUsd);
-      final viaGenerated =
-          await ftso.getFeedById(FeedId.crypto('FLR/USD').bytes);
+      final viaGenerated = await ftso.getFeedById(
+        FeedId.crypto('FLR/USD').bytes,
+      );
 
       // Two independent code paths against one contract must agree on scale.
       // Values may differ by a tick between calls; decimals must not.
@@ -96,44 +99,52 @@ void main() {
 
     setUpAll(() async {
       final address = await registry.addressOf(FlareContract.protocolsV2);
-      protocols =
-          ProtocolsV2InterfaceContract(client: client, address: address);
-    });
-
-    test('exposes the voting-epoch parameters FDC round IDs derive from',
-        () async {
-      final start = await protocols.firstVotingRoundStartTs();
-      final duration = await protocols.votingEpochDurationSeconds();
-
-      // Read these live, never hardcode: Flare's own TypeScript example ships
-      // a Coston value that is wrong for mainnet by 45 seconds.
-      expect(start, greaterThan(BigInt.zero));
-      expect(duration, greaterThan(BigInt.zero));
-      expect(duration, lessThanOrEqualTo(BigInt.from(3600)));
-    });
-
-    test('the current voting epoch is consistent with wall-clock time',
-        () async {
-      final start = await protocols.firstVotingRoundStartTs();
-      final duration = await protocols.votingEpochDurationSeconds();
-      final reported = await protocols.getCurrentVotingEpochId();
-
-      final now = BigInt.from(
-        DateTime.now().toUtc().millisecondsSinceEpoch ~/ 1000,
+      protocols = ProtocolsV2InterfaceContract(
+        client: client,
+        address: address,
       );
-      final derived = (now - start) ~/ duration;
-
-      // This is the exact arithmetic an FDC client uses to compute a round ID.
-      // Allow a couple of epochs of slack for clock skew and block lag.
-      expect((derived - reported).abs(), lessThanOrEqualTo(BigInt.from(2)));
     });
+
+    test(
+      'exposes the voting-epoch parameters FDC round IDs derive from',
+      () async {
+        final start = await protocols.firstVotingRoundStartTs();
+        final duration = await protocols.votingEpochDurationSeconds();
+
+        // Read these live, never hardcode: Flare's own TypeScript example ships
+        // a Coston value that is wrong for mainnet by 45 seconds.
+        expect(start, greaterThan(BigInt.zero));
+        expect(duration, greaterThan(BigInt.zero));
+        expect(duration, lessThanOrEqualTo(BigInt.from(3600)));
+      },
+    );
+
+    test(
+      'the current voting epoch is consistent with wall-clock time',
+      () async {
+        final start = await protocols.firstVotingRoundStartTs();
+        final duration = await protocols.votingEpochDurationSeconds();
+        final reported = await protocols.getCurrentVotingEpochId();
+
+        final now = BigInt.from(
+          DateTime.now().toUtc().millisecondsSinceEpoch ~/ 1000,
+        );
+        final derived = (now - start) ~/ duration;
+
+        // This is the exact arithmetic an FDC client uses to compute a round ID.
+        // Allow a couple of epochs of slack for clock skew and block lag.
+        expect((derived - reported).abs(), lessThanOrEqualTo(BigInt.from(2)));
+      },
+    );
   });
 
   group('generated RandomNumberV2Interface binding', () {
     test('returns a random number, a security flag and a timestamp', () async {
       final address = await registry.addressOf(FlareContract.randomNumberV2);
-      final rng =
-          RandomNumberV2InterfaceContract(client: client, address: address);
+      final rng = RandomNumberV2InterfaceContract(
+        client: client,
+        address: address,
+      );
 
       final result = await rng.getRandomNumber();
 

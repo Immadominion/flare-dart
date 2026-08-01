@@ -22,7 +22,10 @@ class IValidatorRegistryContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IValidatorRegistryContract({required this.client, required this.address});
+  const IValidatorRegistryContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IValidatorRegistry` through the [ContractRegistry].
   static Future<IValidatorRegistryContract> resolve(
@@ -30,17 +33,16 @@ class IValidatorRegistryContract {
     ContractRegistry? registry,
     String registryName = 'IValidatorRegistry',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IValidatorRegistryContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getDataProviderForNodeId(bytes32)`.
   static final AbiFunction getDataProviderForNodeIdFn = AbiFunction(
     name: 'getDataProviderForNodeId',
-    inputs: [
-      AbiParameter(name: '_nodeId', type: AbiType.parse('bytes32')),
-    ],
+    inputs: [AbiParameter(name: '_nodeId', type: AbiType.parse('bytes32'))],
     outputs: [
       AbiParameter(name: '_dataProvider', type: AbiType.parse('address')),
     ],
@@ -87,7 +89,9 @@ class IValidatorRegistryContract {
   /// Calls `getDataProviderForPChainPublicKey(bytes32)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<EthAddress> getDataProviderForPChainPublicKey(Uint8List pChainPublicKey) async {
+  Future<EthAddress> getDataProviderForPChainPublicKey(
+    Uint8List pChainPublicKey,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getDataProviderForPChainPublicKeyFn,
@@ -99,7 +103,9 @@ class IValidatorRegistryContract {
   /// Calls `getDataProviderInfo(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({String nodeId, String pChainPublicKey})> getDataProviderInfo(EthAddress dataProvider) async {
+  Future<({String nodeId, String pChainPublicKey})> getDataProviderInfo(
+    EthAddress dataProvider,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getDataProviderInfoFn,
@@ -107,5 +113,4 @@ class IValidatorRegistryContract {
     );
     return (nodeId: out[0]! as String, pChainPublicKey: out[1]! as String);
   }
-
 }

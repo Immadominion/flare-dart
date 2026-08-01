@@ -20,7 +20,10 @@ class IAddressValidityVerificationContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IAddressValidityVerificationContract({required this.client, required this.address});
+  const IAddressValidityVerificationContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IAddressValidityVerification` through the [ContractRegistry].
   static Future<IAddressValidityVerificationContract> resolve(
@@ -28,20 +31,27 @@ class IAddressValidityVerificationContract {
     ContractRegistry? registry,
     String registryName = 'IAddressValidityVerification',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
-    return IAddressValidityVerificationContract(client: client, address: resolved);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
+    return IAddressValidityVerificationContract(
+      client: client,
+      address: resolved,
+    );
   }
 
   /// ABI descriptor for `verifyAddressValidity((bytes32[],(bytes32,bytes32,uint64,uint64,(string),(bool,string,bytes32))))`.
   static final AbiFunction verifyAddressValidityFn = AbiFunction(
     name: 'verifyAddressValidity',
     inputs: [
-      AbiParameter(name: '_proof', type: AbiType.parse('(bytes32[],(bytes32,bytes32,uint64,uint64,(string),(bool,string,bytes32)))')),
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(string),(bool,string,bytes32)))',
+        ),
+      ),
     ],
-    outputs: [
-      AbiParameter(name: '_proved', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '_proved', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -56,5 +66,4 @@ class IAddressValidityVerificationContract {
     );
     return out[0]! as bool;
   }
-
 }

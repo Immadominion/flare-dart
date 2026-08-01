@@ -20,7 +20,10 @@ class IFtsoRewardManagerContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IFtsoRewardManagerContract({required this.client, required this.address});
+  const IFtsoRewardManagerContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IFtsoRewardManager` through the [ContractRegistry].
   static Future<IFtsoRewardManagerContract> resolve(
@@ -28,19 +31,17 @@ class IFtsoRewardManagerContract {
     ContractRegistry? registry,
     String registryName = 'IFtsoRewardManager',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IFtsoRewardManagerContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `active()`.
   static final AbiFunction activeFn = AbiFunction(
     name: 'active',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -62,11 +63,8 @@ class IFtsoRewardManagerContract {
   /// ABI descriptor for `getCurrentRewardEpoch()`.
   static final AbiFunction getCurrentRewardEpochFn = AbiFunction(
     name: 'getCurrentRewardEpoch',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -104,24 +102,34 @@ class IFtsoRewardManagerContract {
     ],
     outputs: [
       AbiParameter(name: '_rewardAmount', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_votePowerIgnoringRevocation', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_votePowerIgnoringRevocation',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getDataProviderScheduledFeePercentageChanges(address)`.
-  static final AbiFunction getDataProviderScheduledFeePercentageChangesFn = AbiFunction(
-    name: 'getDataProviderScheduledFeePercentageChanges',
-    inputs: [
-      AbiParameter(name: '_dataProvider', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '_feePercentageBIPS', type: AbiType.parse('uint256[]')),
-      AbiParameter(name: '_validFromEpoch', type: AbiType.parse('uint256[]')),
-      AbiParameter(name: '_fixed', type: AbiType.parse('bool[]')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getDataProviderScheduledFeePercentageChangesFn =
+      AbiFunction(
+        name: 'getDataProviderScheduledFeePercentageChanges',
+        inputs: [
+          AbiParameter(name: '_dataProvider', type: AbiType.parse('address')),
+        ],
+        outputs: [
+          AbiParameter(
+            name: '_feePercentageBIPS',
+            type: AbiType.parse('uint256[]'),
+          ),
+          AbiParameter(
+            name: '_validFromEpoch',
+            type: AbiType.parse('uint256[]'),
+          ),
+          AbiParameter(name: '_fixed', type: AbiType.parse('bool[]')),
+        ],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getEpochReward(uint256)`.
   static final AbiFunction getEpochRewardFn = AbiFunction(
@@ -139,8 +147,7 @@ class IFtsoRewardManagerContract {
   /// ABI descriptor for `getEpochsWithClaimableRewards()`.
   static final AbiFunction getEpochsWithClaimableRewardsFn = AbiFunction(
     name: 'getEpochsWithClaimableRewards',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_startEpochId', type: AbiType.parse('uint256')),
       AbiParameter(name: '_endEpochId', type: AbiType.parse('uint256')),
@@ -163,22 +170,16 @@ class IFtsoRewardManagerContract {
   /// ABI descriptor for `getInitialRewardEpoch()`.
   static final AbiFunction getInitialRewardEpochFn = AbiFunction(
     name: 'getInitialRewardEpoch',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getRewardEpochToExpireNext()`.
   static final AbiFunction getRewardEpochToExpireNextFn = AbiFunction(
     name: 'getRewardEpochToExpireNext',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -188,9 +189,7 @@ class IFtsoRewardManagerContract {
     inputs: [
       AbiParameter(name: '_rewardEpoch', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -232,9 +231,7 @@ class IFtsoRewardManagerContract {
     inputs: [
       AbiParameter(name: '_rewardOwner', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -252,7 +249,11 @@ class IFtsoRewardManagerContract {
   /// Calls `getClaimedReward(uint256,address,address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({bool claimed, BigInt amount})> getClaimedReward(BigInt rewardEpoch, EthAddress dataProvider, EthAddress claimer) async {
+  Future<({bool claimed, BigInt amount})> getClaimedReward(
+    BigInt rewardEpoch,
+    EthAddress dataProvider,
+    EthAddress claimer,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getClaimedRewardFn,
@@ -275,7 +276,9 @@ class IFtsoRewardManagerContract {
   /// Calls `getDataProviderCurrentFeePercentage(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> getDataProviderCurrentFeePercentage(EthAddress dataProvider) async {
+  Future<BigInt> getDataProviderCurrentFeePercentage(
+    EthAddress dataProvider,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getDataProviderCurrentFeePercentageFn,
@@ -287,7 +290,10 @@ class IFtsoRewardManagerContract {
   /// Calls `getDataProviderFeePercentage(address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> getDataProviderFeePercentage(EthAddress dataProvider, BigInt rewardEpoch) async {
+  Future<BigInt> getDataProviderFeePercentage(
+    EthAddress dataProvider,
+    BigInt rewardEpoch,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getDataProviderFeePercentageFn,
@@ -299,31 +305,51 @@ class IFtsoRewardManagerContract {
   /// Calls `getDataProviderPerformanceInfo(uint256,address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt rewardAmount, BigInt votePowerIgnoringRevocation})> getDataProviderPerformanceInfo(BigInt rewardEpoch, EthAddress dataProvider) async {
+  Future<({BigInt rewardAmount, BigInt votePowerIgnoringRevocation})>
+  getDataProviderPerformanceInfo(
+    BigInt rewardEpoch,
+    EthAddress dataProvider,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getDataProviderPerformanceInfoFn,
       args: [rewardEpoch, dataProvider],
     );
-    return (rewardAmount: out[0]! as BigInt, votePowerIgnoringRevocation: out[1]! as BigInt);
+    return (
+      rewardAmount: out[0]! as BigInt,
+      votePowerIgnoringRevocation: out[1]! as BigInt,
+    );
   }
 
   /// Calls `getDataProviderScheduledFeePercentageChanges(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<BigInt> feePercentageBIPS, List<BigInt> validFromEpoch, List<bool> fixed})> getDataProviderScheduledFeePercentageChanges(EthAddress dataProvider) async {
+  Future<
+    ({
+      List<BigInt> feePercentageBIPS,
+      List<BigInt> validFromEpoch,
+      List<bool> fixed,
+    })
+  >
+  getDataProviderScheduledFeePercentageChanges(EthAddress dataProvider) async {
     final out = await client.callFunction(
       contract: address,
       function: getDataProviderScheduledFeePercentageChangesFn,
       args: [dataProvider],
     );
-    return (feePercentageBIPS: (out[0]! as List).cast<BigInt>(), validFromEpoch: (out[1]! as List).cast<BigInt>(), fixed: (out[2]! as List).cast<bool>());
+    return (
+      feePercentageBIPS: (out[0]! as List).cast<BigInt>(),
+      validFromEpoch: (out[1]! as List).cast<BigInt>(),
+      fixed: (out[2]! as List).cast<bool>(),
+    );
   }
 
   /// Calls `getEpochReward(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt totalReward, BigInt claimedReward})> getEpochReward(BigInt rewardEpoch) async {
+  Future<({BigInt totalReward, BigInt claimedReward})> getEpochReward(
+    BigInt rewardEpoch,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getEpochRewardFn,
@@ -335,7 +361,8 @@ class IFtsoRewardManagerContract {
   /// Calls `getEpochsWithClaimableRewards()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt startEpochId, BigInt endEpochId})> getEpochsWithClaimableRewards() async {
+  Future<({BigInt startEpochId, BigInt endEpochId})>
+  getEpochsWithClaimableRewards() async {
     final out = await client.callFunction(
       contract: address,
       function: getEpochsWithClaimableRewardsFn,
@@ -346,7 +373,9 @@ class IFtsoRewardManagerContract {
   /// Calls `getEpochsWithUnclaimedRewards(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<BigInt>> getEpochsWithUnclaimedRewards(EthAddress beneficiary) async {
+  Future<List<BigInt>> getEpochsWithUnclaimedRewards(
+    EthAddress beneficiary,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getEpochsWithUnclaimedRewardsFn,
@@ -392,25 +421,47 @@ class IFtsoRewardManagerContract {
   /// Calls `getStateOfRewards(address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<EthAddress> dataProviders, List<BigInt> rewardAmounts, List<bool> claimed, bool claimable})> getStateOfRewards(EthAddress beneficiary, BigInt rewardEpoch) async {
+  Future<
+    ({
+      List<EthAddress> dataProviders,
+      List<BigInt> rewardAmounts,
+      List<bool> claimed,
+      bool claimable,
+    })
+  >
+  getStateOfRewards(EthAddress beneficiary, BigInt rewardEpoch) async {
     final out = await client.callFunction(
       contract: address,
       function: getStateOfRewardsFn,
       args: [beneficiary, rewardEpoch],
     );
-    return (dataProviders: (out[0]! as List).cast<EthAddress>(), rewardAmounts: (out[1]! as List).cast<BigInt>(), claimed: (out[2]! as List).cast<bool>(), claimable: out[3]! as bool);
+    return (
+      dataProviders: (out[0]! as List).cast<EthAddress>(),
+      rewardAmounts: (out[1]! as List).cast<BigInt>(),
+      claimed: (out[2]! as List).cast<bool>(),
+      claimable: out[3]! as bool,
+    );
   }
 
   /// Calls `getStateOfRewardsFromDataProviders(address,uint256,address[])`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<BigInt> rewardAmounts, List<bool> claimed, bool claimable})> getStateOfRewardsFromDataProviders(EthAddress beneficiary, BigInt rewardEpoch, List<EthAddress> dataProviders) async {
+  Future<({List<BigInt> rewardAmounts, List<bool> claimed, bool claimable})>
+  getStateOfRewardsFromDataProviders(
+    EthAddress beneficiary,
+    BigInt rewardEpoch,
+    List<EthAddress> dataProviders,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getStateOfRewardsFromDataProvidersFn,
       args: [beneficiary, rewardEpoch, dataProviders],
     );
-    return (rewardAmounts: (out[0]! as List).cast<BigInt>(), claimed: (out[1]! as List).cast<bool>(), claimable: out[2]! as bool);
+    return (
+      rewardAmounts: (out[0]! as List).cast<BigInt>(),
+      claimed: (out[1]! as List).cast<bool>(),
+      claimable: out[2]! as bool,
+    );
   }
 
   /// Calls `nextClaimableRewardEpoch(address)`.
@@ -424,5 +475,4 @@ class IFtsoRewardManagerContract {
     );
     return out[0]! as BigInt;
   }
-
 }

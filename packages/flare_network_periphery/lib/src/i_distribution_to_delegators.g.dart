@@ -20,7 +20,10 @@ class IDistributionToDelegatorsContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IDistributionToDelegatorsContract({required this.client, required this.address});
+  const IDistributionToDelegatorsContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IDistributionToDelegators` through the [ContractRegistry].
   static Future<IDistributionToDelegatorsContract> resolve(
@@ -28,20 +31,17 @@ class IDistributionToDelegatorsContract {
     ContractRegistry? registry,
     String registryName = 'IDistributionToDelegators',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IDistributionToDelegatorsContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getClaimableAmount(uint256)`.
   static final AbiFunction getClaimableAmountFn = AbiFunction(
     name: 'getClaimableAmount',
-    inputs: [
-      AbiParameter(name: '_month', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '_amountWei', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_month', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '_amountWei', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -52,17 +52,14 @@ class IDistributionToDelegatorsContract {
       AbiParameter(name: '_account', type: AbiType.parse('address')),
       AbiParameter(name: '_month', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '_amountWei', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '_amountWei', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getClaimableMonths()`.
   static final AbiFunction getClaimableMonthsFn = AbiFunction(
     name: 'getClaimableMonths',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_startMonth', type: AbiType.parse('uint256')),
       AbiParameter(name: '_endMonth', type: AbiType.parse('uint256')),
@@ -73,8 +70,7 @@ class IDistributionToDelegatorsContract {
   /// ABI descriptor for `getCurrentMonth()`.
   static final AbiFunction getCurrentMonthFn = AbiFunction(
     name: 'getCurrentMonth',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_currentMonth', type: AbiType.parse('uint256')),
     ],
@@ -84,8 +80,7 @@ class IDistributionToDelegatorsContract {
   /// ABI descriptor for `getMonthToExpireNext()`.
   static final AbiFunction getMonthToExpireNextFn = AbiFunction(
     name: 'getMonthToExpireNext',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_monthToExpireNext', type: AbiType.parse('uint256')),
     ],
@@ -98,9 +93,7 @@ class IDistributionToDelegatorsContract {
     inputs: [
       AbiParameter(name: '_rewardOwner', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -172,5 +165,4 @@ class IDistributionToDelegatorsContract {
     );
     return out[0]! as BigInt;
   }
-
 }

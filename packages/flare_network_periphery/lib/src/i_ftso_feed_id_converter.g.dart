@@ -22,7 +22,10 @@ class IFtsoFeedIdConverterContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IFtsoFeedIdConverterContract({required this.client, required this.address});
+  const IFtsoFeedIdConverterContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IFtsoFeedIdConverter` through the [ContractRegistry].
   static Future<IFtsoFeedIdConverterContract> resolve(
@@ -30,17 +33,16 @@ class IFtsoFeedIdConverterContract {
     ContractRegistry? registry,
     String registryName = 'IFtsoFeedIdConverter',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IFtsoFeedIdConverterContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getFeedCategoryAndName(bytes21)`.
   static final AbiFunction getFeedCategoryAndNameFn = AbiFunction(
     name: 'getFeedCategoryAndName',
-    inputs: [
-      AbiParameter(name: '_feedId', type: AbiType.parse('bytes21')),
-    ],
+    inputs: [AbiParameter(name: '_feedId', type: AbiType.parse('bytes21'))],
     outputs: [
       AbiParameter(name: '_category', type: AbiType.parse('uint8')),
       AbiParameter(name: '_name', type: AbiType.parse('string')),
@@ -55,16 +57,16 @@ class IFtsoFeedIdConverterContract {
       AbiParameter(name: '_category', type: AbiType.parse('uint8')),
       AbiParameter(name: '_name', type: AbiType.parse('string')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bytes21')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bytes21'))],
     stateMutability: StateMutability.view,
   );
 
   /// Calls `getFeedCategoryAndName(bytes21)`.
   ///
   /// Declared `pure` in Solidity; read via `eth_call`.
-  Future<({BigInt category, String name})> getFeedCategoryAndName(Uint8List feedId) async {
+  Future<({BigInt category, String name})> getFeedCategoryAndName(
+    Uint8List feedId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getFeedCategoryAndNameFn,
@@ -84,5 +86,4 @@ class IFtsoFeedIdConverterContract {
     );
     return out[0]! as Uint8List;
   }
-
 }

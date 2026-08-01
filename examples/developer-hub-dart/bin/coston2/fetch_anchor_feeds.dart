@@ -22,12 +22,16 @@ Future<void> main() async {
     ]);
 
     for (final feed in feeds) {
-      print('${feed.feedId.name.padRight(9)} '
-          '${feed.toDecimalString().padLeft(16)}  (${feed.decimals} dp)');
+      print(
+        '${feed.feedId.name.padRight(9)} '
+        '${feed.toDecimalString().padLeft(16)}  (${feed.decimals} dp)',
+      );
       print('  round   : ${feed.votingRoundId}');
       print('  turnout : ${feed.turnoutPercent.toStringAsFixed(2)}%');
-      print('  proof   : ${feed.proof.length} nodes, '
-          'root path starts ${bytesToHex(feed.proof.first).substring(0, 18)}…');
+      print(
+        '  proof   : ${feed.proof.length} nodes, '
+        'root path starts ${bytesToHex(feed.proof.first).substring(0, 18)}…',
+      );
     }
 
     // Anchor decimals are not the same as block-latency decimals for the same

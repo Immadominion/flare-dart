@@ -28,38 +28,32 @@ class IFtsoContract {
     ContractRegistry? registry,
     String registryName = 'IFtso',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IFtsoContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `active()`.
   static final AbiFunction activeFn = AbiFunction(
     name: 'active',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCurrentEpochId()`.
   static final AbiFunction getCurrentEpochIdFn = AbiFunction(
     name: 'getCurrentEpochId',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCurrentPrice()`.
   static final AbiFunction getCurrentPriceFn = AbiFunction(
     name: 'getCurrentPrice',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_price', type: AbiType.parse('uint256')),
       AbiParameter(name: '_timestamp', type: AbiType.parse('uint256')),
@@ -70,14 +64,22 @@ class IFtsoContract {
   /// ABI descriptor for `getCurrentPriceDetails()`.
   static final AbiFunction getCurrentPriceDetailsFn = AbiFunction(
     name: 'getCurrentPriceDetails',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_price', type: AbiType.parse('uint256')),
       AbiParameter(name: '_priceTimestamp', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_priceFinalizationType', type: AbiType.parse('uint8')),
-      AbiParameter(name: '_lastPriceEpochFinalizationTimestamp', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_lastPriceEpochFinalizationType', type: AbiType.parse('uint8')),
+      AbiParameter(
+        name: '_priceFinalizationType',
+        type: AbiType.parse('uint8'),
+      ),
+      AbiParameter(
+        name: '_lastPriceEpochFinalizationTimestamp',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_lastPriceEpochFinalizationType',
+        type: AbiType.parse('uint8'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -85,8 +87,7 @@ class IFtsoContract {
   /// ABI descriptor for `getCurrentPriceFromTrustedProviders()`.
   static final AbiFunction getCurrentPriceFromTrustedProvidersFn = AbiFunction(
     name: 'getCurrentPriceFromTrustedProviders',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_price', type: AbiType.parse('uint256')),
       AbiParameter(name: '_timestamp', type: AbiType.parse('uint256')),
@@ -97,61 +98,55 @@ class IFtsoContract {
   /// ABI descriptor for `getCurrentPriceWithDecimals()`.
   static final AbiFunction getCurrentPriceWithDecimalsFn = AbiFunction(
     name: 'getCurrentPriceWithDecimals',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_price', type: AbiType.parse('uint256')),
       AbiParameter(name: '_timestamp', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_assetPriceUsdDecimals', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_assetPriceUsdDecimals',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCurrentPriceWithDecimalsFromTrustedProviders()`.
-  static final AbiFunction getCurrentPriceWithDecimalsFromTrustedProvidersFn = AbiFunction(
-    name: 'getCurrentPriceWithDecimalsFromTrustedProviders',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '_price', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_timestamp', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_assetPriceUsdDecimals', type: AbiType.parse('uint256')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getCurrentPriceWithDecimalsFromTrustedProvidersFn =
+      AbiFunction(
+        name: 'getCurrentPriceWithDecimalsFromTrustedProviders',
+        inputs: [],
+        outputs: [
+          AbiParameter(name: '_price', type: AbiType.parse('uint256')),
+          AbiParameter(name: '_timestamp', type: AbiType.parse('uint256')),
+          AbiParameter(
+            name: '_assetPriceUsdDecimals',
+            type: AbiType.parse('uint256'),
+          ),
+        ],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getCurrentRandom()`.
   static final AbiFunction getCurrentRandomFn = AbiFunction(
     name: 'getCurrentRandom',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getEpochId(uint256)`.
   static final AbiFunction getEpochIdFn = AbiFunction(
     name: 'getEpochId',
-    inputs: [
-      AbiParameter(name: '_timestamp', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_timestamp', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getEpochPrice(uint256)`.
   static final AbiFunction getEpochPriceFn = AbiFunction(
     name: 'getEpochPrice',
-    inputs: [
-      AbiParameter(name: '_epochId', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_epochId', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -162,21 +157,24 @@ class IFtsoContract {
       AbiParameter(name: '_epochId', type: AbiType.parse('uint256')),
       AbiParameter(name: '_voter', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getPriceEpochConfiguration()`.
   static final AbiFunction getPriceEpochConfigurationFn = AbiFunction(
     name: 'getPriceEpochConfiguration',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_firstEpochStartTs', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_submitPeriodSeconds', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_revealPeriodSeconds', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_submitPeriodSeconds',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_revealPeriodSeconds',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -184,8 +182,7 @@ class IFtsoContract {
   /// ABI descriptor for `getPriceEpochData()`.
   static final AbiFunction getPriceEpochDataFn = AbiFunction(
     name: 'getPriceEpochData',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_epochId', type: AbiType.parse('uint256')),
       AbiParameter(name: '_epochSubmitEndTime', type: AbiType.parse('uint256')),
@@ -199,23 +196,16 @@ class IFtsoContract {
   /// ABI descriptor for `getRandom(uint256)`.
   static final AbiFunction getRandomFn = AbiFunction(
     name: 'getRandom',
-    inputs: [
-      AbiParameter(name: '_epochId', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_epochId', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `symbol()`.
   static final AbiFunction symbolFn = AbiFunction(
     name: 'symbol',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
@@ -255,18 +245,34 @@ class IFtsoContract {
   /// Calls `getCurrentPriceDetails()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt price, BigInt priceTimestamp, BigInt priceFinalizationType, BigInt lastPriceEpochFinalizationTimestamp, BigInt lastPriceEpochFinalizationType})> getCurrentPriceDetails() async {
+  Future<
+    ({
+      BigInt price,
+      BigInt priceTimestamp,
+      BigInt priceFinalizationType,
+      BigInt lastPriceEpochFinalizationTimestamp,
+      BigInt lastPriceEpochFinalizationType,
+    })
+  >
+  getCurrentPriceDetails() async {
     final out = await client.callFunction(
       contract: address,
       function: getCurrentPriceDetailsFn,
     );
-    return (price: out[0]! as BigInt, priceTimestamp: out[1]! as BigInt, priceFinalizationType: out[2]! as BigInt, lastPriceEpochFinalizationTimestamp: out[3]! as BigInt, lastPriceEpochFinalizationType: out[4]! as BigInt);
+    return (
+      price: out[0]! as BigInt,
+      priceTimestamp: out[1]! as BigInt,
+      priceFinalizationType: out[2]! as BigInt,
+      lastPriceEpochFinalizationTimestamp: out[3]! as BigInt,
+      lastPriceEpochFinalizationType: out[4]! as BigInt,
+    );
   }
 
   /// Calls `getCurrentPriceFromTrustedProviders()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt price, BigInt timestamp})> getCurrentPriceFromTrustedProviders() async {
+  Future<({BigInt price, BigInt timestamp})>
+  getCurrentPriceFromTrustedProviders() async {
     final out = await client.callFunction(
       contract: address,
       function: getCurrentPriceFromTrustedProvidersFn,
@@ -277,23 +283,33 @@ class IFtsoContract {
   /// Calls `getCurrentPriceWithDecimals()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt price, BigInt timestamp, BigInt assetPriceUsdDecimals})> getCurrentPriceWithDecimals() async {
+  Future<({BigInt price, BigInt timestamp, BigInt assetPriceUsdDecimals})>
+  getCurrentPriceWithDecimals() async {
     final out = await client.callFunction(
       contract: address,
       function: getCurrentPriceWithDecimalsFn,
     );
-    return (price: out[0]! as BigInt, timestamp: out[1]! as BigInt, assetPriceUsdDecimals: out[2]! as BigInt);
+    return (
+      price: out[0]! as BigInt,
+      timestamp: out[1]! as BigInt,
+      assetPriceUsdDecimals: out[2]! as BigInt,
+    );
   }
 
   /// Calls `getCurrentPriceWithDecimalsFromTrustedProviders()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt price, BigInt timestamp, BigInt assetPriceUsdDecimals})> getCurrentPriceWithDecimalsFromTrustedProviders() async {
+  Future<({BigInt price, BigInt timestamp, BigInt assetPriceUsdDecimals})>
+  getCurrentPriceWithDecimalsFromTrustedProviders() async {
     final out = await client.callFunction(
       contract: address,
       function: getCurrentPriceWithDecimalsFromTrustedProvidersFn,
     );
-    return (price: out[0]! as BigInt, timestamp: out[1]! as BigInt, assetPriceUsdDecimals: out[2]! as BigInt);
+    return (
+      price: out[0]! as BigInt,
+      timestamp: out[1]! as BigInt,
+      assetPriceUsdDecimals: out[2]! as BigInt,
+    );
   }
 
   /// Calls `getCurrentRandom()`.
@@ -346,23 +362,49 @@ class IFtsoContract {
   /// Calls `getPriceEpochConfiguration()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt firstEpochStartTs, BigInt submitPeriodSeconds, BigInt revealPeriodSeconds})> getPriceEpochConfiguration() async {
+  Future<
+    ({
+      BigInt firstEpochStartTs,
+      BigInt submitPeriodSeconds,
+      BigInt revealPeriodSeconds,
+    })
+  >
+  getPriceEpochConfiguration() async {
     final out = await client.callFunction(
       contract: address,
       function: getPriceEpochConfigurationFn,
     );
-    return (firstEpochStartTs: out[0]! as BigInt, submitPeriodSeconds: out[1]! as BigInt, revealPeriodSeconds: out[2]! as BigInt);
+    return (
+      firstEpochStartTs: out[0]! as BigInt,
+      submitPeriodSeconds: out[1]! as BigInt,
+      revealPeriodSeconds: out[2]! as BigInt,
+    );
   }
 
   /// Calls `getPriceEpochData()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt epochId, BigInt epochSubmitEndTime, BigInt epochRevealEndTime, BigInt votePowerBlock, bool fallbackMode})> getPriceEpochData() async {
+  Future<
+    ({
+      BigInt epochId,
+      BigInt epochSubmitEndTime,
+      BigInt epochRevealEndTime,
+      BigInt votePowerBlock,
+      bool fallbackMode,
+    })
+  >
+  getPriceEpochData() async {
     final out = await client.callFunction(
       contract: address,
       function: getPriceEpochDataFn,
     );
-    return (epochId: out[0]! as BigInt, epochSubmitEndTime: out[1]! as BigInt, epochRevealEndTime: out[2]! as BigInt, votePowerBlock: out[3]! as BigInt, fallbackMode: out[4]! as bool);
+    return (
+      epochId: out[0]! as BigInt,
+      epochSubmitEndTime: out[1]! as BigInt,
+      epochRevealEndTime: out[2]! as BigInt,
+      votePowerBlock: out[3]! as BigInt,
+      fallbackMode: out[4]! as bool,
+    );
   }
 
   /// Calls `getRandom(uint256)`.
@@ -387,5 +429,4 @@ class IFtsoContract {
     );
     return out[0]! as String;
   }
-
 }

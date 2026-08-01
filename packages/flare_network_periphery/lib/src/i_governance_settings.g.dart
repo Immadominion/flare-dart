@@ -20,7 +20,10 @@ class IGovernanceSettingsContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IGovernanceSettingsContract({required this.client, required this.address});
+  const IGovernanceSettingsContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IGovernanceSettings` through the [ContractRegistry].
   static Future<IGovernanceSettingsContract> resolve(
@@ -28,53 +31,41 @@ class IGovernanceSettingsContract {
     ContractRegistry? registry,
     String registryName = 'IGovernanceSettings',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IGovernanceSettingsContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getExecutors()`.
   static final AbiFunction getExecutorsFn = AbiFunction(
     name: 'getExecutors',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getGovernanceAddress()`.
   static final AbiFunction getGovernanceAddressFn = AbiFunction(
     name: 'getGovernanceAddress',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getTimelock()`.
   static final AbiFunction getTimelockFn = AbiFunction(
     name: 'getTimelock',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `isExecutor(address)`.
   static final AbiFunction isExecutorFn = AbiFunction(
     name: 'isExecutor',
-    inputs: [
-      AbiParameter(name: '_address', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [AbiParameter(name: '_address', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -122,5 +113,4 @@ class IGovernanceSettingsContract {
     );
     return out[0]! as bool;
   }
-
 }

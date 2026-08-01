@@ -20,7 +20,10 @@ class IAgentAlwaysAllowedMintersContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IAgentAlwaysAllowedMintersContract({required this.client, required this.address});
+  const IAgentAlwaysAllowedMintersContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IAgentAlwaysAllowedMinters` through the [ContractRegistry].
   static Future<IAgentAlwaysAllowedMintersContract> resolve(
@@ -28,27 +31,29 @@ class IAgentAlwaysAllowedMintersContract {
     ContractRegistry? registry,
     String registryName = 'IAgentAlwaysAllowedMinters',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
-    return IAgentAlwaysAllowedMintersContract(client: client, address: resolved);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
+    return IAgentAlwaysAllowedMintersContract(
+      client: client,
+      address: resolved,
+    );
   }
 
   /// ABI descriptor for `alwaysAllowedMintersForAgent(address)`.
   static final AbiFunction alwaysAllowedMintersForAgentFn = AbiFunction(
     name: 'alwaysAllowedMintersForAgent',
-    inputs: [
-      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// Calls `alwaysAllowedMintersForAgent(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<EthAddress>> alwaysAllowedMintersForAgent(EthAddress agentVault) async {
+  Future<List<EthAddress>> alwaysAllowedMintersForAgent(
+    EthAddress agentVault,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: alwaysAllowedMintersForAgentFn,
@@ -56,5 +61,4 @@ class IAgentAlwaysAllowedMintersContract {
     );
     return (out[0]! as List).cast<EthAddress>();
   }
-
 }

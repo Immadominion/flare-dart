@@ -28,41 +28,33 @@ class IPersonalAccountContract {
     ContractRegistry? registry,
     String registryName = 'IPersonalAccount',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IPersonalAccountContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `controllerAddress()`.
   static final AbiFunction controllerAddressFn = AbiFunction(
     name: 'controllerAddress',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `implementation()`.
   static final AbiFunction implementationFn = AbiFunction(
     name: 'implementation',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `xrplOwner()`.
   static final AbiFunction xrplOwnerFn = AbiFunction(
     name: 'xrplOwner',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
@@ -98,5 +90,4 @@ class IPersonalAccountContract {
     );
     return out[0]! as String;
   }
-
 }

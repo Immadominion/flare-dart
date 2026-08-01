@@ -20,7 +20,10 @@ class ITypeTemplateVerificationContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const ITypeTemplateVerificationContract({required this.client, required this.address});
+  const ITypeTemplateVerificationContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `ITypeTemplateVerification` through the [ContractRegistry].
   static Future<ITypeTemplateVerificationContract> resolve(
@@ -28,8 +31,9 @@ class ITypeTemplateVerificationContract {
     ContractRegistry? registry,
     String registryName = 'ITypeTemplateVerification',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return ITypeTemplateVerificationContract(client: client, address: resolved);
   }
 
@@ -37,11 +41,14 @@ class ITypeTemplateVerificationContract {
   static final AbiFunction verifyTypeTemplateFn = AbiFunction(
     name: 'verifyTypeTemplate',
     inputs: [
-      AbiParameter(name: '_proof', type: AbiType.parse('(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,bool,(bytes32,uint256[],bool[]),(bytes32,int256[],bool[])[]),(bytes32,(bytes32)[])))')),
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,bool,(bytes32,uint256[],bool[]),(bytes32,int256[],bool[])[]),(bytes32,(bytes32)[])))',
+        ),
+      ),
     ],
-    outputs: [
-      AbiParameter(name: '_proved', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '_proved', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -56,5 +63,4 @@ class ITypeTemplateVerificationContract {
     );
     return out[0]! as bool;
   }
-
 }

@@ -22,7 +22,10 @@ class IInstructionsFacetContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IInstructionsFacetContract({required this.client, required this.address});
+  const IInstructionsFacetContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IInstructionsFacet` through the [ContractRegistry].
   static Future<IInstructionsFacetContract> resolve(
@@ -30,22 +33,27 @@ class IInstructionsFacetContract {
     ContractRegistry? registry,
     String registryName = 'IInstructionsFacet',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IInstructionsFacetContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getTransactionIdForCollateralReservation(uint256)`.
-  static final AbiFunction getTransactionIdForCollateralReservationFn = AbiFunction(
-    name: 'getTransactionIdForCollateralReservation',
-    inputs: [
-      AbiParameter(name: '_collateralReservationId', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '_transactionId', type: AbiType.parse('bytes32')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getTransactionIdForCollateralReservationFn =
+      AbiFunction(
+        name: 'getTransactionIdForCollateralReservation',
+        inputs: [
+          AbiParameter(
+            name: '_collateralReservationId',
+            type: AbiType.parse('uint256'),
+          ),
+        ],
+        outputs: [
+          AbiParameter(name: '_transactionId', type: AbiType.parse('bytes32')),
+        ],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `reserveCollateral(string,bytes32,bytes32)`.
   static final AbiFunction reserveCollateralFn = AbiFunction(
@@ -56,7 +64,10 @@ class IInstructionsFacetContract {
       AbiParameter(name: '_transactionId', type: AbiType.parse('bytes32')),
     ],
     outputs: [
-      AbiParameter(name: '_collateralReservationId', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_collateralReservationId',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.payable,
   );
@@ -64,7 +75,9 @@ class IInstructionsFacetContract {
   /// Calls `getTransactionIdForCollateralReservation(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<Uint8List> getTransactionIdForCollateralReservation(BigInt collateralReservationId) async {
+  Future<Uint8List> getTransactionIdForCollateralReservation(
+    BigInt collateralReservationId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getTransactionIdForCollateralReservationFn,
@@ -76,7 +89,11 @@ class IInstructionsFacetContract {
   /// Calls `reserveCollateral(string,bytes32,bytes32)`.
   ///
   /// Declared `payable` in Solidity; read via `eth_call`.
-  Future<BigInt> reserveCollateral(String xrplAddress, Uint8List paymentReference, Uint8List transactionId) async {
+  Future<BigInt> reserveCollateral(
+    String xrplAddress,
+    Uint8List paymentReference,
+    Uint8List transactionId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: reserveCollateralFn,
@@ -84,5 +101,4 @@ class IInstructionsFacetContract {
     );
     return out[0]! as BigInt;
   }
-
 }

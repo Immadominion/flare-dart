@@ -20,7 +20,10 @@ class IVoterPreRegistryContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IVoterPreRegistryContract({required this.client, required this.address});
+  const IVoterPreRegistryContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IVoterPreRegistry` through the [ContractRegistry].
   static Future<IVoterPreRegistryContract> resolve(
@@ -28,8 +31,9 @@ class IVoterPreRegistryContract {
     ContractRegistry? registry,
     String registryName = 'IVoterPreRegistry',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IVoterPreRegistryContract(client: client, address: resolved);
   }
 
@@ -39,9 +43,7 @@ class IVoterPreRegistryContract {
     inputs: [
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
@@ -65,9 +67,7 @@ class IVoterPreRegistryContract {
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
       AbiParameter(name: '_voter', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -86,7 +86,10 @@ class IVoterPreRegistryContract {
   /// Calls `getVoterSignature(uint256,address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<Object?>> getVoterSignature(BigInt rewardEpochId, EthAddress voter) async {
+  Future<List<Object?>> getVoterSignature(
+    BigInt rewardEpochId,
+    EthAddress voter,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getVoterSignatureFn,
@@ -98,7 +101,10 @@ class IVoterPreRegistryContract {
   /// Calls `isVoterPreRegistered(uint256,address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<bool> isVoterPreRegistered(BigInt rewardEpochId, EthAddress voter) async {
+  Future<bool> isVoterPreRegistered(
+    BigInt rewardEpochId,
+    EthAddress voter,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: isVoterPreRegisteredFn,
@@ -106,5 +112,4 @@ class IVoterPreRegistryContract {
     );
     return out[0]! as bool;
   }
-
 }

@@ -28,8 +28,9 @@ class IIVPTokenContract {
     ContractRegistry? registry,
     String registryName = 'IIVPToken',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIVPTokenContract(client: client, address: resolved);
   }
 
@@ -40,21 +41,15 @@ class IIVPTokenContract {
       AbiParameter(name: 'owner', type: AbiType.parse('address')),
       AbiParameter(name: 'spender', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `balanceOf(address)`.
   static final AbiFunction balanceOfFn = AbiFunction(
     name: 'balanceOf',
-    inputs: [
-      AbiParameter(name: 'account', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: 'account', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -65,9 +60,7 @@ class IIVPTokenContract {
       AbiParameter(name: '_owner', type: AbiType.parse('address')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -78,42 +71,35 @@ class IIVPTokenContract {
       AbiParameter(name: '_owners', type: AbiType.parse('address[]')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256[]')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `cleanupBlockNumber()`.
   static final AbiFunction cleanupBlockNumberFn = AbiFunction(
     name: 'cleanupBlockNumber',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `decimals()`.
   static final AbiFunction decimalsFn = AbiFunction(
     name: 'decimals',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint8')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint8'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `delegatesOf(address)`.
   static final AbiFunction delegatesOfFn = AbiFunction(
     name: 'delegatesOf',
-    inputs: [
-      AbiParameter(name: '_who', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_who', type: AbiType.parse('address'))],
     outputs: [
-      AbiParameter(name: '_delegateAddresses', type: AbiType.parse('address[]')),
+      AbiParameter(
+        name: '_delegateAddresses',
+        type: AbiType.parse('address[]'),
+      ),
       AbiParameter(name: '_bips', type: AbiType.parse('uint256[]')),
       AbiParameter(name: '_count', type: AbiType.parse('uint256')),
       AbiParameter(name: '_delegationMode', type: AbiType.parse('uint256')),
@@ -129,7 +115,10 @@ class IIVPTokenContract {
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
     outputs: [
-      AbiParameter(name: '_delegateAddresses', type: AbiType.parse('address[]')),
+      AbiParameter(
+        name: '_delegateAddresses',
+        type: AbiType.parse('address[]'),
+      ),
       AbiParameter(name: '_bips', type: AbiType.parse('uint256[]')),
       AbiParameter(name: '_count', type: AbiType.parse('uint256')),
       AbiParameter(name: '_delegationMode', type: AbiType.parse('uint256')),
@@ -140,67 +129,48 @@ class IIVPTokenContract {
   /// ABI descriptor for `delegationModeOf(address)`.
   static final AbiFunction delegationModeOfFn = AbiFunction(
     name: 'delegationModeOf',
-    inputs: [
-      AbiParameter(name: '_who', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_who', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `governanceVotePower()`.
   static final AbiFunction governanceVotePowerFn = AbiFunction(
     name: 'governanceVotePower',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `name()`.
   static final AbiFunction nameFn = AbiFunction(
     name: 'name',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `readVotePowerContract()`.
   static final AbiFunction readVotePowerContractFn = AbiFunction(
     name: 'readVotePowerContract',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `symbol()`.
   static final AbiFunction symbolFn = AbiFunction(
     name: 'symbol',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `totalSupply()`.
   static final AbiFunction totalSupplyFn = AbiFunction(
     name: 'totalSupply',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -210,20 +180,15 @@ class IIVPTokenContract {
     inputs: [
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `totalVotePower()`.
   static final AbiFunction totalVotePowerFn = AbiFunction(
     name: 'totalVotePower',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -233,21 +198,15 @@ class IIVPTokenContract {
     inputs: [
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `undelegatedVotePowerOf(address)`.
   static final AbiFunction undelegatedVotePowerOfFn = AbiFunction(
     name: 'undelegatedVotePowerOf',
-    inputs: [
-      AbiParameter(name: '_owner', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_owner', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -258,9 +217,7 @@ class IIVPTokenContract {
       AbiParameter(name: '_owner', type: AbiType.parse('address')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -271,9 +228,7 @@ class IIVPTokenContract {
       AbiParameter(name: '_from', type: AbiType.parse('address')),
       AbiParameter(name: '_to', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -285,21 +240,15 @@ class IIVPTokenContract {
       AbiParameter(name: '_to', type: AbiType.parse('address')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `votePowerOf(address)`.
   static final AbiFunction votePowerOfFn = AbiFunction(
     name: 'votePowerOf',
-    inputs: [
-      AbiParameter(name: '_owner', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_owner', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -310,9 +259,7 @@ class IIVPTokenContract {
       AbiParameter(name: '_owner', type: AbiType.parse('address')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -323,20 +270,15 @@ class IIVPTokenContract {
       AbiParameter(name: '_owner', type: AbiType.parse('address')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `writeVotePowerContract()`.
   static final AbiFunction writeVotePowerContractFn = AbiFunction(
     name: 'writeVotePowerContract',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -379,7 +321,10 @@ class IIVPTokenContract {
   /// Calls `batchVotePowerOfAt(address[],uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<BigInt>> batchVotePowerOfAt(List<EthAddress> owners, BigInt blockNumber) async {
+  Future<List<BigInt>> batchVotePowerOfAt(
+    List<EthAddress> owners,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: batchVotePowerOfAtFn,
@@ -413,25 +358,51 @@ class IIVPTokenContract {
   /// Calls `delegatesOf(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<EthAddress> delegateAddresses, List<BigInt> bips, BigInt count, BigInt delegationMode})> delegatesOf(EthAddress who) async {
+  Future<
+    ({
+      List<EthAddress> delegateAddresses,
+      List<BigInt> bips,
+      BigInt count,
+      BigInt delegationMode,
+    })
+  >
+  delegatesOf(EthAddress who) async {
     final out = await client.callFunction(
       contract: address,
       function: delegatesOfFn,
       args: [who],
     );
-    return (delegateAddresses: (out[0]! as List).cast<EthAddress>(), bips: (out[1]! as List).cast<BigInt>(), count: out[2]! as BigInt, delegationMode: out[3]! as BigInt);
+    return (
+      delegateAddresses: (out[0]! as List).cast<EthAddress>(),
+      bips: (out[1]! as List).cast<BigInt>(),
+      count: out[2]! as BigInt,
+      delegationMode: out[3]! as BigInt,
+    );
   }
 
   /// Calls `delegatesOfAt(address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<EthAddress> delegateAddresses, List<BigInt> bips, BigInt count, BigInt delegationMode})> delegatesOfAt(EthAddress who, BigInt blockNumber) async {
+  Future<
+    ({
+      List<EthAddress> delegateAddresses,
+      List<BigInt> bips,
+      BigInt count,
+      BigInt delegationMode,
+    })
+  >
+  delegatesOfAt(EthAddress who, BigInt blockNumber) async {
     final out = await client.callFunction(
       contract: address,
       function: delegatesOfAtFn,
       args: [who, blockNumber],
     );
-    return (delegateAddresses: (out[0]! as List).cast<EthAddress>(), bips: (out[1]! as List).cast<BigInt>(), count: out[2]! as BigInt, delegationMode: out[3]! as BigInt);
+    return (
+      delegateAddresses: (out[0]! as List).cast<EthAddress>(),
+      bips: (out[1]! as List).cast<BigInt>(),
+      count: out[2]! as BigInt,
+      delegationMode: out[3]! as BigInt,
+    );
   }
 
   /// Calls `delegationModeOf(address)`.
@@ -461,10 +432,7 @@ class IIVPTokenContract {
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
   Future<String> name() async {
-    final out = await client.callFunction(
-      contract: address,
-      function: nameFn,
-    );
+    final out = await client.callFunction(contract: address, function: nameFn);
     return out[0]! as String;
   }
 
@@ -551,7 +519,10 @@ class IIVPTokenContract {
   /// Calls `undelegatedVotePowerOfAt(address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> undelegatedVotePowerOfAt(EthAddress owner, BigInt blockNumber) async {
+  Future<BigInt> undelegatedVotePowerOfAt(
+    EthAddress owner,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: undelegatedVotePowerOfAtFn,
@@ -575,7 +546,11 @@ class IIVPTokenContract {
   /// Calls `votePowerFromToAt(address,address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> votePowerFromToAt(EthAddress from, EthAddress to, BigInt blockNumber) async {
+  Future<BigInt> votePowerFromToAt(
+    EthAddress from,
+    EthAddress to,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: votePowerFromToAtFn,
@@ -611,7 +586,10 @@ class IIVPTokenContract {
   /// Calls `votePowerOfAtIgnoringRevocation(address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> votePowerOfAtIgnoringRevocation(EthAddress owner, BigInt blockNumber) async {
+  Future<BigInt> votePowerOfAtIgnoringRevocation(
+    EthAddress owner,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: votePowerOfAtIgnoringRevocationFn,
@@ -630,5 +608,4 @@ class IIVPTokenContract {
     );
     return out[0]! as EthAddress;
   }
-
 }

@@ -22,7 +22,10 @@ class IPaymentProofsFacetContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IPaymentProofsFacetContract({required this.client, required this.address});
+  const IPaymentProofsFacetContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IPaymentProofsFacet` through the [ContractRegistry].
   static Future<IPaymentProofsFacetContract> resolve(
@@ -30,30 +33,26 @@ class IPaymentProofsFacetContract {
     ContractRegistry? registry,
     String registryName = 'IPaymentProofsFacet',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IPaymentProofsFacetContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getPaymentProofValidityDurationSeconds()`.
-  static final AbiFunction getPaymentProofValidityDurationSecondsFn = AbiFunction(
-    name: 'getPaymentProofValidityDurationSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getPaymentProofValidityDurationSecondsFn =
+      AbiFunction(
+        name: 'getPaymentProofValidityDurationSeconds',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getSourceId()`.
   static final AbiFunction getSourceIdFn = AbiFunction(
     name: 'getSourceId',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bytes32')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bytes32'))],
     stateMutability: StateMutability.view,
   );
 
@@ -78,5 +77,4 @@ class IPaymentProofsFacetContract {
     );
     return out[0]! as Uint8List;
   }
-
 }

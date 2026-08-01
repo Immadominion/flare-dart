@@ -21,8 +21,10 @@ Future<void> main() async {
 
     for (final feed in feeds) {
       // Always print value with its own decimals: the scale differs per feed.
-      print('${feed.feedId.name.padRight(9)} '
-          '${feed.toDecimalString().padLeft(16)}  (${feed.decimals} dp)');
+      print(
+        '${feed.feedId.name.padRight(9)} '
+        '${feed.toDecimalString().padLeft(16)}  (${feed.decimals} dp)',
+      );
     }
     print('Published at ${feeds.first.publishedAt.toIso8601String()}');
   } finally {

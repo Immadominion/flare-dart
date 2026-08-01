@@ -28,63 +28,49 @@ class IIRewardManagerContract {
     ContractRegistry? registry,
     String registryName = 'IIRewardManager',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIRewardManagerContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `active()`.
   static final AbiFunction activeFn = AbiFunction(
     name: 'active',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `cleanupBlockNumber()`.
   static final AbiFunction cleanupBlockNumberFn = AbiFunction(
     name: 'cleanupBlockNumber',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `firstClaimableRewardEpochId()`.
   static final AbiFunction firstClaimableRewardEpochIdFn = AbiFunction(
     name: 'firstClaimableRewardEpochId',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint24')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint24'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCurrentRewardEpochId()`.
   static final AbiFunction getCurrentRewardEpochIdFn = AbiFunction(
     name: 'getCurrentRewardEpochId',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint24')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint24'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getInitialRewardEpochId()`.
   static final AbiFunction getInitialRewardEpochIdFn = AbiFunction(
     name: 'getInitialRewardEpochId',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -94,34 +80,29 @@ class IIRewardManagerContract {
     inputs: [
       AbiParameter(name: '_rewardOwner', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getRewardEpochIdToExpireNext()`.
   static final AbiFunction getRewardEpochIdToExpireNextFn = AbiFunction(
     name: 'getRewardEpochIdToExpireNext',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getRewardEpochIdsWithClaimableRewards()`.
-  static final AbiFunction getRewardEpochIdsWithClaimableRewardsFn = AbiFunction(
-    name: 'getRewardEpochIdsWithClaimableRewards',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '_startEpochId', type: AbiType.parse('uint24')),
-      AbiParameter(name: '_endEpochId', type: AbiType.parse('uint24')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getRewardEpochIdsWithClaimableRewardsFn =
+      AbiFunction(
+        name: 'getRewardEpochIdsWithClaimableRewards',
+        inputs: [],
+        outputs: [
+          AbiParameter(name: '_startEpochId', type: AbiType.parse('uint24')),
+          AbiParameter(name: '_endEpochId', type: AbiType.parse('uint24')),
+        ],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getRewardEpochTotals(uint24)`.
   static final AbiFunction getRewardEpochTotalsFn = AbiFunction(
@@ -131,8 +112,14 @@ class IIRewardManagerContract {
     ],
     outputs: [
       AbiParameter(name: '_totalRewardsWei', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_totalInflationRewardsWei', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_initialisedRewardsWei', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_totalInflationRewardsWei',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_initialisedRewardsWei',
+        type: AbiType.parse('uint256'),
+      ),
       AbiParameter(name: '_claimedRewardsWei', type: AbiType.parse('uint256')),
       AbiParameter(name: '_burnedRewardsWei', type: AbiType.parse('uint256')),
     ],
@@ -146,7 +133,10 @@ class IIRewardManagerContract {
       AbiParameter(name: '_rewardOwner', type: AbiType.parse('address')),
     ],
     outputs: [
-      AbiParameter(name: '_rewardStates', type: AbiType.parse('(uint24,bytes20,uint120,uint8,bool)[][]')),
+      AbiParameter(
+        name: '_rewardStates',
+        type: AbiType.parse('(uint24,bytes20,uint120,uint8,bool)[][]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -159,7 +149,10 @@ class IIRewardManagerContract {
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint24')),
     ],
     outputs: [
-      AbiParameter(name: '_rewardStates', type: AbiType.parse('(uint24,bytes20,uint120,uint8,bool)[]')),
+      AbiParameter(
+        name: '_rewardStates',
+        type: AbiType.parse('(uint24,bytes20,uint120,uint8,bool)[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -167,11 +160,13 @@ class IIRewardManagerContract {
   /// ABI descriptor for `getTotals()`.
   static final AbiFunction getTotalsFn = AbiFunction(
     name: 'getTotals',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_totalRewardsWei', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_totalInflationRewardsWei', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_totalInflationRewardsWei',
+        type: AbiType.parse('uint256'),
+      ),
       AbiParameter(name: '_totalClaimedWei', type: AbiType.parse('uint256')),
       AbiParameter(name: '_totalBurnedWei', type: AbiType.parse('uint256')),
     ],
@@ -187,7 +182,10 @@ class IIRewardManagerContract {
       AbiParameter(name: '_claimType', type: AbiType.parse('uint8')),
     ],
     outputs: [
-      AbiParameter(name: '_state', type: AbiType.parse('(bool,uint120,uint128)')),
+      AbiParameter(
+        name: '_state',
+        type: AbiType.parse('(bool,uint120,uint128)'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -198,20 +196,15 @@ class IIRewardManagerContract {
     inputs: [
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `rewardManagerId()`.
   static final AbiFunction rewardManagerIdFn = AbiFunction(
     name: 'rewardManagerId',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -296,7 +289,8 @@ class IIRewardManagerContract {
   /// Calls `getRewardEpochIdsWithClaimableRewards()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt startEpochId, BigInt endEpochId})> getRewardEpochIdsWithClaimableRewards() async {
+  Future<({BigInt startEpochId, BigInt endEpochId})>
+  getRewardEpochIdsWithClaimableRewards() async {
     final out = await client.callFunction(
       contract: address,
       function: getRewardEpochIdsWithClaimableRewardsFn,
@@ -307,19 +301,36 @@ class IIRewardManagerContract {
   /// Calls `getRewardEpochTotals(uint24)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt totalRewardsWei, BigInt totalInflationRewardsWei, BigInt initialisedRewardsWei, BigInt claimedRewardsWei, BigInt burnedRewardsWei})> getRewardEpochTotals(BigInt rewardEpochId) async {
+  Future<
+    ({
+      BigInt totalRewardsWei,
+      BigInt totalInflationRewardsWei,
+      BigInt initialisedRewardsWei,
+      BigInt claimedRewardsWei,
+      BigInt burnedRewardsWei,
+    })
+  >
+  getRewardEpochTotals(BigInt rewardEpochId) async {
     final out = await client.callFunction(
       contract: address,
       function: getRewardEpochTotalsFn,
       args: [rewardEpochId],
     );
-    return (totalRewardsWei: out[0]! as BigInt, totalInflationRewardsWei: out[1]! as BigInt, initialisedRewardsWei: out[2]! as BigInt, claimedRewardsWei: out[3]! as BigInt, burnedRewardsWei: out[4]! as BigInt);
+    return (
+      totalRewardsWei: out[0]! as BigInt,
+      totalInflationRewardsWei: out[1]! as BigInt,
+      initialisedRewardsWei: out[2]! as BigInt,
+      claimedRewardsWei: out[3]! as BigInt,
+      burnedRewardsWei: out[4]! as BigInt,
+    );
   }
 
   /// Calls `getStateOfRewards(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<List<List<Object?>>>> getStateOfRewards(EthAddress rewardOwner) async {
+  Future<List<List<List<Object?>>>> getStateOfRewards(
+    EthAddress rewardOwner,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getStateOfRewardsFn,
@@ -331,7 +342,10 @@ class IIRewardManagerContract {
   /// Calls `getStateOfRewardsAt(address,uint24)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<List<Object?>>> getStateOfRewardsAt(EthAddress rewardOwner, BigInt rewardEpochId) async {
+  Future<List<List<Object?>>> getStateOfRewardsAt(
+    EthAddress rewardOwner,
+    BigInt rewardEpochId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getStateOfRewardsAtFn,
@@ -343,18 +357,35 @@ class IIRewardManagerContract {
   /// Calls `getTotals()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt totalRewardsWei, BigInt totalInflationRewardsWei, BigInt totalClaimedWei, BigInt totalBurnedWei})> getTotals() async {
+  Future<
+    ({
+      BigInt totalRewardsWei,
+      BigInt totalInflationRewardsWei,
+      BigInt totalClaimedWei,
+      BigInt totalBurnedWei,
+    })
+  >
+  getTotals() async {
     final out = await client.callFunction(
       contract: address,
       function: getTotalsFn,
     );
-    return (totalRewardsWei: out[0]! as BigInt, totalInflationRewardsWei: out[1]! as BigInt, totalClaimedWei: out[2]! as BigInt, totalBurnedWei: out[3]! as BigInt);
+    return (
+      totalRewardsWei: out[0]! as BigInt,
+      totalInflationRewardsWei: out[1]! as BigInt,
+      totalClaimedWei: out[2]! as BigInt,
+      totalBurnedWei: out[3]! as BigInt,
+    );
   }
 
   /// Calls `getUnclaimedRewardState(address,uint24,uint8)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<Object?>> getUnclaimedRewardState(EthAddress beneficiary, BigInt rewardEpochId, BigInt claimType) async {
+  Future<List<Object?>> getUnclaimedRewardState(
+    EthAddress beneficiary,
+    BigInt rewardEpochId,
+    BigInt claimType,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getUnclaimedRewardStateFn,
@@ -385,5 +416,4 @@ class IIRewardManagerContract {
     );
     return out[0]! as BigInt;
   }
-
 }

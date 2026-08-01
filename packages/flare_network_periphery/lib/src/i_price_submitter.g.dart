@@ -28,76 +28,57 @@ class IPriceSubmitterContract {
     ContractRegistry? registry,
     String registryName = 'IPriceSubmitter',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IPriceSubmitterContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getCurrentRandom()`.
   static final AbiFunction getCurrentRandomFn = AbiFunction(
     name: 'getCurrentRandom',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getFtsoManager()`.
   static final AbiFunction getFtsoManagerFn = AbiFunction(
     name: 'getFtsoManager',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getFtsoRegistry()`.
   static final AbiFunction getFtsoRegistryFn = AbiFunction(
     name: 'getFtsoRegistry',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getRandom(uint256)`.
   static final AbiFunction getRandomFn = AbiFunction(
     name: 'getRandom',
-    inputs: [
-      AbiParameter(name: '_epochId', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_epochId', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getVoterWhitelister()`.
   static final AbiFunction getVoterWhitelisterFn = AbiFunction(
     name: 'getVoterWhitelister',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `voterWhitelistBitmap(address)`.
   static final AbiFunction voterWhitelistBitmapFn = AbiFunction(
     name: 'voterWhitelistBitmap',
-    inputs: [
-      AbiParameter(name: '_voter', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -168,5 +149,4 @@ class IPriceSubmitterContract {
     );
     return out[0]! as BigInt;
   }
-
 }

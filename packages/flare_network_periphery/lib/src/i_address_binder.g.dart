@@ -30,32 +30,25 @@ class IAddressBinderContract {
     ContractRegistry? registry,
     String registryName = 'IAddressBinder',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IAddressBinderContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `cAddressToPAddress(address)`.
   static final AbiFunction cAddressToPAddressFn = AbiFunction(
     name: 'cAddressToPAddress',
-    inputs: [
-      AbiParameter(name: '_cAddress', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '_pAddress', type: AbiType.parse('bytes20')),
-    ],
+    inputs: [AbiParameter(name: '_cAddress', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '_pAddress', type: AbiType.parse('bytes20'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `pAddressToCAddress(bytes20)`.
   static final AbiFunction pAddressToCAddressFn = AbiFunction(
     name: 'pAddressToCAddress',
-    inputs: [
-      AbiParameter(name: '_pAddress', type: AbiType.parse('bytes20')),
-    ],
-    outputs: [
-      AbiParameter(name: '_cAddress', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_pAddress', type: AbiType.parse('bytes20'))],
+    outputs: [AbiParameter(name: '_cAddress', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -82,5 +75,4 @@ class IAddressBinderContract {
     );
     return out[0]! as EthAddress;
   }
-
 }

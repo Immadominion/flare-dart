@@ -28,8 +28,9 @@ class IRNatContract {
     ContractRegistry? registry,
     String registryName = 'IRNat',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IRNatContract(client: client, address: resolved);
   }
 
@@ -40,52 +41,38 @@ class IRNatContract {
       AbiParameter(name: 'owner', type: AbiType.parse('address')),
       AbiParameter(name: 'spender', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `balanceOf(address)`.
   static final AbiFunction balanceOfFn = AbiFunction(
     name: 'balanceOf',
-    inputs: [
-      AbiParameter(name: 'account', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: 'account', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `decimals()`.
   static final AbiFunction decimalsFn = AbiFunction(
     name: 'decimals',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint8')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint8'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `firstMonthStartTs()`.
   static final AbiFunction firstMonthStartTsFn = AbiFunction(
     name: 'firstMonthStartTs',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getBalancesOf(address)`.
   static final AbiFunction getBalancesOfFn = AbiFunction(
     name: 'getBalancesOf',
-    inputs: [
-      AbiParameter(name: '_owner', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_owner', type: AbiType.parse('address'))],
     outputs: [
       AbiParameter(name: '_wNatBalance', type: AbiType.parse('uint256')),
       AbiParameter(name: '_rNatBalance', type: AbiType.parse('uint256')),
@@ -101,20 +88,15 @@ class IRNatContract {
       AbiParameter(name: '_projectId', type: AbiType.parse('uint256')),
       AbiParameter(name: '_owner', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint128')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint128'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCurrentMonth()`.
   static final AbiFunction getCurrentMonthFn = AbiFunction(
     name: 'getCurrentMonth',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -137,20 +119,36 @@ class IRNatContract {
   /// ABI descriptor for `getProjectInfo(uint256)`.
   static final AbiFunction getProjectInfoFn = AbiFunction(
     name: 'getProjectInfo',
-    inputs: [
-      AbiParameter(name: '_projectId', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_projectId', type: AbiType.parse('uint256'))],
     outputs: [
       AbiParameter(name: '_name', type: AbiType.parse('string')),
       AbiParameter(name: '_distributor', type: AbiType.parse('address')),
-      AbiParameter(name: '_currentMonthDistributionEnabled', type: AbiType.parse('bool')),
+      AbiParameter(
+        name: '_currentMonthDistributionEnabled',
+        type: AbiType.parse('bool'),
+      ),
       AbiParameter(name: '_distributionDisabled', type: AbiType.parse('bool')),
       AbiParameter(name: '_claimingDisabled', type: AbiType.parse('bool')),
-      AbiParameter(name: '_totalAssignedRewards', type: AbiType.parse('uint128')),
-      AbiParameter(name: '_totalDistributedRewards', type: AbiType.parse('uint128')),
-      AbiParameter(name: '_totalClaimedRewards', type: AbiType.parse('uint128')),
-      AbiParameter(name: '_totalUnassignedUnclaimedRewards', type: AbiType.parse('uint128')),
-      AbiParameter(name: '_monthsWithRewards', type: AbiType.parse('uint256[]')),
+      AbiParameter(
+        name: '_totalAssignedRewards',
+        type: AbiType.parse('uint128'),
+      ),
+      AbiParameter(
+        name: '_totalDistributedRewards',
+        type: AbiType.parse('uint128'),
+      ),
+      AbiParameter(
+        name: '_totalClaimedRewards',
+        type: AbiType.parse('uint128'),
+      ),
+      AbiParameter(
+        name: '_totalUnassignedUnclaimedRewards',
+        type: AbiType.parse('uint128'),
+      ),
+      AbiParameter(
+        name: '_monthsWithRewards',
+        type: AbiType.parse('uint256[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -166,7 +164,10 @@ class IRNatContract {
       AbiParameter(name: '_assignedRewards', type: AbiType.parse('uint128')),
       AbiParameter(name: '_distributedRewards', type: AbiType.parse('uint128')),
       AbiParameter(name: '_claimedRewards', type: AbiType.parse('uint128')),
-      AbiParameter(name: '_unassignedUnclaimedRewards', type: AbiType.parse('uint128')),
+      AbiParameter(
+        name: '_unassignedUnclaimedRewards',
+        type: AbiType.parse('uint128'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -174,8 +175,7 @@ class IRNatContract {
   /// ABI descriptor for `getProjectsBasicInfo()`.
   static final AbiFunction getProjectsBasicInfoFn = AbiFunction(
     name: 'getProjectsBasicInfo',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_names', type: AbiType.parse('string[]')),
       AbiParameter(name: '_claimingDisabled', type: AbiType.parse('bool[]')),
@@ -186,37 +186,44 @@ class IRNatContract {
   /// ABI descriptor for `getProjectsCount()`.
   static final AbiFunction getProjectsCountFn = AbiFunction(
     name: 'getProjectsCount',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getRNatAccount(address)`.
   static final AbiFunction getRNatAccountFn = AbiFunction(
     name: 'getRNatAccount',
-    inputs: [
-      AbiParameter(name: '_owner', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_owner', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getRewardsInfo()`.
   static final AbiFunction getRewardsInfoFn = AbiFunction(
     name: 'getRewardsInfo',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_totalAssignableRewards', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_totalAssignedRewards', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_totalClaimedRewards', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_totalWithdrawnRewards', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_totalWithdrawnAssignableRewards', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_totalAssignableRewards',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_totalAssignedRewards',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_totalClaimedRewards',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_totalWithdrawnRewards',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_totalWithdrawnAssignableRewards',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -224,44 +231,32 @@ class IRNatContract {
   /// ABI descriptor for `name()`.
   static final AbiFunction nameFn = AbiFunction(
     name: 'name',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `symbol()`.
   static final AbiFunction symbolFn = AbiFunction(
     name: 'symbol',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `totalSupply()`.
   static final AbiFunction totalSupplyFn = AbiFunction(
     name: 'totalSupply',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `wNat()`.
   static final AbiFunction wNatFn = AbiFunction(
     name: 'wNat',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -314,13 +309,18 @@ class IRNatContract {
   /// Calls `getBalancesOf(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt wNatBalance, BigInt rNatBalance, BigInt lockedBalance})> getBalancesOf(EthAddress owner) async {
+  Future<({BigInt wNatBalance, BigInt rNatBalance, BigInt lockedBalance})>
+  getBalancesOf(EthAddress owner) async {
     final out = await client.callFunction(
       contract: address,
       function: getBalancesOfFn,
       args: [owner],
     );
-    return (wNatBalance: out[0]! as BigInt, rNatBalance: out[1]! as BigInt, lockedBalance: out[2]! as BigInt);
+    return (
+      wNatBalance: out[0]! as BigInt,
+      rNatBalance: out[1]! as BigInt,
+      lockedBalance: out[2]! as BigInt,
+    );
   }
 
   /// Calls `getClaimableRewards(uint256,address)`.
@@ -349,48 +349,95 @@ class IRNatContract {
   /// Calls `getOwnerRewardsInfo(uint256,uint256,address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt assignedRewards, BigInt claimedRewards, bool claimable})> getOwnerRewardsInfo(BigInt projectId, BigInt month, EthAddress owner) async {
+  Future<({BigInt assignedRewards, BigInt claimedRewards, bool claimable})>
+  getOwnerRewardsInfo(BigInt projectId, BigInt month, EthAddress owner) async {
     final out = await client.callFunction(
       contract: address,
       function: getOwnerRewardsInfoFn,
       args: [projectId, month, owner],
     );
-    return (assignedRewards: out[0]! as BigInt, claimedRewards: out[1]! as BigInt, claimable: out[2]! as bool);
+    return (
+      assignedRewards: out[0]! as BigInt,
+      claimedRewards: out[1]! as BigInt,
+      claimable: out[2]! as bool,
+    );
   }
 
   /// Calls `getProjectInfo(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({String name, EthAddress distributor, bool currentMonthDistributionEnabled, bool distributionDisabled, bool claimingDisabled, BigInt totalAssignedRewards, BigInt totalDistributedRewards, BigInt totalClaimedRewards, BigInt totalUnassignedUnclaimedRewards, List<BigInt> monthsWithRewards})> getProjectInfo(BigInt projectId) async {
+  Future<
+    ({
+      String name,
+      EthAddress distributor,
+      bool currentMonthDistributionEnabled,
+      bool distributionDisabled,
+      bool claimingDisabled,
+      BigInt totalAssignedRewards,
+      BigInt totalDistributedRewards,
+      BigInt totalClaimedRewards,
+      BigInt totalUnassignedUnclaimedRewards,
+      List<BigInt> monthsWithRewards,
+    })
+  >
+  getProjectInfo(BigInt projectId) async {
     final out = await client.callFunction(
       contract: address,
       function: getProjectInfoFn,
       args: [projectId],
     );
-    return (name: out[0]! as String, distributor: out[1]! as EthAddress, currentMonthDistributionEnabled: out[2]! as bool, distributionDisabled: out[3]! as bool, claimingDisabled: out[4]! as bool, totalAssignedRewards: out[5]! as BigInt, totalDistributedRewards: out[6]! as BigInt, totalClaimedRewards: out[7]! as BigInt, totalUnassignedUnclaimedRewards: out[8]! as BigInt, monthsWithRewards: (out[9]! as List).cast<BigInt>());
+    return (
+      name: out[0]! as String,
+      distributor: out[1]! as EthAddress,
+      currentMonthDistributionEnabled: out[2]! as bool,
+      distributionDisabled: out[3]! as bool,
+      claimingDisabled: out[4]! as bool,
+      totalAssignedRewards: out[5]! as BigInt,
+      totalDistributedRewards: out[6]! as BigInt,
+      totalClaimedRewards: out[7]! as BigInt,
+      totalUnassignedUnclaimedRewards: out[8]! as BigInt,
+      monthsWithRewards: (out[9]! as List).cast<BigInt>(),
+    );
   }
 
   /// Calls `getProjectRewardsInfo(uint256,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt assignedRewards, BigInt distributedRewards, BigInt claimedRewards, BigInt unassignedUnclaimedRewards})> getProjectRewardsInfo(BigInt projectId, BigInt month) async {
+  Future<
+    ({
+      BigInt assignedRewards,
+      BigInt distributedRewards,
+      BigInt claimedRewards,
+      BigInt unassignedUnclaimedRewards,
+    })
+  >
+  getProjectRewardsInfo(BigInt projectId, BigInt month) async {
     final out = await client.callFunction(
       contract: address,
       function: getProjectRewardsInfoFn,
       args: [projectId, month],
     );
-    return (assignedRewards: out[0]! as BigInt, distributedRewards: out[1]! as BigInt, claimedRewards: out[2]! as BigInt, unassignedUnclaimedRewards: out[3]! as BigInt);
+    return (
+      assignedRewards: out[0]! as BigInt,
+      distributedRewards: out[1]! as BigInt,
+      claimedRewards: out[2]! as BigInt,
+      unassignedUnclaimedRewards: out[3]! as BigInt,
+    );
   }
 
   /// Calls `getProjectsBasicInfo()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<String> names, List<bool> claimingDisabled})> getProjectsBasicInfo() async {
+  Future<({List<String> names, List<bool> claimingDisabled})>
+  getProjectsBasicInfo() async {
     final out = await client.callFunction(
       contract: address,
       function: getProjectsBasicInfoFn,
     );
-    return (names: (out[0]! as List).cast<String>(), claimingDisabled: (out[1]! as List).cast<bool>());
+    return (
+      names: (out[0]! as List).cast<String>(),
+      claimingDisabled: (out[1]! as List).cast<bool>(),
+    );
   }
 
   /// Calls `getProjectsCount()`.
@@ -419,22 +466,34 @@ class IRNatContract {
   /// Calls `getRewardsInfo()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt totalAssignableRewards, BigInt totalAssignedRewards, BigInt totalClaimedRewards, BigInt totalWithdrawnRewards, BigInt totalWithdrawnAssignableRewards})> getRewardsInfo() async {
+  Future<
+    ({
+      BigInt totalAssignableRewards,
+      BigInt totalAssignedRewards,
+      BigInt totalClaimedRewards,
+      BigInt totalWithdrawnRewards,
+      BigInt totalWithdrawnAssignableRewards,
+    })
+  >
+  getRewardsInfo() async {
     final out = await client.callFunction(
       contract: address,
       function: getRewardsInfoFn,
     );
-    return (totalAssignableRewards: out[0]! as BigInt, totalAssignedRewards: out[1]! as BigInt, totalClaimedRewards: out[2]! as BigInt, totalWithdrawnRewards: out[3]! as BigInt, totalWithdrawnAssignableRewards: out[4]! as BigInt);
+    return (
+      totalAssignableRewards: out[0]! as BigInt,
+      totalAssignedRewards: out[1]! as BigInt,
+      totalClaimedRewards: out[2]! as BigInt,
+      totalWithdrawnRewards: out[3]! as BigInt,
+      totalWithdrawnAssignableRewards: out[4]! as BigInt,
+    );
   }
 
   /// Calls `name()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
   Future<String> name() async {
-    final out = await client.callFunction(
-      contract: address,
-      function: nameFn,
-    );
+    final out = await client.callFunction(contract: address, function: nameFn);
     return out[0]! as String;
   }
 
@@ -464,11 +523,7 @@ class IRNatContract {
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
   Future<EthAddress> wNat() async {
-    final out = await client.callFunction(
-      contract: address,
-      function: wNatFn,
-    );
+    final out = await client.callFunction(contract: address, function: wNatFn);
     return out[0]! as EthAddress;
   }
-
 }

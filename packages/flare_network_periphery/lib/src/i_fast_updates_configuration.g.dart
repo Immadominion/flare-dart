@@ -22,7 +22,10 @@ class IFastUpdatesConfigurationContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IFastUpdatesConfigurationContract({required this.client, required this.address});
+  const IFastUpdatesConfigurationContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IFastUpdatesConfiguration` through the [ContractRegistry].
   static Future<IFastUpdatesConfigurationContract> resolve(
@@ -30,16 +33,16 @@ class IFastUpdatesConfigurationContract {
     ContractRegistry? registry,
     String registryName = 'IFastUpdatesConfiguration',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IFastUpdatesConfigurationContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getFeedConfigurations()`.
   static final AbiFunction getFeedConfigurationsFn = AbiFunction(
     name: 'getFeedConfigurations',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '', type: AbiType.parse('(bytes21,uint32,uint24)[]')),
     ],
@@ -49,57 +52,40 @@ class IFastUpdatesConfigurationContract {
   /// ABI descriptor for `getFeedId(uint256)`.
   static final AbiFunction getFeedIdFn = AbiFunction(
     name: 'getFeedId',
-    inputs: [
-      AbiParameter(name: '_index', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '_feedId', type: AbiType.parse('bytes21')),
-    ],
+    inputs: [AbiParameter(name: '_index', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '_feedId', type: AbiType.parse('bytes21'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getFeedIds()`.
   static final AbiFunction getFeedIdsFn = AbiFunction(
     name: 'getFeedIds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bytes21[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bytes21[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getFeedIndex(bytes21)`.
   static final AbiFunction getFeedIndexFn = AbiFunction(
     name: 'getFeedIndex',
-    inputs: [
-      AbiParameter(name: '_feedId', type: AbiType.parse('bytes21')),
-    ],
-    outputs: [
-      AbiParameter(name: '_index', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_feedId', type: AbiType.parse('bytes21'))],
+    outputs: [AbiParameter(name: '_index', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getNumberOfFeeds()`.
   static final AbiFunction getNumberOfFeedsFn = AbiFunction(
     name: 'getNumberOfFeeds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getUnusedIndices()`.
   static final AbiFunction getUnusedIndicesFn = AbiFunction(
     name: 'getUnusedIndices',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256[]'))],
     stateMutability: StateMutability.view,
   );
 
@@ -170,5 +156,4 @@ class IFastUpdatesConfigurationContract {
     );
     return (out[0]! as List).cast<BigInt>();
   }
-
 }

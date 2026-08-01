@@ -28,20 +28,17 @@ class ICChainStakeContract {
     ContractRegistry? registry,
     String registryName = 'ICChainStake',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return ICChainStakeContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `balanceOf(address)`.
   static final AbiFunction balanceOfFn = AbiFunction(
     name: 'balanceOf',
-    inputs: [
-      AbiParameter(name: '_owner', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_owner', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -52,9 +49,7 @@ class ICChainStakeContract {
       AbiParameter(name: '_owner', type: AbiType.parse('address')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -65,18 +60,14 @@ class ICChainStakeContract {
       AbiParameter(name: '_accounts', type: AbiType.parse('address[]')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256[]')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `stakesOf(address)`.
   static final AbiFunction stakesOfFn = AbiFunction(
     name: 'stakesOf',
-    inputs: [
-      AbiParameter(name: '_owner', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_owner', type: AbiType.parse('address'))],
     outputs: [
       AbiParameter(name: '_accounts', type: AbiType.parse('address[]')),
       AbiParameter(name: '_amounts', type: AbiType.parse('uint256[]')),
@@ -101,11 +92,8 @@ class ICChainStakeContract {
   /// ABI descriptor for `totalSupply()`.
   static final AbiFunction totalSupplyFn = AbiFunction(
     name: 'totalSupply',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -115,20 +103,15 @@ class ICChainStakeContract {
     inputs: [
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `totalVotePower()`.
   static final AbiFunction totalVotePowerFn = AbiFunction(
     name: 'totalVotePower',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -138,9 +121,7 @@ class ICChainStakeContract {
     inputs: [
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -151,9 +132,7 @@ class ICChainStakeContract {
       AbiParameter(name: '_owner', type: AbiType.parse('address')),
       AbiParameter(name: '_account', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -165,21 +144,15 @@ class ICChainStakeContract {
       AbiParameter(name: '_account', type: AbiType.parse('address')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `votePowerOf(address)`.
   static final AbiFunction votePowerOfFn = AbiFunction(
     name: 'votePowerOf',
-    inputs: [
-      AbiParameter(name: '_account', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_account', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -190,9 +163,7 @@ class ICChainStakeContract {
       AbiParameter(name: '_account', type: AbiType.parse('address')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -223,7 +194,10 @@ class ICChainStakeContract {
   /// Calls `batchVotePowerOfAt(address[],uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<BigInt>> batchVotePowerOfAt(List<EthAddress> accounts, BigInt blockNumber) async {
+  Future<List<BigInt>> batchVotePowerOfAt(
+    List<EthAddress> accounts,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: batchVotePowerOfAtFn,
@@ -235,25 +209,36 @@ class ICChainStakeContract {
   /// Calls `stakesOf(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<EthAddress> accounts, List<BigInt> amounts})> stakesOf(EthAddress owner) async {
+  Future<({List<EthAddress> accounts, List<BigInt> amounts})> stakesOf(
+    EthAddress owner,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: stakesOfFn,
       args: [owner],
     );
-    return (accounts: (out[0]! as List).cast<EthAddress>(), amounts: (out[1]! as List).cast<BigInt>());
+    return (
+      accounts: (out[0]! as List).cast<EthAddress>(),
+      amounts: (out[1]! as List).cast<BigInt>(),
+    );
   }
 
   /// Calls `stakesOfAt(address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<EthAddress> accounts, List<BigInt> amounts})> stakesOfAt(EthAddress owner, BigInt blockNumber) async {
+  Future<({List<EthAddress> accounts, List<BigInt> amounts})> stakesOfAt(
+    EthAddress owner,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: stakesOfAtFn,
       args: [owner, blockNumber],
     );
-    return (accounts: (out[0]! as List).cast<EthAddress>(), amounts: (out[1]! as List).cast<BigInt>());
+    return (
+      accounts: (out[0]! as List).cast<EthAddress>(),
+      amounts: (out[1]! as List).cast<BigInt>(),
+    );
   }
 
   /// Calls `totalSupply()`.
@@ -317,7 +302,11 @@ class ICChainStakeContract {
   /// Calls `votePowerFromToAt(address,address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> votePowerFromToAt(EthAddress owner, EthAddress account, BigInt blockNumber) async {
+  Future<BigInt> votePowerFromToAt(
+    EthAddress owner,
+    EthAddress account,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: votePowerFromToAtFn,
@@ -349,5 +338,4 @@ class ICChainStakeContract {
     );
     return out[0]! as BigInt;
   }
-
 }

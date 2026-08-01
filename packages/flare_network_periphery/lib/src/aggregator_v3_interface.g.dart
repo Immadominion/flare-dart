@@ -20,7 +20,10 @@ class AggregatorV3InterfaceContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const AggregatorV3InterfaceContract({required this.client, required this.address});
+  const AggregatorV3InterfaceContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `AggregatorV3Interface` through the [ContractRegistry].
   static Future<AggregatorV3InterfaceContract> resolve(
@@ -28,39 +31,32 @@ class AggregatorV3InterfaceContract {
     ContractRegistry? registry,
     String registryName = 'AggregatorV3Interface',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return AggregatorV3InterfaceContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `decimals()`.
   static final AbiFunction decimalsFn = AbiFunction(
     name: 'decimals',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint8')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint8'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `description()`.
   static final AbiFunction descriptionFn = AbiFunction(
     name: 'description',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getRoundData(uint80)`.
   static final AbiFunction getRoundDataFn = AbiFunction(
     name: 'getRoundData',
-    inputs: [
-      AbiParameter(name: '_roundId', type: AbiType.parse('uint80')),
-    ],
+    inputs: [AbiParameter(name: '_roundId', type: AbiType.parse('uint80'))],
     outputs: [
       AbiParameter(name: 'roundId', type: AbiType.parse('uint80')),
       AbiParameter(name: 'answer', type: AbiType.parse('int256')),
@@ -74,8 +70,7 @@ class AggregatorV3InterfaceContract {
   /// ABI descriptor for `latestRoundData()`.
   static final AbiFunction latestRoundDataFn = AbiFunction(
     name: 'latestRoundData',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: 'roundId', type: AbiType.parse('uint80')),
       AbiParameter(name: 'answer', type: AbiType.parse('int256')),
@@ -89,11 +84,8 @@ class AggregatorV3InterfaceContract {
   /// ABI descriptor for `version()`.
   static final AbiFunction versionFn = AbiFunction(
     name: 'version',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -122,24 +114,54 @@ class AggregatorV3InterfaceContract {
   /// Calls `getRoundData(uint80)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt roundId, BigInt answer, BigInt startedAt, BigInt updatedAt, BigInt answeredInRound})> getRoundData(BigInt roundId) async {
+  Future<
+    ({
+      BigInt roundId,
+      BigInt answer,
+      BigInt startedAt,
+      BigInt updatedAt,
+      BigInt answeredInRound,
+    })
+  >
+  getRoundData(BigInt roundId) async {
     final out = await client.callFunction(
       contract: address,
       function: getRoundDataFn,
       args: [roundId],
     );
-    return (roundId: out[0]! as BigInt, answer: out[1]! as BigInt, startedAt: out[2]! as BigInt, updatedAt: out[3]! as BigInt, answeredInRound: out[4]! as BigInt);
+    return (
+      roundId: out[0]! as BigInt,
+      answer: out[1]! as BigInt,
+      startedAt: out[2]! as BigInt,
+      updatedAt: out[3]! as BigInt,
+      answeredInRound: out[4]! as BigInt,
+    );
   }
 
   /// Calls `latestRoundData()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt roundId, BigInt answer, BigInt startedAt, BigInt updatedAt, BigInt answeredInRound})> latestRoundData() async {
+  Future<
+    ({
+      BigInt roundId,
+      BigInt answer,
+      BigInt startedAt,
+      BigInt updatedAt,
+      BigInt answeredInRound,
+    })
+  >
+  latestRoundData() async {
     final out = await client.callFunction(
       contract: address,
       function: latestRoundDataFn,
     );
-    return (roundId: out[0]! as BigInt, answer: out[1]! as BigInt, startedAt: out[2]! as BigInt, updatedAt: out[3]! as BigInt, answeredInRound: out[4]! as BigInt);
+    return (
+      roundId: out[0]! as BigInt,
+      answer: out[1]! as BigInt,
+      startedAt: out[2]! as BigInt,
+      updatedAt: out[3]! as BigInt,
+      answeredInRound: out[4]! as BigInt,
+    );
   }
 
   /// Calls `version()`.
@@ -152,5 +174,4 @@ class AggregatorV3InterfaceContract {
     );
     return out[0]! as BigInt;
   }
-
 }

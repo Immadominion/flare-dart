@@ -17,24 +17,41 @@ import 'package:path/path.dart' as p;
 ///       --network coston2 \
 ///       --out ../flare_network_periphery/lib
 Future<int> main(List<String> args) async {
-  final parser = ArgParser()
-    ..addOption('artifacts',
-        abbr: 'a',
-        help: 'Root of the extracted flare-periphery-contract-artifacts '
-            'package (the directory containing flare/, coston2/, dist/).')
-    ..addOption('network',
-        abbr: 'n',
-        defaultsTo: 'flare',
-        allowed: ['flare', 'coston2', 'songbird', 'coston'],
-        help: 'Which ABI tree to read. Flare and Coston2 are byte-identical, '
-            'as are Songbird and Coston.')
-    ..addOption('out', abbr: 'o', help: 'Output directory for generated Dart.')
-    ..addMultiOption('only',
-        help: 'Generate only these contracts. Repeatable. '
-            'Defaults to every contract in the tree.')
-    ..addFlag('dry-run',
-        negatable: false, help: 'Report what would be written, write nothing.')
-    ..addFlag('help', abbr: 'h', negatable: false);
+  final parser =
+      ArgParser()
+        ..addOption(
+          'artifacts',
+          abbr: 'a',
+          help:
+              'Root of the extracted flare-periphery-contract-artifacts '
+              'package (the directory containing flare/, coston2/, dist/).',
+        )
+        ..addOption(
+          'network',
+          abbr: 'n',
+          defaultsTo: 'flare',
+          allowed: ['flare', 'coston2', 'songbird', 'coston'],
+          help:
+              'Which ABI tree to read. Flare and Coston2 are byte-identical, '
+              'as are Songbird and Coston.',
+        )
+        ..addOption(
+          'out',
+          abbr: 'o',
+          help: 'Output directory for generated Dart.',
+        )
+        ..addMultiOption(
+          'only',
+          help:
+              'Generate only these contracts. Repeatable. '
+              'Defaults to every contract in the tree.',
+        )
+        ..addFlag(
+          'dry-run',
+          negatable: false,
+          help: 'Report what would be written, write nothing.',
+        )
+        ..addFlag('help', abbr: 'h', negatable: false);
 
   final ArgResults opts;
   try {
@@ -57,11 +74,14 @@ Future<int> main(List<String> args) async {
   }
 
   final network = opts['network'] as String;
-  final contractsDir =
-      Directory(p.join(artifactsRoot.path, network, 'artifacts', 'contracts'));
+  final contractsDir = Directory(
+    p.join(artifactsRoot.path, network, 'artifacts', 'contracts'),
+  );
   if (!contractsDir.existsSync()) {
-    stderr.writeln('No contracts for network "$network" at '
-        '${contractsDir.path}');
+    stderr.writeln(
+      'No contracts for network "$network" at '
+      '${contractsDir.path}',
+    );
     return 66;
   }
 
@@ -73,12 +93,13 @@ Future<int> main(List<String> args) async {
   final bindings = <GeneratedBinding>[];
   final skipped = <String, String>{};
 
-  final files = contractsDir
-      .listSync(recursive: true)
-      .whereType<File>()
-      .where((f) => f.path.endsWith('.json'))
-      .toList()
-    ..sort((a, b) => a.path.compareTo(b.path));
+  final files =
+      contractsDir
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((f) => f.path.endsWith('.json'))
+          .toList()
+        ..sort((a, b) => a.path.compareTo(b.path));
 
   for (final file in files) {
     final contractName = p.basenameWithoutExtension(file.path);
@@ -103,8 +124,10 @@ Future<int> main(List<String> args) async {
     ..writeln('Artifacts : ${artifactsRoot.path} (v$version)')
     ..writeln('Network   : $network')
     ..writeln('Scanned   : ${files.length} artifact file(s)')
-    ..writeln('Generated : ${bindings.length} binding(s), '
-        '${bindings.fold<int>(0, (n, b) => n + b.methodCount)} read method(s)')
+    ..writeln(
+      'Generated : ${bindings.length} binding(s), '
+      '${bindings.fold<int>(0, (n, b) => n + b.methodCount)} read method(s)',
+    )
     ..writeln('Skipped   : ${skipped.length}');
 
   if (skipped.isNotEmpty) {
@@ -131,11 +154,13 @@ Future<int> main(List<String> args) async {
 
   final srcDir = Directory(p.join(outRoot, 'src'))..createSync(recursive: true);
   for (final binding in bindings) {
-    File(p.join(srcDir.path, binding.fileName))
-        .writeAsStringSync(binding.source);
+    File(
+      p.join(srcDir.path, binding.fileName),
+    ).writeAsStringSync(binding.source);
   }
-  File(p.join(outRoot, 'flare_network_periphery.dart'))
-      .writeAsStringSync(generator.generateBarrel(bindings));
+  File(
+    p.join(outRoot, 'flare_network_periphery.dart'),
+  ).writeAsStringSync(generator.generateBarrel(bindings));
 
   stdout.writeln('\nWrote ${bindings.length + 1} file(s) to $outRoot');
   return 0;
@@ -144,7 +169,8 @@ Future<int> main(List<String> args) async {
 String? _readArtifactVersion(Directory root) {
   final pkg = File(p.join(root.path, 'package.json'));
   if (!pkg.existsSync()) return null;
-  final match =
-      RegExp(r'"version"\s*:\s*"([^"]+)"').firstMatch(pkg.readAsStringSync());
+  final match = RegExp(
+    r'"version"\s*:\s*"([^"]+)"',
+  ).firstMatch(pkg.readAsStringSync());
   return match?.group(1);
 }

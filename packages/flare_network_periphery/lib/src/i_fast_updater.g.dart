@@ -30,42 +30,33 @@ class IFastUpdaterContract {
     ContractRegistry? registry,
     String registryName = 'IFastUpdater',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IFastUpdaterContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `blockScoreCutoff(uint256)`.
   static final AbiFunction blockScoreCutoffFn = AbiFunction(
     name: 'blockScoreCutoff',
-    inputs: [
-      AbiParameter(name: '_blockNum', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '_cutoff', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_blockNum', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '_cutoff', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `currentRewardEpochId()`.
   static final AbiFunction currentRewardEpochIdFn = AbiFunction(
     name: 'currentRewardEpochId',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint24')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint24'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `currentScoreCutoff()`.
   static final AbiFunction currentScoreCutoffFn = AbiFunction(
     name: 'currentScoreCutoff',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '_cutoff', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '_cutoff', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -73,19 +64,19 @@ class IFastUpdaterContract {
   static final AbiFunction currentSortitionWeightFn = AbiFunction(
     name: 'currentSortitionWeight',
     inputs: [
-      AbiParameter(name: '_signingPolicyAddress', type: AbiType.parse('address')),
+      AbiParameter(
+        name: '_signingPolicyAddress',
+        type: AbiType.parse('address'),
+      ),
     ],
-    outputs: [
-      AbiParameter(name: '_weight', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '_weight', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `fetchAllCurrentFeeds()`.
   static final AbiFunction fetchAllCurrentFeedsFn = AbiFunction(
     name: 'fetchAllCurrentFeeds',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_feedIds', type: AbiType.parse('bytes21[]')),
       AbiParameter(name: '_feeds', type: AbiType.parse('uint256[]')),
@@ -98,9 +89,7 @@ class IFastUpdaterContract {
   /// ABI descriptor for `fetchCurrentFeeds(uint256[])`.
   static final AbiFunction fetchCurrentFeedsFn = AbiFunction(
     name: 'fetchCurrentFeeds',
-    inputs: [
-      AbiParameter(name: '_indices', type: AbiType.parse('uint256[]')),
-    ],
+    inputs: [AbiParameter(name: '_indices', type: AbiType.parse('uint256[]'))],
     outputs: [
       AbiParameter(name: '_feeds', type: AbiType.parse('uint256[]')),
       AbiParameter(name: '_decimals', type: AbiType.parse('int8[]')),
@@ -136,11 +125,8 @@ class IFastUpdaterContract {
   /// ABI descriptor for `submissionWindow()`.
   static final AbiFunction submissionWindowFn = AbiFunction(
     name: 'submissionWindow',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint8')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint8'))],
     stateMutability: StateMutability.view,
   );
 
@@ -193,24 +179,42 @@ class IFastUpdaterContract {
   /// Calls `fetchAllCurrentFeeds()`.
   ///
   /// Declared `payable` in Solidity; read via `eth_call`.
-  Future<({List<Uint8List> feedIds, List<BigInt> feeds, List<BigInt> decimals, BigInt timestamp})> fetchAllCurrentFeeds() async {
+  Future<
+    ({
+      List<Uint8List> feedIds,
+      List<BigInt> feeds,
+      List<BigInt> decimals,
+      BigInt timestamp,
+    })
+  >
+  fetchAllCurrentFeeds() async {
     final out = await client.callFunction(
       contract: address,
       function: fetchAllCurrentFeedsFn,
     );
-    return (feedIds: (out[0]! as List).cast<Uint8List>(), feeds: (out[1]! as List).cast<BigInt>(), decimals: (out[2]! as List).cast<BigInt>(), timestamp: out[3]! as BigInt);
+    return (
+      feedIds: (out[0]! as List).cast<Uint8List>(),
+      feeds: (out[1]! as List).cast<BigInt>(),
+      decimals: (out[2]! as List).cast<BigInt>(),
+      timestamp: out[3]! as BigInt,
+    );
   }
 
   /// Calls `fetchCurrentFeeds(uint256[])`.
   ///
   /// Declared `payable` in Solidity; read via `eth_call`.
-  Future<({List<BigInt> feeds, List<BigInt> decimals, BigInt timestamp})> fetchCurrentFeeds(List<BigInt> indices) async {
+  Future<({List<BigInt> feeds, List<BigInt> decimals, BigInt timestamp})>
+  fetchCurrentFeeds(List<BigInt> indices) async {
     final out = await client.callFunction(
       contract: address,
       function: fetchCurrentFeedsFn,
       args: [indices],
     );
-    return (feeds: (out[0]! as List).cast<BigInt>(), decimals: (out[1]! as List).cast<BigInt>(), timestamp: out[2]! as BigInt);
+    return (
+      feeds: (out[0]! as List).cast<BigInt>(),
+      decimals: (out[1]! as List).cast<BigInt>(),
+      timestamp: out[2]! as BigInt,
+    );
   }
 
   /// Calls `numberOfUpdates(uint256)`.
@@ -247,5 +251,4 @@ class IFastUpdaterContract {
     );
     return out[0]! as BigInt;
   }
-
 }

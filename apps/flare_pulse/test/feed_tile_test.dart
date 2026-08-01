@@ -14,35 +14,36 @@ void main() {
     required int value,
     required int decimals,
     int direction = 0,
-  }) =>
-      FeedRow(
-        feedId: feed,
-        direction: direction,
-        value: FtsoFeedValue(
-          feedId: feed,
-          value: BigInt.from(value),
-          decimals: decimals,
-          timestamp: 1785528109,
-        ),
-      );
+  }) => FeedRow(
+    feedId: feed,
+    direction: direction,
+    value: FtsoFeedValue(
+      feedId: feed,
+      value: BigInt.from(value),
+      decimals: decimals,
+      timestamp: 1785528109,
+    ),
+  );
 
   Future<void> pump(WidgetTester tester, FeedRow r) => tester.pumpWidget(
-        MaterialApp(
-          theme: PulseTheme.dark,
-          home: Scaffold(body: FeedTile(row: r)),
-        ),
-      );
+    MaterialApp(
+      theme: PulseTheme.dark,
+      home: Scaffold(body: FeedTile(row: r)),
+    ),
+  );
 
-  testWidgets('renders the feed name and its exact decimal value',
-      (tester) async {
+  testWidgets('renders the feed name and its exact decimal value', (
+    tester,
+  ) async {
     await pump(tester, row(feed: Feeds.flrUsd, value: 626973, decimals: 8));
 
     expect(find.text('FLR/USD'), findsOneWidget);
     expect(find.text('0.00626973'), findsOneWidget);
   });
 
-  testWidgets('shows the decimal scale, because it differs per feed',
-      (tester) async {
+  testWidgets('shows the decimal scale, because it differs per feed', (
+    tester,
+  ) async {
     await pump(tester, row(feed: Feeds.btcUsd, value: 6288717, decimals: 2));
 
     expect(find.text('62887.17'), findsOneWidget);
@@ -51,21 +52,23 @@ void main() {
     expect(find.text('2 dp'), findsOneWidget);
   });
 
-  testWidgets('renders each feed at its own scale without cross-contamination',
-      (tester) async {
-    // The four scales seen in one live Coston2 call.
-    final cases = <(FeedId, int, int, String)>[
-      (Feeds.flrUsd, 626973, 8, '0.00626973'),
-      (Feeds.btcUsd, 6288717, 2, '62887.17'),
-      (Feeds.ethUsd, 1861608, 3, '1861.608'),
-      (Feeds.xrpUsd, 1061849, 6, '1.061849'),
-    ];
+  testWidgets(
+    'renders each feed at its own scale without cross-contamination',
+    (tester) async {
+      // The four scales seen in one live Coston2 call.
+      final cases = <(FeedId, int, int, String)>[
+        (Feeds.flrUsd, 626973, 8, '0.00626973'),
+        (Feeds.btcUsd, 6288717, 2, '62887.17'),
+        (Feeds.ethUsd, 1861608, 3, '1861.608'),
+        (Feeds.xrpUsd, 1061849, 6, '1.061849'),
+      ];
 
-    for (final (feed, value, decimals, expected) in cases) {
-      await pump(tester, row(feed: feed, value: value, decimals: decimals));
-      expect(find.text(expected), findsOneWidget, reason: feed.name);
-    }
-  });
+      for (final (feed, value, decimals, expected) in cases) {
+        await pump(tester, row(feed: feed, value: value, decimals: decimals));
+        expect(find.text(expected), findsOneWidget, reason: feed.name);
+      }
+    },
+  );
 
   testWidgets('shows an up arrow when the price rose', (tester) async {
     await pump(
@@ -95,8 +98,9 @@ void main() {
     expect(find.byIcon(Icons.arrow_drop_down), findsNothing);
   });
 
-  testWidgets('the flash settles rather than animating forever',
-      (tester) async {
+  testWidgets('the flash settles rather than animating forever', (
+    tester,
+  ) async {
     await pump(
       tester,
       row(feed: Feeds.flrUsd, value: 626973, decimals: 8, direction: 1),
@@ -107,10 +111,15 @@ void main() {
     expect(find.text('0.00626973'), findsOneWidget);
   });
 
-  testWidgets('re-flashes only when the value actually changed',
-      (tester) async {
-    final first =
-        row(feed: Feeds.flrUsd, value: 626973, decimals: 8, direction: 1);
+  testWidgets('re-flashes only when the value actually changed', (
+    tester,
+  ) async {
+    final first = row(
+      feed: Feeds.flrUsd,
+      value: 626973,
+      decimals: 8,
+      direction: 1,
+    );
     await pump(tester, first);
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
@@ -128,8 +137,9 @@ void main() {
     expect(find.text('0.00627049'), findsOneWidget);
   });
 
-  testWidgets('handles a negative decimals value without crashing',
-      (tester) async {
+  testWidgets('handles a negative decimals value without crashing', (
+    tester,
+  ) async {
     // `decimals` is a signed int8; a negative value scales up.
     await pump(tester, row(feed: Feeds.flrUsd, value: 42, decimals: -2));
     expect(find.text('4200'), findsOneWidget);

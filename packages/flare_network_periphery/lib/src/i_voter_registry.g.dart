@@ -30,8 +30,9 @@ class IVoterRegistryContract {
     ContractRegistry? registry,
     String registryName = 'IVoterRegistry',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IVoterRegistryContract(client: client, address: resolved);
   }
 
@@ -53,9 +54,7 @@ class IVoterRegistryContract {
     inputs: [
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -65,9 +64,7 @@ class IVoterRegistryContract {
     inputs: [
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
@@ -78,43 +75,34 @@ class IVoterRegistryContract {
       AbiParameter(name: '_voter', type: AbiType.parse('address')),
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `maxVoters()`.
   static final AbiFunction maxVotersFn = AbiFunction(
     name: 'maxVoters',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `newSigningPolicyInitializationStartBlockNumber(uint256)`.
-  static final AbiFunction newSigningPolicyInitializationStartBlockNumberFn = AbiFunction(
-    name: 'newSigningPolicyInitializationStartBlockNumber',
-    inputs: [
-      AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction newSigningPolicyInitializationStartBlockNumberFn =
+      AbiFunction(
+        name: 'newSigningPolicyInitializationStartBlockNumber',
+        inputs: [
+          AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
+        ],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `publicKeyRequired()`.
   static final AbiFunction publicKeyRequiredFn = AbiFunction(
     name: 'publicKeyRequired',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -180,7 +168,9 @@ class IVoterRegistryContract {
   /// Calls `newSigningPolicyInitializationStartBlockNumber(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> newSigningPolicyInitializationStartBlockNumber(BigInt rewardEpochId) async {
+  Future<BigInt> newSigningPolicyInitializationStartBlockNumber(
+    BigInt rewardEpochId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: newSigningPolicyInitializationStartBlockNumberFn,
@@ -199,5 +189,4 @@ class IVoterRegistryContract {
     );
     return out[0]! as bool;
   }
-
 }

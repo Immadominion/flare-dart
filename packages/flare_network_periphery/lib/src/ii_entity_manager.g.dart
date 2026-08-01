@@ -30,20 +30,17 @@ class IIEntityManagerContract {
     ContractRegistry? registry,
     String registryName = 'IIEntityManager',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIEntityManagerContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getDelegationAddressOf(address)`.
   static final AbiFunction getDelegationAddressOfFn = AbiFunction(
     name: 'getDelegationAddressOf',
-    inputs: [
-      AbiParameter(name: '_voter', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -54,9 +51,7 @@ class IIEntityManagerContract {
       AbiParameter(name: '_voter', type: AbiType.parse('address')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -68,7 +63,10 @@ class IIEntityManagerContract {
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
     outputs: [
-      AbiParameter(name: '_delegationAddresses', type: AbiType.parse('address[]')),
+      AbiParameter(
+        name: '_delegationAddresses',
+        type: AbiType.parse('address[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -89,12 +87,8 @@ class IIEntityManagerContract {
   /// ABI descriptor for `getNodeIdsOf(address)`.
   static final AbiFunction getNodeIdsOfFn = AbiFunction(
     name: 'getNodeIdsOf',
-    inputs: [
-      AbiParameter(name: '_voter', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bytes20[]')),
-    ],
+    inputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bytes20[]'))],
     stateMutability: StateMutability.view,
   );
 
@@ -105,18 +99,14 @@ class IIEntityManagerContract {
       AbiParameter(name: '_voter', type: AbiType.parse('address')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bytes20[]')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bytes20[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getPublicKeyOf(address)`.
   static final AbiFunction getPublicKeyOfFn = AbiFunction(
     name: 'getPublicKeyOf',
-    inputs: [
-      AbiParameter(name: '_voter', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
     outputs: [
       AbiParameter(name: '', type: AbiType.parse('bytes32')),
       AbiParameter(name: '', type: AbiType.parse('bytes32')),
@@ -160,7 +150,10 @@ class IIEntityManagerContract {
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
     outputs: [
-      AbiParameter(name: '_signingPolicyAddresses', type: AbiType.parse('address[]')),
+      AbiParameter(
+        name: '_signingPolicyAddresses',
+        type: AbiType.parse('address[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -186,7 +179,10 @@ class IIEntityManagerContract {
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
     outputs: [
-      AbiParameter(name: '_submitSignaturesAddresses', type: AbiType.parse('address[]')),
+      AbiParameter(
+        name: '_submitSignaturesAddresses',
+        type: AbiType.parse('address[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -194,11 +190,12 @@ class IIEntityManagerContract {
   /// ABI descriptor for `getVoterAddresses(address)`.
   static final AbiFunction getVoterAddressesFn = AbiFunction(
     name: 'getVoterAddresses',
-    inputs: [
-      AbiParameter(name: '_voter', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
     outputs: [
-      AbiParameter(name: '_addresses', type: AbiType.parse('(address,address,address)')),
+      AbiParameter(
+        name: '_addresses',
+        type: AbiType.parse('(address,address,address)'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -211,7 +208,10 @@ class IIEntityManagerContract {
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
     outputs: [
-      AbiParameter(name: '_addresses', type: AbiType.parse('(address,address,address)')),
+      AbiParameter(
+        name: '_addresses',
+        type: AbiType.parse('(address,address,address)'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -223,9 +223,7 @@ class IIEntityManagerContract {
       AbiParameter(name: '_delegationAddress', type: AbiType.parse('address')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '_voter', type: AbiType.parse('address')),
-    ],
+    outputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -236,9 +234,7 @@ class IIEntityManagerContract {
       AbiParameter(name: '_nodeId', type: AbiType.parse('bytes20')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '_voter', type: AbiType.parse('address')),
-    ],
+    outputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -250,9 +246,7 @@ class IIEntityManagerContract {
       AbiParameter(name: '_part2', type: AbiType.parse('bytes32')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '_voter', type: AbiType.parse('address')),
-    ],
+    outputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -260,12 +254,13 @@ class IIEntityManagerContract {
   static final AbiFunction getVoterForSigningPolicyAddressFn = AbiFunction(
     name: 'getVoterForSigningPolicyAddress',
     inputs: [
-      AbiParameter(name: '_signingPolicyAddress', type: AbiType.parse('address')),
+      AbiParameter(
+        name: '_signingPolicyAddress',
+        type: AbiType.parse('address'),
+      ),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '_voter', type: AbiType.parse('address')),
-    ],
+    outputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -276,9 +271,7 @@ class IIEntityManagerContract {
       AbiParameter(name: '_submitAddress', type: AbiType.parse('address')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '_voter', type: AbiType.parse('address')),
-    ],
+    outputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -286,12 +279,13 @@ class IIEntityManagerContract {
   static final AbiFunction getVoterForSubmitSignaturesAddressFn = AbiFunction(
     name: 'getVoterForSubmitSignaturesAddress',
     inputs: [
-      AbiParameter(name: '_submitSignaturesAddress', type: AbiType.parse('address')),
+      AbiParameter(
+        name: '_submitSignaturesAddress',
+        type: AbiType.parse('address'),
+      ),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '_voter', type: AbiType.parse('address')),
-    ],
+    outputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -310,7 +304,10 @@ class IIEntityManagerContract {
   /// Calls `getDelegationAddressOfAt(address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<EthAddress> getDelegationAddressOfAt(EthAddress voter, BigInt blockNumber) async {
+  Future<EthAddress> getDelegationAddressOfAt(
+    EthAddress voter,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getDelegationAddressOfAtFn,
@@ -322,7 +319,10 @@ class IIEntityManagerContract {
   /// Calls `getDelegationAddresses(address[],uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<EthAddress>> getDelegationAddresses(List<EthAddress> voters, BigInt blockNumber) async {
+  Future<List<EthAddress>> getDelegationAddresses(
+    List<EthAddress> voters,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getDelegationAddressesFn,
@@ -334,7 +334,10 @@ class IIEntityManagerContract {
   /// Calls `getNodeIds(address[],uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<List<Uint8List>>> getNodeIds(List<EthAddress> voters, BigInt blockNumber) async {
+  Future<List<List<Uint8List>>> getNodeIds(
+    List<EthAddress> voters,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getNodeIdsFn,
@@ -358,7 +361,10 @@ class IIEntityManagerContract {
   /// Calls `getNodeIdsOfAt(address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<Uint8List>> getNodeIdsOfAt(EthAddress voter, BigInt blockNumber) async {
+  Future<List<Uint8List>> getNodeIdsOfAt(
+    EthAddress voter,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getNodeIdsOfAtFn,
@@ -382,7 +388,10 @@ class IIEntityManagerContract {
   /// Calls `getPublicKeyOfAt(address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<(Uint8List, Uint8List)> getPublicKeyOfAt(EthAddress voter, BigInt blockNumber) async {
+  Future<(Uint8List, Uint8List)> getPublicKeyOfAt(
+    EthAddress voter,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getPublicKeyOfAtFn,
@@ -394,19 +403,28 @@ class IIEntityManagerContract {
   /// Calls `getPublicKeys(address[],uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<Uint8List> parts1, List<Uint8List> parts2})> getPublicKeys(List<EthAddress> voters, BigInt blockNumber) async {
+  Future<({List<Uint8List> parts1, List<Uint8List> parts2})> getPublicKeys(
+    List<EthAddress> voters,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getPublicKeysFn,
       args: [voters, blockNumber],
     );
-    return (parts1: (out[0]! as List).cast<Uint8List>(), parts2: (out[1]! as List).cast<Uint8List>());
+    return (
+      parts1: (out[0]! as List).cast<Uint8List>(),
+      parts2: (out[1]! as List).cast<Uint8List>(),
+    );
   }
 
   /// Calls `getSigningPolicyAddresses(address[],uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<EthAddress>> getSigningPolicyAddresses(List<EthAddress> voters, BigInt blockNumber) async {
+  Future<List<EthAddress>> getSigningPolicyAddresses(
+    List<EthAddress> voters,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getSigningPolicyAddressesFn,
@@ -418,7 +436,10 @@ class IIEntityManagerContract {
   /// Calls `getSubmitAddresses(address[],uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<EthAddress>> getSubmitAddresses(List<EthAddress> voters, BigInt blockNumber) async {
+  Future<List<EthAddress>> getSubmitAddresses(
+    List<EthAddress> voters,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getSubmitAddressesFn,
@@ -430,7 +451,10 @@ class IIEntityManagerContract {
   /// Calls `getSubmitSignaturesAddresses(address[],uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<EthAddress>> getSubmitSignaturesAddresses(List<EthAddress> voters, BigInt blockNumber) async {
+  Future<List<EthAddress>> getSubmitSignaturesAddresses(
+    List<EthAddress> voters,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getSubmitSignaturesAddressesFn,
@@ -454,7 +478,10 @@ class IIEntityManagerContract {
   /// Calls `getVoterAddressesAt(address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<Object?>> getVoterAddressesAt(EthAddress voter, BigInt blockNumber) async {
+  Future<List<Object?>> getVoterAddressesAt(
+    EthAddress voter,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getVoterAddressesAtFn,
@@ -466,7 +493,10 @@ class IIEntityManagerContract {
   /// Calls `getVoterForDelegationAddress(address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<EthAddress> getVoterForDelegationAddress(EthAddress delegationAddress, BigInt blockNumber) async {
+  Future<EthAddress> getVoterForDelegationAddress(
+    EthAddress delegationAddress,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getVoterForDelegationAddressFn,
@@ -478,7 +508,10 @@ class IIEntityManagerContract {
   /// Calls `getVoterForNodeId(bytes20,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<EthAddress> getVoterForNodeId(Uint8List nodeId, BigInt blockNumber) async {
+  Future<EthAddress> getVoterForNodeId(
+    Uint8List nodeId,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getVoterForNodeIdFn,
@@ -490,7 +523,11 @@ class IIEntityManagerContract {
   /// Calls `getVoterForPublicKey(bytes32,bytes32,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<EthAddress> getVoterForPublicKey(Uint8List part1, Uint8List part2, BigInt blockNumber) async {
+  Future<EthAddress> getVoterForPublicKey(
+    Uint8List part1,
+    Uint8List part2,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getVoterForPublicKeyFn,
@@ -502,7 +539,10 @@ class IIEntityManagerContract {
   /// Calls `getVoterForSigningPolicyAddress(address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<EthAddress> getVoterForSigningPolicyAddress(EthAddress signingPolicyAddress, BigInt blockNumber) async {
+  Future<EthAddress> getVoterForSigningPolicyAddress(
+    EthAddress signingPolicyAddress,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getVoterForSigningPolicyAddressFn,
@@ -514,7 +554,10 @@ class IIEntityManagerContract {
   /// Calls `getVoterForSubmitAddress(address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<EthAddress> getVoterForSubmitAddress(EthAddress submitAddress, BigInt blockNumber) async {
+  Future<EthAddress> getVoterForSubmitAddress(
+    EthAddress submitAddress,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getVoterForSubmitAddressFn,
@@ -526,7 +569,10 @@ class IIEntityManagerContract {
   /// Calls `getVoterForSubmitSignaturesAddress(address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<EthAddress> getVoterForSubmitSignaturesAddress(EthAddress submitSignaturesAddress, BigInt blockNumber) async {
+  Future<EthAddress> getVoterForSubmitSignaturesAddress(
+    EthAddress submitSignaturesAddress,
+    BigInt blockNumber,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getVoterForSubmitSignaturesAddressFn,
@@ -534,5 +580,4 @@ class IIEntityManagerContract {
     );
     return out[0]! as EthAddress;
   }
-
 }

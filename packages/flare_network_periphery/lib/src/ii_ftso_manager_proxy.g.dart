@@ -20,7 +20,10 @@ class IIFtsoManagerProxyContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IIFtsoManagerProxyContract({required this.client, required this.address});
+  const IIFtsoManagerProxyContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IIFtsoManagerProxy` through the [ContractRegistry].
   static Future<IIFtsoManagerProxyContract> resolve(
@@ -28,52 +31,41 @@ class IIFtsoManagerProxyContract {
     ContractRegistry? registry,
     String registryName = 'IIFtsoManagerProxy',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIFtsoManagerProxyContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `fastUpdater()`.
   static final AbiFunction fastUpdaterFn = AbiFunction(
     name: 'fastUpdater',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `fastUpdatesConfiguration()`.
   static final AbiFunction fastUpdatesConfigurationFn = AbiFunction(
     name: 'fastUpdatesConfiguration',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `flareSystemsManager()`.
   static final AbiFunction flareSystemsManagerFn = AbiFunction(
     name: 'flareSystemsManager',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `relay()`.
   static final AbiFunction relayFn = AbiFunction(
     name: 'relay',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -114,11 +106,7 @@ class IIFtsoManagerProxyContract {
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
   Future<EthAddress> relay() async {
-    final out = await client.callFunction(
-      contract: address,
-      function: relayFn,
-    );
+    final out = await client.callFunction(contract: address, function: relayFn);
     return out[0]! as EthAddress;
   }
-
 }

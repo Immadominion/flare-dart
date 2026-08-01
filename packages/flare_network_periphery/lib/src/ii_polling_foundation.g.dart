@@ -22,7 +22,10 @@ class IIPollingFoundationContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IIPollingFoundationContract({required this.client, required this.address});
+  const IIPollingFoundationContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IIPollingFoundation` through the [ContractRegistry].
   static Future<IIPollingFoundationContract> resolve(
@@ -30,8 +33,9 @@ class IIPollingFoundationContract {
     ContractRegistry? registry,
     String registryName = 'IIPollingFoundation',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIPollingFoundationContract(client: client, address: resolved);
   }
 
@@ -44,18 +48,14 @@ class IIPollingFoundationContract {
       AbiParameter(name: '_calldatas', type: AbiType.parse('bytes[]')),
       AbiParameter(name: '_description', type: AbiType.parse('string')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.payable,
   );
 
   /// ABI descriptor for `getProposalInfo(uint256)`.
   static final AbiFunction getProposalInfoFn = AbiFunction(
     name: 'getProposalInfo',
-    inputs: [
-      AbiParameter(name: '_proposalId', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_proposalId', type: AbiType.parse('uint256'))],
     outputs: [
       AbiParameter(name: '_proposer', type: AbiType.parse('address')),
       AbiParameter(name: '_accept', type: AbiType.parse('bool')),
@@ -64,8 +64,14 @@ class IIPollingFoundationContract {
       AbiParameter(name: '_voteEndTime', type: AbiType.parse('uint256')),
       AbiParameter(name: '_execStartTime', type: AbiType.parse('uint256')),
       AbiParameter(name: '_execEndTime', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_thresholdConditionBIPS', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_majorityConditionBIPS', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_thresholdConditionBIPS',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_majorityConditionBIPS',
+        type: AbiType.parse('uint256'),
+      ),
       AbiParameter(name: '_circulatingSupply', type: AbiType.parse('uint256')),
     ],
     stateMutability: StateMutability.view,
@@ -74,9 +80,7 @@ class IIPollingFoundationContract {
   /// ABI descriptor for `getProposalVotes(uint256)`.
   static final AbiFunction getProposalVotesFn = AbiFunction(
     name: 'getProposalVotes',
-    inputs: [
-      AbiParameter(name: '_proposalId', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_proposalId', type: AbiType.parse('uint256'))],
     outputs: [
       AbiParameter(name: '_for', type: AbiType.parse('uint256')),
       AbiParameter(name: '_against', type: AbiType.parse('uint256')),
@@ -91,9 +95,7 @@ class IIPollingFoundationContract {
       AbiParameter(name: '_voter', type: AbiType.parse('address')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -104,40 +106,35 @@ class IIPollingFoundationContract {
       AbiParameter(name: '_proposalId', type: AbiType.parse('uint256')),
       AbiParameter(name: '_voter', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `isProposer(address)`.
   static final AbiFunction isProposerFn = AbiFunction(
     name: 'isProposer',
-    inputs: [
-      AbiParameter(name: '_account', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [AbiParameter(name: '_account', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `state(uint256)`.
   static final AbiFunction stateFn = AbiFunction(
     name: 'state',
-    inputs: [
-      AbiParameter(name: '_proposalId', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint8')),
-    ],
+    inputs: [AbiParameter(name: '_proposalId', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint8'))],
     stateMutability: StateMutability.view,
   );
 
   /// Calls `execute(address[],uint256[],bytes[],string)`.
   ///
   /// Declared `payable` in Solidity; read via `eth_call`.
-  Future<BigInt> execute(List<EthAddress> targets, List<BigInt> values, List<Uint8List> calldatas, String description) async {
+  Future<BigInt> execute(
+    List<EthAddress> targets,
+    List<BigInt> values,
+    List<Uint8List> calldatas,
+    String description,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: executeFn,
@@ -149,19 +146,46 @@ class IIPollingFoundationContract {
   /// Calls `getProposalInfo(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({EthAddress proposer, bool accept, BigInt votePowerBlock, BigInt voteStartTime, BigInt voteEndTime, BigInt execStartTime, BigInt execEndTime, BigInt thresholdConditionBIPS, BigInt majorityConditionBIPS, BigInt circulatingSupply})> getProposalInfo(BigInt proposalId) async {
+  Future<
+    ({
+      EthAddress proposer,
+      bool accept,
+      BigInt votePowerBlock,
+      BigInt voteStartTime,
+      BigInt voteEndTime,
+      BigInt execStartTime,
+      BigInt execEndTime,
+      BigInt thresholdConditionBIPS,
+      BigInt majorityConditionBIPS,
+      BigInt circulatingSupply,
+    })
+  >
+  getProposalInfo(BigInt proposalId) async {
     final out = await client.callFunction(
       contract: address,
       function: getProposalInfoFn,
       args: [proposalId],
     );
-    return (proposer: out[0]! as EthAddress, accept: out[1]! as bool, votePowerBlock: out[2]! as BigInt, voteStartTime: out[3]! as BigInt, voteEndTime: out[4]! as BigInt, execStartTime: out[5]! as BigInt, execEndTime: out[6]! as BigInt, thresholdConditionBIPS: out[7]! as BigInt, majorityConditionBIPS: out[8]! as BigInt, circulatingSupply: out[9]! as BigInt);
+    return (
+      proposer: out[0]! as EthAddress,
+      accept: out[1]! as bool,
+      votePowerBlock: out[2]! as BigInt,
+      voteStartTime: out[3]! as BigInt,
+      voteEndTime: out[4]! as BigInt,
+      execStartTime: out[5]! as BigInt,
+      execEndTime: out[6]! as BigInt,
+      thresholdConditionBIPS: out[7]! as BigInt,
+      majorityConditionBIPS: out[8]! as BigInt,
+      circulatingSupply: out[9]! as BigInt,
+    );
   }
 
   /// Calls `getProposalVotes(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt forValue, BigInt against})> getProposalVotes(BigInt proposalId) async {
+  Future<({BigInt forValue, BigInt against})> getProposalVotes(
+    BigInt proposalId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getProposalVotesFn,
@@ -217,5 +241,4 @@ class IIPollingFoundationContract {
     );
     return out[0]! as BigInt;
   }
-
 }

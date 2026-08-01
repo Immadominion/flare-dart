@@ -3,22 +3,78 @@
 /// Solidity has its own keyword set, so a perfectly legal Solidity parameter
 /// name such as `is` or `default` will not compile as Dart.
 const _dartReserved = {
-  'abstract', 'as', 'assert', 'async', 'await', 'base', 'break', 'case',
-  'catch', 'class', 'const', 'continue', 'covariant', 'default', 'deferred',
-  'do', 'dynamic', 'else', 'enum', 'export', 'extends', 'extension',
-  'external', 'factory', 'false', 'final', 'finally', 'for', 'function',
-  'get', 'hide', 'if', 'implements', 'import', 'in', 'interface', 'is',
-  'late', 'library', 'mixin', 'new', 'null', 'on', 'operator', 'part',
-  'required', 'rethrow', 'return', 'sealed', 'set', 'show', 'static',
-  'super', 'switch', 'sync', 'this', 'throw', 'true', 'try', 'type',
-  'typedef', 'var', 'void', 'when', 'while', 'with', 'yield',
+  'abstract',
+  'as',
+  'assert',
+  'async',
+  'await',
+  'base',
+  'break',
+  'case',
+  'catch',
+  'class',
+  'const',
+  'continue',
+  'covariant',
+  'default',
+  'deferred',
+  'do',
+  'dynamic',
+  'else',
+  'enum',
+  'export',
+  'extends',
+  'extension',
+  'external',
+  'factory',
+  'false',
+  'final',
+  'finally',
+  'for',
+  'function',
+  'get',
+  'hide',
+  'if',
+  'implements',
+  'import',
+  'in',
+  'interface',
+  'is',
+  'late',
+  'library',
+  'mixin',
+  'new',
+  'null',
+  'on',
+  'operator',
+  'part',
+  'required',
+  'rethrow',
+  'return',
+  'sealed',
+  'set',
+  'show',
+  'static',
+  'super',
+  'switch',
+  'sync',
+  'this',
+  'throw',
+  'true',
+  'try',
+  'type',
+  'typedef',
+  'var',
+  'void',
+  'when',
+  'while',
+  'with',
+  'yield',
 };
 
 /// Members every Dart object already has. Shadowing them in a generated class
 /// produces a confusing override error rather than a clean failure.
-const _objectMembers = {
-  'hashCode', 'runtimeType', 'toString', 'noSuchMethod',
-};
+const _objectMembers = {'hashCode', 'runtimeType', 'toString', 'noSuchMethod'};
 
 /// Converts a Solidity identifier to a safe lowerCamelCase Dart identifier.
 ///
@@ -68,17 +124,20 @@ String toDartClassName(String raw) {
 
 /// Converts a name to lower_snake_case, for file names.
 String toSnakeCase(String raw) {
-  final s = raw
-      .replaceAllMapped(
-        RegExp(r'([a-z0-9])([A-Z])'),
-        (m) => '${m[1]}_${m[2]}',
-      )
-      .replaceAllMapped(
-        RegExp(r'([A-Z]+)([A-Z][a-z])'),
-        (m) => '${m[1]}_${m[2]}',
-      )
-      .toLowerCase();
-  return s.replaceAll(RegExp(r'[^a-z0-9]+'), '_').replaceAll(RegExp(r'^_|_$'), '');
+  final s =
+      raw
+          .replaceAllMapped(
+            RegExp(r'([a-z0-9])([A-Z])'),
+            (m) => '${m[1]}_${m[2]}',
+          )
+          .replaceAllMapped(
+            RegExp(r'([A-Z]+)([A-Z][a-z])'),
+            (m) => '${m[1]}_${m[2]}',
+          )
+          .toLowerCase();
+  return s
+      .replaceAll(RegExp(r'[^a-z0-9]+'), '_')
+      .replaceAll(RegExp(r'^_|_$'), '');
 }
 
 /// Makes each name in [names] unique by appending a numeric suffix.

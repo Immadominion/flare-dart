@@ -20,7 +20,10 @@ class IBalanceDecreasingTransactionVerificationContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IBalanceDecreasingTransactionVerificationContract({required this.client, required this.address});
+  const IBalanceDecreasingTransactionVerificationContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IBalanceDecreasingTransactionVerification` through the [ContractRegistry].
   static Future<IBalanceDecreasingTransactionVerificationContract> resolve(
@@ -28,20 +31,27 @@ class IBalanceDecreasingTransactionVerificationContract {
     ContractRegistry? registry,
     String registryName = 'IBalanceDecreasingTransactionVerification',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
-    return IBalanceDecreasingTransactionVerificationContract(client: client, address: resolved);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
+    return IBalanceDecreasingTransactionVerificationContract(
+      client: client,
+      address: resolved,
+    );
   }
 
   /// ABI descriptor for `verifyBalanceDecreasingTransaction((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,bytes32),(uint64,uint64,bytes32,int256,bytes32))))`.
   static final AbiFunction verifyBalanceDecreasingTransactionFn = AbiFunction(
     name: 'verifyBalanceDecreasingTransaction',
     inputs: [
-      AbiParameter(name: '_proof', type: AbiType.parse('(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,bytes32),(uint64,uint64,bytes32,int256,bytes32)))')),
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,bytes32),(uint64,uint64,bytes32,int256,bytes32)))',
+        ),
+      ),
     ],
-    outputs: [
-      AbiParameter(name: '_proved', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '_proved', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -56,5 +66,4 @@ class IBalanceDecreasingTransactionVerificationContract {
     );
     return out[0]! as bool;
   }
-
 }

@@ -20,7 +20,10 @@ class IInstructionFeesFacetContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IInstructionFeesFacetContract({required this.client, required this.address});
+  const IInstructionFeesFacetContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IInstructionFeesFacet` through the [ContractRegistry].
   static Future<IInstructionFeesFacetContract> resolve(
@@ -28,19 +31,17 @@ class IInstructionFeesFacetContract {
     ContractRegistry? registry,
     String registryName = 'IInstructionFeesFacet',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IInstructionFeesFacetContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getDefaultInstructionFee()`.
   static final AbiFunction getDefaultInstructionFeeFn = AbiFunction(
     name: 'getDefaultInstructionFee',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -50,9 +51,7 @@ class IInstructionFeesFacetContract {
     inputs: [
       AbiParameter(name: '_instructionId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -78,5 +77,4 @@ class IInstructionFeesFacetContract {
     );
     return out[0]! as BigInt;
   }
-
 }

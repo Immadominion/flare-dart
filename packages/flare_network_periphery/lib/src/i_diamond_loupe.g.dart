@@ -30,8 +30,9 @@ class IDiamondLoupeContract {
     ContractRegistry? registry,
     String registryName = 'IDiamondLoupe',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IDiamondLoupeContract(client: client, address: resolved);
   }
 
@@ -50,8 +51,7 @@ class IDiamondLoupeContract {
   /// ABI descriptor for `facetAddresses()`.
   static final AbiFunction facetAddressesFn = AbiFunction(
     name: 'facetAddresses',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: 'facetAddresses_', type: AbiType.parse('address[]')),
     ],
@@ -61,11 +61,12 @@ class IDiamondLoupeContract {
   /// ABI descriptor for `facetFunctionSelectors(address)`.
   static final AbiFunction facetFunctionSelectorsFn = AbiFunction(
     name: 'facetFunctionSelectors',
-    inputs: [
-      AbiParameter(name: '_facet', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_facet', type: AbiType.parse('address'))],
     outputs: [
-      AbiParameter(name: 'facetFunctionSelectors_', type: AbiType.parse('bytes4[]')),
+      AbiParameter(
+        name: 'facetFunctionSelectors_',
+        type: AbiType.parse('bytes4[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -73,10 +74,12 @@ class IDiamondLoupeContract {
   /// ABI descriptor for `facets()`.
   static final AbiFunction facetsFn = AbiFunction(
     name: 'facets',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: 'facets_', type: AbiType.parse('(address,bytes4[])[]')),
+      AbiParameter(
+        name: 'facets_',
+        type: AbiType.parse('(address,bytes4[])[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -126,5 +129,4 @@ class IDiamondLoupeContract {
     );
     return (out[0]! as List).cast<List<Object?>>();
   }
-
 }

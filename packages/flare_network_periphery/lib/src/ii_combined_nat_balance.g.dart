@@ -20,7 +20,10 @@ class IICombinedNatBalanceContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IICombinedNatBalanceContract({required this.client, required this.address});
+  const IICombinedNatBalanceContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IICombinedNatBalance` through the [ContractRegistry].
   static Future<IICombinedNatBalanceContract> resolve(
@@ -28,20 +31,17 @@ class IICombinedNatBalanceContract {
     ContractRegistry? registry,
     String registryName = 'IICombinedNatBalance',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IICombinedNatBalanceContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `balanceOf(address)`.
   static final AbiFunction balanceOfFn = AbiFunction(
     name: 'balanceOf',
-    inputs: [
-      AbiParameter(name: '_owner', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_owner', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -52,20 +52,15 @@ class IICombinedNatBalanceContract {
       AbiParameter(name: '_owner', type: AbiType.parse('address')),
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `totalSupply()`.
   static final AbiFunction totalSupplyFn = AbiFunction(
     name: 'totalSupply',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -75,9 +70,7 @@ class IICombinedNatBalanceContract {
     inputs: [
       AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -127,5 +120,4 @@ class IICombinedNatBalanceContract {
     );
     return out[0]! as BigInt;
   }
-
 }

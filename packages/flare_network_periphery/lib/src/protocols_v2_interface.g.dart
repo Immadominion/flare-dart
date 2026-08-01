@@ -20,7 +20,10 @@ class ProtocolsV2InterfaceContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const ProtocolsV2InterfaceContract({required this.client, required this.address});
+  const ProtocolsV2InterfaceContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `ProtocolsV2Interface` through the [ContractRegistry].
   static Future<ProtocolsV2InterfaceContract> resolve(
@@ -28,52 +31,41 @@ class ProtocolsV2InterfaceContract {
     ContractRegistry? registry,
     String registryName = 'ProtocolsV2Interface',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return ProtocolsV2InterfaceContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `firstRewardEpochStartTs()`.
   static final AbiFunction firstRewardEpochStartTsFn = AbiFunction(
     name: 'firstRewardEpochStartTs',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `firstVotingRoundStartTs()`.
   static final AbiFunction firstVotingRoundStartTsFn = AbiFunction(
     name: 'firstVotingRoundStartTs',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCurrentRewardEpochId()`.
   static final AbiFunction getCurrentRewardEpochIdFn = AbiFunction(
     name: 'getCurrentRewardEpochId',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint24')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint24'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCurrentVotingEpochId()`.
   static final AbiFunction getCurrentVotingEpochIdFn = AbiFunction(
     name: 'getCurrentVotingEpochId',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint32')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint32'))],
     stateMutability: StateMutability.view,
   );
 
@@ -83,9 +75,7 @@ class ProtocolsV2InterfaceContract {
     inputs: [
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint32')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint32'))],
     stateMutability: StateMutability.view,
   );
 
@@ -104,22 +94,16 @@ class ProtocolsV2InterfaceContract {
   /// ABI descriptor for `rewardEpochDurationSeconds()`.
   static final AbiFunction rewardEpochDurationSecondsFn = AbiFunction(
     name: 'rewardEpochDurationSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `votingEpochDurationSeconds()`.
   static final AbiFunction votingEpochDurationSecondsFn = AbiFunction(
     name: 'votingEpochDurationSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
     stateMutability: StateMutability.view,
   );
 
@@ -212,5 +196,4 @@ class ProtocolsV2InterfaceContract {
     );
     return out[0]! as BigInt;
   }
-
 }

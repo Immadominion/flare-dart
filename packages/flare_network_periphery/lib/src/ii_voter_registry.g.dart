@@ -30,8 +30,9 @@ class IIVoterRegistryContract {
     ContractRegistry? registry,
     String registryName = 'IIVoterRegistry',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIVoterRegistryContract(client: client, address: resolved);
   }
 
@@ -53,9 +54,7 @@ class IIVoterRegistryContract {
     inputs: [
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -64,13 +63,19 @@ class IIVoterRegistryContract {
     name: 'getPublicKeyAndNormalisedWeight',
     inputs: [
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_signingPolicyAddress', type: AbiType.parse('address')),
+      AbiParameter(
+        name: '_signingPolicyAddress',
+        type: AbiType.parse('address'),
+      ),
     ],
     outputs: [
       AbiParameter(name: '_publicKeyPart1', type: AbiType.parse('bytes32')),
       AbiParameter(name: '_publicKeyPart2', type: AbiType.parse('bytes32')),
       AbiParameter(name: '_normalisedWeight', type: AbiType.parse('uint16')),
-      AbiParameter(name: '_normalisedWeightsSumOfVotersWithPublicKeys', type: AbiType.parse('uint16')),
+      AbiParameter(
+        name: '_normalisedWeightsSumOfVotersWithPublicKeys',
+        type: AbiType.parse('uint16'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -82,7 +87,10 @@ class IIVoterRegistryContract {
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
     outputs: [
-      AbiParameter(name: '_delegationAddresses', type: AbiType.parse('address[]')),
+      AbiParameter(
+        name: '_delegationAddresses',
+        type: AbiType.parse('address[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -119,7 +127,10 @@ class IIVoterRegistryContract {
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
     outputs: [
-      AbiParameter(name: '_signingPolicyAddresses', type: AbiType.parse('address[]')),
+      AbiParameter(
+        name: '_signingPolicyAddresses',
+        type: AbiType.parse('address[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -130,23 +141,25 @@ class IIVoterRegistryContract {
     inputs: [
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getRegisteredSubmitSignaturesAddresses(uint256)`.
-  static final AbiFunction getRegisteredSubmitSignaturesAddressesFn = AbiFunction(
-    name: 'getRegisteredSubmitSignaturesAddresses',
-    inputs: [
-      AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '_signingPolicyAddresses', type: AbiType.parse('address[]')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getRegisteredSubmitSignaturesAddressesFn =
+      AbiFunction(
+        name: 'getRegisteredSubmitSignaturesAddresses',
+        inputs: [
+          AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
+        ],
+        outputs: [
+          AbiParameter(
+            name: '_signingPolicyAddresses',
+            type: AbiType.parse('address[]'),
+          ),
+        ],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getRegisteredVoters(uint256)`.
   static final AbiFunction getRegisteredVotersFn = AbiFunction(
@@ -154,37 +167,43 @@ class IIVoterRegistryContract {
     inputs: [
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getRegisteredVotersAndNormalisedWeights(uint256)`.
-  static final AbiFunction getRegisteredVotersAndNormalisedWeightsFn = AbiFunction(
-    name: 'getRegisteredVotersAndNormalisedWeights',
-    inputs: [
-      AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '_voters', type: AbiType.parse('address[]')),
-      AbiParameter(name: '_normalisedWeights', type: AbiType.parse('uint16[]')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getRegisteredVotersAndNormalisedWeightsFn =
+      AbiFunction(
+        name: 'getRegisteredVotersAndNormalisedWeights',
+        inputs: [
+          AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
+        ],
+        outputs: [
+          AbiParameter(name: '_voters', type: AbiType.parse('address[]')),
+          AbiParameter(
+            name: '_normalisedWeights',
+            type: AbiType.parse('uint16[]'),
+          ),
+        ],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getRegisteredVotersAndRegistrationWeights(uint256)`.
-  static final AbiFunction getRegisteredVotersAndRegistrationWeightsFn = AbiFunction(
-    name: 'getRegisteredVotersAndRegistrationWeights',
-    inputs: [
-      AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '_voters', type: AbiType.parse('address[]')),
-      AbiParameter(name: '_registrationWeights', type: AbiType.parse('uint256[]')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getRegisteredVotersAndRegistrationWeightsFn =
+      AbiFunction(
+        name: 'getRegisteredVotersAndRegistrationWeights',
+        inputs: [
+          AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
+        ],
+        outputs: [
+          AbiParameter(name: '_voters', type: AbiType.parse('address[]')),
+          AbiParameter(
+            name: '_registrationWeights',
+            type: AbiType.parse('uint256[]'),
+          ),
+        ],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getVoterNormalisedWeight(address,uint256)`.
   static final AbiFunction getVoterNormalisedWeightFn = AbiFunction(
@@ -217,7 +236,10 @@ class IIVoterRegistryContract {
     name: 'getVoterWithNormalisedWeight',
     inputs: [
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_signingPolicyAddress', type: AbiType.parse('address')),
+      AbiParameter(
+        name: '_signingPolicyAddress',
+        type: AbiType.parse('address'),
+      ),
     ],
     outputs: [
       AbiParameter(name: '_voter', type: AbiType.parse('address')),
@@ -234,8 +256,14 @@ class IIVoterRegistryContract {
     ],
     outputs: [
       AbiParameter(name: '_weightsSum', type: AbiType.parse('uint128')),
-      AbiParameter(name: '_normalisedWeightsSum', type: AbiType.parse('uint16')),
-      AbiParameter(name: '_normalisedWeightsSumOfVotersWithPublicKeys', type: AbiType.parse('uint16')),
+      AbiParameter(
+        name: '_normalisedWeightsSum',
+        type: AbiType.parse('uint16'),
+      ),
+      AbiParameter(
+        name: '_normalisedWeightsSumOfVotersWithPublicKeys',
+        type: AbiType.parse('uint16'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -247,43 +275,34 @@ class IIVoterRegistryContract {
       AbiParameter(name: '_voter', type: AbiType.parse('address')),
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `maxVoters()`.
   static final AbiFunction maxVotersFn = AbiFunction(
     name: 'maxVoters',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `newSigningPolicyInitializationStartBlockNumber(uint256)`.
-  static final AbiFunction newSigningPolicyInitializationStartBlockNumberFn = AbiFunction(
-    name: 'newSigningPolicyInitializationStartBlockNumber',
-    inputs: [
-      AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction newSigningPolicyInitializationStartBlockNumberFn =
+      AbiFunction(
+        name: 'newSigningPolicyInitializationStartBlockNumber',
+        inputs: [
+          AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
+        ],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `publicKeyRequired()`.
   static final AbiFunction publicKeyRequiredFn = AbiFunction(
     name: 'publicKeyRequired',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -314,19 +333,37 @@ class IIVoterRegistryContract {
   /// Calls `getPublicKeyAndNormalisedWeight(uint256,address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({Uint8List publicKeyPart1, Uint8List publicKeyPart2, BigInt normalisedWeight, BigInt normalisedWeightsSumOfVotersWithPublicKeys})> getPublicKeyAndNormalisedWeight(BigInt rewardEpochId, EthAddress signingPolicyAddress) async {
+  Future<
+    ({
+      Uint8List publicKeyPart1,
+      Uint8List publicKeyPart2,
+      BigInt normalisedWeight,
+      BigInt normalisedWeightsSumOfVotersWithPublicKeys,
+    })
+  >
+  getPublicKeyAndNormalisedWeight(
+    BigInt rewardEpochId,
+    EthAddress signingPolicyAddress,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getPublicKeyAndNormalisedWeightFn,
       args: [rewardEpochId, signingPolicyAddress],
     );
-    return (publicKeyPart1: out[0]! as Uint8List, publicKeyPart2: out[1]! as Uint8List, normalisedWeight: out[2]! as BigInt, normalisedWeightsSumOfVotersWithPublicKeys: out[3]! as BigInt);
+    return (
+      publicKeyPart1: out[0]! as Uint8List,
+      publicKeyPart2: out[1]! as Uint8List,
+      normalisedWeight: out[2]! as BigInt,
+      normalisedWeightsSumOfVotersWithPublicKeys: out[3]! as BigInt,
+    );
   }
 
   /// Calls `getRegisteredDelegationAddresses(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<EthAddress>> getRegisteredDelegationAddresses(BigInt rewardEpochId) async {
+  Future<List<EthAddress>> getRegisteredDelegationAddresses(
+    BigInt rewardEpochId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getRegisteredDelegationAddressesFn,
@@ -338,7 +375,9 @@ class IIVoterRegistryContract {
   /// Calls `getRegisteredNodeIds(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<List<Uint8List>>> getRegisteredNodeIds(BigInt rewardEpochId) async {
+  Future<List<List<Uint8List>>> getRegisteredNodeIds(
+    BigInt rewardEpochId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getRegisteredNodeIdsFn,
@@ -350,19 +389,25 @@ class IIVoterRegistryContract {
   /// Calls `getRegisteredPublicKeys(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<Uint8List> parts1, List<Uint8List> parts2})> getRegisteredPublicKeys(BigInt rewardEpochId) async {
+  Future<({List<Uint8List> parts1, List<Uint8List> parts2})>
+  getRegisteredPublicKeys(BigInt rewardEpochId) async {
     final out = await client.callFunction(
       contract: address,
       function: getRegisteredPublicKeysFn,
       args: [rewardEpochId],
     );
-    return (parts1: (out[0]! as List).cast<Uint8List>(), parts2: (out[1]! as List).cast<Uint8List>());
+    return (
+      parts1: (out[0]! as List).cast<Uint8List>(),
+      parts2: (out[1]! as List).cast<Uint8List>(),
+    );
   }
 
   /// Calls `getRegisteredSigningPolicyAddresses(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<EthAddress>> getRegisteredSigningPolicyAddresses(BigInt rewardEpochId) async {
+  Future<List<EthAddress>> getRegisteredSigningPolicyAddresses(
+    BigInt rewardEpochId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getRegisteredSigningPolicyAddressesFn,
@@ -374,7 +419,9 @@ class IIVoterRegistryContract {
   /// Calls `getRegisteredSubmitAddresses(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<EthAddress>> getRegisteredSubmitAddresses(BigInt rewardEpochId) async {
+  Future<List<EthAddress>> getRegisteredSubmitAddresses(
+    BigInt rewardEpochId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getRegisteredSubmitAddressesFn,
@@ -386,7 +433,9 @@ class IIVoterRegistryContract {
   /// Calls `getRegisteredSubmitSignaturesAddresses(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<EthAddress>> getRegisteredSubmitSignaturesAddresses(BigInt rewardEpochId) async {
+  Future<List<EthAddress>> getRegisteredSubmitSignaturesAddresses(
+    BigInt rewardEpochId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getRegisteredSubmitSignaturesAddressesFn,
@@ -410,31 +459,42 @@ class IIVoterRegistryContract {
   /// Calls `getRegisteredVotersAndNormalisedWeights(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<EthAddress> voters, List<BigInt> normalisedWeights})> getRegisteredVotersAndNormalisedWeights(BigInt rewardEpochId) async {
+  Future<({List<EthAddress> voters, List<BigInt> normalisedWeights})>
+  getRegisteredVotersAndNormalisedWeights(BigInt rewardEpochId) async {
     final out = await client.callFunction(
       contract: address,
       function: getRegisteredVotersAndNormalisedWeightsFn,
       args: [rewardEpochId],
     );
-    return (voters: (out[0]! as List).cast<EthAddress>(), normalisedWeights: (out[1]! as List).cast<BigInt>());
+    return (
+      voters: (out[0]! as List).cast<EthAddress>(),
+      normalisedWeights: (out[1]! as List).cast<BigInt>(),
+    );
   }
 
   /// Calls `getRegisteredVotersAndRegistrationWeights(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<EthAddress> voters, List<BigInt> registrationWeights})> getRegisteredVotersAndRegistrationWeights(BigInt rewardEpochId) async {
+  Future<({List<EthAddress> voters, List<BigInt> registrationWeights})>
+  getRegisteredVotersAndRegistrationWeights(BigInt rewardEpochId) async {
     final out = await client.callFunction(
       contract: address,
       function: getRegisteredVotersAndRegistrationWeightsFn,
       args: [rewardEpochId],
     );
-    return (voters: (out[0]! as List).cast<EthAddress>(), registrationWeights: (out[1]! as List).cast<BigInt>());
+    return (
+      voters: (out[0]! as List).cast<EthAddress>(),
+      registrationWeights: (out[1]! as List).cast<BigInt>(),
+    );
   }
 
   /// Calls `getVoterNormalisedWeight(address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> getVoterNormalisedWeight(EthAddress voter, BigInt rewardEpochId) async {
+  Future<BigInt> getVoterNormalisedWeight(
+    EthAddress voter,
+    BigInt rewardEpochId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getVoterNormalisedWeightFn,
@@ -446,7 +506,10 @@ class IIVoterRegistryContract {
   /// Calls `getVoterRegistrationWeight(address,uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> getVoterRegistrationWeight(EthAddress voter, BigInt rewardEpochId) async {
+  Future<BigInt> getVoterRegistrationWeight(
+    EthAddress voter,
+    BigInt rewardEpochId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getVoterRegistrationWeightFn,
@@ -458,7 +521,11 @@ class IIVoterRegistryContract {
   /// Calls `getVoterWithNormalisedWeight(uint256,address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({EthAddress voter, BigInt normalisedWeight})> getVoterWithNormalisedWeight(BigInt rewardEpochId, EthAddress signingPolicyAddress) async {
+  Future<({EthAddress voter, BigInt normalisedWeight})>
+  getVoterWithNormalisedWeight(
+    BigInt rewardEpochId,
+    EthAddress signingPolicyAddress,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getVoterWithNormalisedWeightFn,
@@ -470,13 +537,24 @@ class IIVoterRegistryContract {
   /// Calls `getWeightsSums(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt weightsSum, BigInt normalisedWeightsSum, BigInt normalisedWeightsSumOfVotersWithPublicKeys})> getWeightsSums(BigInt rewardEpochId) async {
+  Future<
+    ({
+      BigInt weightsSum,
+      BigInt normalisedWeightsSum,
+      BigInt normalisedWeightsSumOfVotersWithPublicKeys,
+    })
+  >
+  getWeightsSums(BigInt rewardEpochId) async {
     final out = await client.callFunction(
       contract: address,
       function: getWeightsSumsFn,
       args: [rewardEpochId],
     );
-    return (weightsSum: out[0]! as BigInt, normalisedWeightsSum: out[1]! as BigInt, normalisedWeightsSumOfVotersWithPublicKeys: out[2]! as BigInt);
+    return (
+      weightsSum: out[0]! as BigInt,
+      normalisedWeightsSum: out[1]! as BigInt,
+      normalisedWeightsSumOfVotersWithPublicKeys: out[2]! as BigInt,
+    );
   }
 
   /// Calls `isVoterRegistered(address,uint256)`.
@@ -505,7 +583,9 @@ class IIVoterRegistryContract {
   /// Calls `newSigningPolicyInitializationStartBlockNumber(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<BigInt> newSigningPolicyInitializationStartBlockNumber(BigInt rewardEpochId) async {
+  Future<BigInt> newSigningPolicyInitializationStartBlockNumber(
+    BigInt rewardEpochId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: newSigningPolicyInitializationStartBlockNumberFn,
@@ -524,5 +604,4 @@ class IIVoterRegistryContract {
     );
     return out[0]! as bool;
   }
-
 }

@@ -22,7 +22,10 @@ class IIFlareAssetRegistryProviderContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IIFlareAssetRegistryProviderContract({required this.client, required this.address});
+  const IIFlareAssetRegistryProviderContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IIFlareAssetRegistryProvider` through the [ContractRegistry].
   static Future<IIFlareAssetRegistryProviderContract> resolve(
@@ -30,30 +33,28 @@ class IIFlareAssetRegistryProviderContract {
     ContractRegistry? registry,
     String registryName = 'IIFlareAssetRegistryProvider',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
-    return IIFlareAssetRegistryProviderContract(client: client, address: resolved);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
+    return IIFlareAssetRegistryProviderContract(
+      client: client,
+      address: resolved,
+    );
   }
 
   /// ABI descriptor for `allAssets()`.
   static final AbiFunction allAssetsFn = AbiFunction(
     name: 'allAssets',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `assetType()`.
   static final AbiFunction assetTypeFn = AbiFunction(
     name: 'assetType',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bytes32')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bytes32'))],
     stateMutability: StateMutability.view,
   );
 
@@ -96,7 +97,10 @@ class IIFlareAssetRegistryProviderContract {
   /// Calls `getAttribute(address,bytes32)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({bool defined, Uint8List value})> getAttribute(EthAddress token, Uint8List nameHash) async {
+  Future<({bool defined, Uint8List value})> getAttribute(
+    EthAddress token,
+    Uint8List nameHash,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getAttributeFn,
@@ -104,5 +108,4 @@ class IIFlareAssetRegistryProviderContract {
     );
     return (defined: out[0]! as bool, value: out[1]! as Uint8List);
   }
-
 }

@@ -20,7 +20,10 @@ class IFlareSystemsCalculatorContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IFlareSystemsCalculatorContract({required this.client, required this.address});
+  const IFlareSystemsCalculatorContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IFlareSystemsCalculator` through the [ContractRegistry].
   static Future<IFlareSystemsCalculatorContract> resolve(
@@ -28,52 +31,44 @@ class IFlareSystemsCalculatorContract {
     ContractRegistry? registry,
     String registryName = 'IFlareSystemsCalculator',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IFlareSystemsCalculatorContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `signingPolicySignNoRewardsDurationBlocks()`.
-  static final AbiFunction signingPolicySignNoRewardsDurationBlocksFn = AbiFunction(
-    name: 'signingPolicySignNoRewardsDurationBlocks',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction signingPolicySignNoRewardsDurationBlocksFn =
+      AbiFunction(
+        name: 'signingPolicySignNoRewardsDurationBlocks',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `signingPolicySignNonPunishableDurationBlocks()`.
-  static final AbiFunction signingPolicySignNonPunishableDurationBlocksFn = AbiFunction(
-    name: 'signingPolicySignNonPunishableDurationBlocks',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction signingPolicySignNonPunishableDurationBlocksFn =
+      AbiFunction(
+        name: 'signingPolicySignNonPunishableDurationBlocks',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `signingPolicySignNonPunishableDurationSeconds()`.
-  static final AbiFunction signingPolicySignNonPunishableDurationSecondsFn = AbiFunction(
-    name: 'signingPolicySignNonPunishableDurationSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction signingPolicySignNonPunishableDurationSecondsFn =
+      AbiFunction(
+        name: 'signingPolicySignNonPunishableDurationSeconds',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `wNatCapPPM()`.
   static final AbiFunction wNatCapPPMFn = AbiFunction(
     name: 'wNatCapPPM',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint24')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint24'))],
     stateMutability: StateMutability.view,
   );
 
@@ -120,5 +115,4 @@ class IFlareSystemsCalculatorContract {
     );
     return out[0]! as BigInt;
   }
-
 }

@@ -18,17 +18,19 @@ class AbiFn {
   });
 
   factory AbiFn.fromJson(Map<String, Object?> json) => AbiFn(
-        name: (json['name'] as String?) ?? '',
-        inputs: ((json['inputs'] as List<Object?>?) ?? const [])
+    name: (json['name'] as String?) ?? '',
+    inputs:
+        ((json['inputs'] as List<Object?>?) ?? const [])
             .cast<Map<String, Object?>>()
             .map(AbiParam.fromJson)
             .toList(),
-        outputs: ((json['outputs'] as List<Object?>?) ?? const [])
+    outputs:
+        ((json['outputs'] as List<Object?>?) ?? const [])
             .cast<Map<String, Object?>>()
             .map(AbiParam.fromJson)
             .toList(),
-        stateMutability: (json['stateMutability'] as String?) ?? 'nonpayable',
-      );
+    stateMutability: (json['stateMutability'] as String?) ?? 'nonpayable',
+  );
 
   String get canonicalSignature =>
       '$name(${inputs.map((i) => i.canonicalType).join(',')})';
@@ -88,11 +90,21 @@ class BindingGenerator {
 
     // Only import dart:typed_data when a Uint8List actually appears, or every
     // binding without a bytes type emits an unused-import warning.
-    final needsTypedData = readable.any((f) => [...f.inputs, ...f.outputs]
-        .any((p) => TypeMapper.dartType(p).contains('Uint8List')));
+    final needsTypedData = readable.any(
+      (f) => [
+        ...f.inputs,
+        ...f.outputs,
+      ].any((p) => TypeMapper.dartType(p).contains('Uint8List')),
+    );
 
-    _writeHeader(buffer, contractName, className, all.length, readable.length,
-        needsTypedData: needsTypedData);
+    _writeHeader(
+      buffer,
+      contractName,
+      className,
+      all.length,
+      readable.length,
+      needsTypedData: needsTypedData,
+    );
     _writeClassOpen(buffer, className, contractName);
 
     // Overloads share a Solidity name; give each a unique Dart name.
@@ -129,15 +141,21 @@ class BindingGenerator {
     b
       ..writeln('// GENERATED CODE — DO NOT EDIT BY HAND.')
       ..writeln('//')
-      ..writeln('// Source: @flarenetwork/flare-periphery-contract-artifacts@'
-          '$artifactVersion')
+      ..writeln(
+        '// Source: @flarenetwork/flare-periphery-contract-artifacts@'
+        '$artifactVersion',
+      )
       ..writeln('// Contract: $contractName')
-      ..writeln('// Functions: $readable readable of $total total '
-          '(state-changing functions are omitted — this SDK does not sign).')
+      ..writeln(
+        '// Functions: $readable readable of $total total '
+        '(state-changing functions are omitted — this SDK does not sign).',
+      )
       ..writeln('//')
       ..writeln('// Regenerate with:')
-      ..writeln('//   dart run flare_network_codegen --artifacts <dir> '
-          '--out <dir>')
+      ..writeln(
+        '//   dart run flare_network_codegen --artifacts <dir> '
+        '--out <dir>',
+      )
       ..writeln();
     if (needsTypedData) {
       b
@@ -151,7 +169,9 @@ class BindingGenerator {
 
   void _writeClassOpen(StringBuffer b, String className, String contractName) {
     b
-      ..writeln('/// Typed read bindings for Flare\'s `$contractName` contract.')
+      ..writeln(
+        '/// Typed read bindings for Flare\'s `$contractName` contract.',
+      )
       ..writeln('///')
       ..writeln('/// Resolve it through the registry rather than hardcoding an')
       ..writeln('/// address — Flare redeploys contracts.')
@@ -162,18 +182,24 @@ class BindingGenerator {
       ..writeln('  /// Resolved address on [client]\'s network.')
       ..writeln('  final EthAddress address;')
       ..writeln()
-      ..writeln('  const $className({required this.client, '
-          'required this.address});')
+      ..writeln(
+        '  const $className({required this.client, '
+        'required this.address});',
+      )
       ..writeln()
-      ..writeln('  /// Resolves `$contractName` through the '
-          '[ContractRegistry].')
+      ..writeln(
+        '  /// Resolves `$contractName` through the '
+        '[ContractRegistry].',
+      )
       ..writeln('  static Future<$className> resolve(')
       ..writeln('    FlareClient client, {')
       ..writeln('    ContractRegistry? registry,')
       ..writeln('    String registryName = \'$contractName\',')
       ..writeln('  }) async {')
-      ..writeln('    final resolved = await (registry ?? '
-          'ContractRegistry(client))')
+      ..writeln(
+        '    final resolved = await (registry ?? '
+        'ContractRegistry(client))',
+      )
       ..writeln('        .addressOf(registryName);')
       ..writeln('    return $className(client: client, address: resolved);')
       ..writeln('  }')
@@ -187,15 +213,19 @@ class BindingGenerator {
       ..writeln("    name: '${fn.name}',")
       ..writeln('    inputs: [');
     for (final input in fn.inputs) {
-      b.writeln("      AbiParameter(name: '${input.name}', "
-          "type: AbiType.parse('${input.canonicalType}')),");
+      b.writeln(
+        "      AbiParameter(name: '${input.name}', "
+        "type: AbiType.parse('${input.canonicalType}')),",
+      );
     }
     b
       ..writeln('    ],')
       ..writeln('    outputs: [');
     for (final output in fn.outputs) {
-      b.writeln("      AbiParameter(name: '${output.name}', "
-          "type: AbiType.parse('${output.canonicalType}')),");
+      b.writeln(
+        "      AbiParameter(name: '${output.name}', "
+        "type: AbiType.parse('${output.canonicalType}')),",
+      );
     }
     b
       ..writeln('    ],')
@@ -239,10 +269,14 @@ class BindingGenerator {
     b
       ..writeln('  /// Calls `${fn.canonicalSignature}`.')
       ..writeln('  ///')
-      ..writeln('  /// Declared `${fn.stateMutability}` in Solidity; read via '
-          '`eth_call`.')
-      ..writeln('  Future<$returnType> $methodName('
-          '${params.join(', ')}) async {');
+      ..writeln(
+        '  /// Declared `${fn.stateMutability}` in Solidity; read via '
+        '`eth_call`.',
+      )
+      ..writeln(
+        '  Future<$returnType> $methodName('
+        '${params.join(', ')}) async {',
+      );
 
     if (fn.inputs.isEmpty) {
       b
@@ -260,13 +294,17 @@ class BindingGenerator {
     }
 
     if (fn.outputs.length == 1) {
-      b.writeln('    return ${TypeMapper.castExpression('out[0]', fn.outputs.single)};');
+      b.writeln(
+        '    return ${TypeMapper.castExpression('out[0]', fn.outputs.single)};',
+      );
     } else {
-      final names = fn.outputs
-          .map((o) => o.name.isEmpty ? '' : toDartIdentifier(o.name))
-          .toList();
+      final names =
+          fn.outputs
+              .map((o) => o.name.isEmpty ? '' : toDartIdentifier(o.name))
+              .toList();
       final named =
-          names.every((n) => n.isNotEmpty) && names.toSet().length == names.length;
+          names.every((n) => n.isNotEmpty) &&
+          names.toSet().length == names.length;
 
       final parts = [
         for (var i = 0; i < fn.outputs.length; i++)
@@ -283,17 +321,21 @@ class BindingGenerator {
 
   /// Emits a barrel file exporting every generated binding.
   String generateBarrel(List<GeneratedBinding> bindings) {
-    final b = StringBuffer()
-      ..writeln('// GENERATED CODE — DO NOT EDIT BY HAND.')
-      ..writeln('//')
-      ..writeln('// Typed bindings for @flarenetwork/'
-          'flare-periphery-contract-artifacts@$artifactVersion')
-      ..writeln('// ${bindings.length} contracts, '
-          '${bindings.fold<int>(0, (n, x) => n + x.methodCount)} read methods.')
-      ..writeln();
-    for (final binding in [...bindings]..sort(
-        (a, b) => a.fileName.compareTo(b.fileName),
-      )) {
+    final b =
+        StringBuffer()
+          ..writeln('// GENERATED CODE — DO NOT EDIT BY HAND.')
+          ..writeln('//')
+          ..writeln(
+            '// Typed bindings for @flarenetwork/'
+            'flare-periphery-contract-artifacts@$artifactVersion',
+          )
+          ..writeln(
+            '// ${bindings.length} contracts, '
+            '${bindings.fold<int>(0, (n, x) => n + x.methodCount)} read methods.',
+          )
+          ..writeln();
+    for (final binding in [...bindings]
+      ..sort((a, b) => a.fileName.compareTo(b.fileName))) {
       b.writeln("export 'src/${binding.fileName}';");
     }
     return b.toString();

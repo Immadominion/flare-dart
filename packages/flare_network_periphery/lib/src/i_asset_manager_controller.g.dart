@@ -20,7 +20,10 @@ class IAssetManagerControllerContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IAssetManagerControllerContract({required this.client, required this.address});
+  const IAssetManagerControllerContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IAssetManagerController` through the [ContractRegistry].
   static Future<IAssetManagerControllerContract> resolve(
@@ -28,8 +31,9 @@ class IAssetManagerControllerContract {
     ContractRegistry? registry,
     String registryName = 'IAssetManagerController',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IAssetManagerControllerContract(client: client, address: resolved);
   }
 
@@ -39,20 +43,15 @@ class IAssetManagerControllerContract {
     inputs: [
       AbiParameter(name: '_assetManager', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getAssetManagers()`.
   static final AbiFunction getAssetManagersFn = AbiFunction(
     name: 'getAssetManagers',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
@@ -78,5 +77,4 @@ class IAssetManagerControllerContract {
     );
     return (out[0]! as List).cast<EthAddress>();
   }
-
 }

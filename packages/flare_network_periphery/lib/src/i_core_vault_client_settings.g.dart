@@ -20,7 +20,10 @@ class ICoreVaultClientSettingsContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const ICoreVaultClientSettingsContract({required this.client, required this.address});
+  const ICoreVaultClientSettingsContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `ICoreVaultClientSettings` through the [ContractRegistry].
   static Future<ICoreVaultClientSettingsContract> resolve(
@@ -28,98 +31,77 @@ class ICoreVaultClientSettingsContract {
     ContractRegistry? registry,
     String registryName = 'ICoreVaultClientSettings',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return ICoreVaultClientSettingsContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getCoreVaultDonationTag()`.
   static final AbiFunction getCoreVaultDonationTagFn = AbiFunction(
     name: 'getCoreVaultDonationTag',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCoreVaultManager()`.
   static final AbiFunction getCoreVaultManagerFn = AbiFunction(
     name: 'getCoreVaultManager',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCoreVaultMinimumAmountLeftBIPS()`.
   static final AbiFunction getCoreVaultMinimumAmountLeftBIPSFn = AbiFunction(
     name: 'getCoreVaultMinimumAmountLeftBIPS',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCoreVaultMinimumRedeemLots()`.
   static final AbiFunction getCoreVaultMinimumRedeemLotsFn = AbiFunction(
     name: 'getCoreVaultMinimumRedeemLots',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCoreVaultNativeAddress()`.
   static final AbiFunction getCoreVaultNativeAddressFn = AbiFunction(
     name: 'getCoreVaultNativeAddress',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCoreVaultRedemptionFeeBIPS()`.
   static final AbiFunction getCoreVaultRedemptionFeeBIPSFn = AbiFunction(
     name: 'getCoreVaultRedemptionFeeBIPS',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCoreVaultTransferDefaultPenaltyBIPS()`.
-  static final AbiFunction getCoreVaultTransferDefaultPenaltyBIPSFn = AbiFunction(
-    name: 'getCoreVaultTransferDefaultPenaltyBIPS',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getCoreVaultTransferDefaultPenaltyBIPSFn =
+      AbiFunction(
+        name: 'getCoreVaultTransferDefaultPenaltyBIPS',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// ABI descriptor for `getCoreVaultTransferTimeExtensionSeconds()`.
-  static final AbiFunction getCoreVaultTransferTimeExtensionSecondsFn = AbiFunction(
-    name: 'getCoreVaultTransferTimeExtensionSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
-    stateMutability: StateMutability.view,
-  );
+  static final AbiFunction getCoreVaultTransferTimeExtensionSecondsFn =
+      AbiFunction(
+        name: 'getCoreVaultTransferTimeExtensionSeconds',
+        inputs: [],
+        outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+        stateMutability: StateMutability.view,
+      );
 
   /// Calls `getCoreVaultDonationTag()`.
   ///
@@ -208,5 +190,4 @@ class ICoreVaultClientSettingsContract {
     );
     return out[0]! as BigInt;
   }
-
 }

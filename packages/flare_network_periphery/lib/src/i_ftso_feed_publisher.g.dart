@@ -22,7 +22,10 @@ class IFtsoFeedPublisherContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IFtsoFeedPublisherContract({required this.client, required this.address});
+  const IFtsoFeedPublisherContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IFtsoFeedPublisher` through the [ContractRegistry].
   static Future<IFtsoFeedPublisherContract> resolve(
@@ -30,41 +33,37 @@ class IFtsoFeedPublisherContract {
     ContractRegistry? registry,
     String registryName = 'IFtsoFeedPublisher',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IFtsoFeedPublisherContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `feedsHistorySize()`.
   static final AbiFunction feedsHistorySizeFn = AbiFunction(
     name: 'feedsHistorySize',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `ftsoProtocolId()`.
   static final AbiFunction ftsoProtocolIdFn = AbiFunction(
     name: 'ftsoProtocolId',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint8')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint8'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCurrentFeed(bytes21)`.
   static final AbiFunction getCurrentFeedFn = AbiFunction(
     name: 'getCurrentFeed',
-    inputs: [
-      AbiParameter(name: '_feedId', type: AbiType.parse('bytes21')),
-    ],
+    inputs: [AbiParameter(name: '_feedId', type: AbiType.parse('bytes21'))],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(uint32,bytes21,int32,uint16,int8)')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse('(uint32,bytes21,int32,uint16,int8)'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -77,7 +76,10 @@ class IFtsoFeedPublisherContract {
       AbiParameter(name: '_votingRoundId', type: AbiType.parse('uint256')),
     ],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(uint32,bytes21,int32,uint16,int8)')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse('(uint32,bytes21,int32,uint16,int8)'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -127,5 +129,4 @@ class IFtsoFeedPublisherContract {
     );
     return (out[0]! as List).cast<Object?>();
   }
-
 }

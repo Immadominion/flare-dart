@@ -28,19 +28,17 @@ class IFlareDaemonizeContract {
     ContractRegistry? registry,
     String registryName = 'IFlareDaemonize',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IFlareDaemonizeContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getContractName()`.
   static final AbiFunction getContractNameFn = AbiFunction(
     name: 'getContractName',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
@@ -54,5 +52,4 @@ class IFlareDaemonizeContract {
     );
     return out[0]! as String;
   }
-
 }

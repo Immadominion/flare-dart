@@ -20,7 +20,10 @@ class IFtsoInflationConfigurationsContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IFtsoInflationConfigurationsContract({required this.client, required this.address});
+  const IFtsoInflationConfigurationsContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IFtsoInflationConfigurations` through the [ContractRegistry].
   static Future<IFtsoInflationConfigurationsContract> resolve(
@@ -28,19 +31,24 @@ class IFtsoInflationConfigurationsContract {
     ContractRegistry? registry,
     String registryName = 'IFtsoInflationConfigurations',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
-    return IFtsoInflationConfigurationsContract(client: client, address: resolved);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
+    return IFtsoInflationConfigurationsContract(
+      client: client,
+      address: resolved,
+    );
   }
 
   /// ABI descriptor for `getFtsoConfiguration(uint256)`.
   static final AbiFunction getFtsoConfigurationFn = AbiFunction(
     name: 'getFtsoConfiguration',
-    inputs: [
-      AbiParameter(name: '_index', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_index', type: AbiType.parse('uint256'))],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(bytes,uint24,uint16,uint24,bytes,uint16)')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse('(bytes,uint24,uint16,uint24,bytes,uint16)'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -48,10 +56,12 @@ class IFtsoInflationConfigurationsContract {
   /// ABI descriptor for `getFtsoConfigurations()`.
   static final AbiFunction getFtsoConfigurationsFn = AbiFunction(
     name: 'getFtsoConfigurations',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(bytes,uint24,uint16,uint24,bytes,uint16)[]')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse('(bytes,uint24,uint16,uint24,bytes,uint16)[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -78,5 +88,4 @@ class IFtsoInflationConfigurationsContract {
     );
     return (out[0]! as List).cast<List<Object?>>();
   }
-
 }

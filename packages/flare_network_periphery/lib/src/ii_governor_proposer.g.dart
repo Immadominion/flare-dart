@@ -20,7 +20,10 @@ class IIGovernorProposerContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IIGovernorProposerContract({required this.client, required this.address});
+  const IIGovernorProposerContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IIGovernorProposer` through the [ContractRegistry].
   static Future<IIGovernorProposerContract> resolve(
@@ -28,20 +31,17 @@ class IIGovernorProposerContract {
     ContractRegistry? registry,
     String registryName = 'IIGovernorProposer',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIGovernorProposerContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `isProposer(address)`.
   static final AbiFunction isProposerFn = AbiFunction(
     name: 'isProposer',
-    inputs: [
-      AbiParameter(name: '_account', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [AbiParameter(name: '_account', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -56,5 +56,4 @@ class IIGovernorProposerContract {
     );
     return out[0]! as bool;
   }
-
 }

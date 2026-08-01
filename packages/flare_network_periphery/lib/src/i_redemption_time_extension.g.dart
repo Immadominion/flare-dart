@@ -20,7 +20,10 @@ class IRedemptionTimeExtensionContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IRedemptionTimeExtensionContract({required this.client, required this.address});
+  const IRedemptionTimeExtensionContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IRedemptionTimeExtension` through the [ContractRegistry].
   static Future<IRedemptionTimeExtensionContract> resolve(
@@ -28,19 +31,17 @@ class IRedemptionTimeExtensionContract {
     ContractRegistry? registry,
     String registryName = 'IRedemptionTimeExtension',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IRedemptionTimeExtensionContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `redemptionPaymentExtensionSeconds()`.
   static final AbiFunction redemptionPaymentExtensionSecondsFn = AbiFunction(
     name: 'redemptionPaymentExtensionSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -54,5 +55,4 @@ class IRedemptionTimeExtensionContract {
     );
     return out[0]! as BigInt;
   }
-
 }

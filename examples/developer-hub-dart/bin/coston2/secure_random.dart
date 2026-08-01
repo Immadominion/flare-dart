@@ -38,12 +38,16 @@ Future<void> main() async {
     print('RandomNumberV2 : $address');
     print('random         : $random');
     print('isSecureRandom : $isSecure');
-    print('timestamp      : '
-        '${DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: true)}');
+    print(
+      'timestamp      : '
+      '${DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: true)}',
+    );
 
     if (!isSecure) {
-      print('\nThis round is NOT flagged secure — do not use it for anything '
-          'with value at stake.');
+      print(
+        '\nThis round is NOT flagged secure — do not use it for anything '
+        'with value at stake.',
+      );
     }
   } finally {
     client.close();

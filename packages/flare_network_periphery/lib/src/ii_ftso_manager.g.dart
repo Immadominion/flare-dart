@@ -28,54 +28,54 @@ class IIFtsoManagerContract {
     ContractRegistry? registry,
     String registryName = 'IIFtsoManager',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIFtsoManagerContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `active()`.
   static final AbiFunction activeFn = AbiFunction(
     name: 'active',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `currentRewardEpochEnds()`.
   static final AbiFunction currentRewardEpochEndsFn = AbiFunction(
     name: 'currentRewardEpochEnds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getContractName()`.
   static final AbiFunction getContractNameFn = AbiFunction(
     name: 'getContractName',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCurrentPriceEpochData()`.
   static final AbiFunction getCurrentPriceEpochDataFn = AbiFunction(
     name: 'getCurrentPriceEpochData',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_priceEpochId', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_priceEpochStartTimestamp', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_priceEpochEndTimestamp', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_priceEpochRevealEndTimestamp', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_priceEpochStartTimestamp',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_priceEpochEndTimestamp',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_priceEpochRevealEndTimestamp',
+        type: AbiType.parse('uint256'),
+      ),
       AbiParameter(name: '_currentTimestamp', type: AbiType.parse('uint256')),
     ],
     stateMutability: StateMutability.view,
@@ -84,8 +84,7 @@ class IIFtsoManagerContract {
   /// ABI descriptor for `getCurrentPriceEpochId()`.
   static final AbiFunction getCurrentPriceEpochIdFn = AbiFunction(
     name: 'getCurrentPriceEpochId',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_priceEpochId', type: AbiType.parse('uint256')),
     ],
@@ -95,31 +94,23 @@ class IIFtsoManagerContract {
   /// ABI descriptor for `getCurrentRewardEpoch()`.
   static final AbiFunction getCurrentRewardEpochFn = AbiFunction(
     name: 'getCurrentRewardEpoch',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getElasticBandWidthPPMFtso(address)`.
   static final AbiFunction getElasticBandWidthPPMFtsoFn = AbiFunction(
     name: 'getElasticBandWidthPPMFtso',
-    inputs: [
-      AbiParameter(name: '_ftso', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_ftso', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getFallbackMode()`.
   static final AbiFunction getFallbackModeFn = AbiFunction(
     name: 'getFallbackMode',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_fallbackMode', type: AbiType.parse('bool')),
       AbiParameter(name: '_ftsos', type: AbiType.parse('address[]')),
@@ -131,23 +122,28 @@ class IIFtsoManagerContract {
   /// ABI descriptor for `getFtsos()`.
   static final AbiFunction getFtsosFn = AbiFunction(
     name: 'getFtsos',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '_ftsos', type: AbiType.parse('address[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '_ftsos', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getLastUnprocessedPriceEpochData()`.
   static final AbiFunction getLastUnprocessedPriceEpochDataFn = AbiFunction(
     name: 'getLastUnprocessedPriceEpochData',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_lastUnprocessedPriceEpoch', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_lastUnprocessedPriceEpochRevealEnds', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_lastUnprocessedPriceEpochInitialized', type: AbiType.parse('bool')),
+      AbiParameter(
+        name: '_lastUnprocessedPriceEpoch',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_lastUnprocessedPriceEpochRevealEnds',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_lastUnprocessedPriceEpochInitialized',
+        type: AbiType.parse('bool'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -155,12 +151,20 @@ class IIFtsoManagerContract {
   /// ABI descriptor for `getPriceEpochConfiguration()`.
   static final AbiFunction getPriceEpochConfigurationFn = AbiFunction(
     name: 'getPriceEpochConfiguration',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_firstPriceEpochStartTs', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_priceEpochDurationSeconds', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_revealEpochDurationSeconds', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_firstPriceEpochStartTs',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_priceEpochDurationSeconds',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_revealEpochDurationSeconds',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -168,11 +172,16 @@ class IIFtsoManagerContract {
   /// ABI descriptor for `getRewardEpochConfiguration()`.
   static final AbiFunction getRewardEpochConfigurationFn = AbiFunction(
     name: 'getRewardEpochConfiguration',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_firstRewardEpochStartTs', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_rewardEpochDurationSeconds', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_firstRewardEpochStartTs',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_rewardEpochDurationSeconds',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -192,11 +201,8 @@ class IIFtsoManagerContract {
   /// ABI descriptor for `getRewardEpochToExpireNext()`.
   static final AbiFunction getRewardEpochToExpireNextFn = AbiFunction(
     name: 'getRewardEpochToExpireNext',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -206,43 +212,31 @@ class IIFtsoManagerContract {
     inputs: [
       AbiParameter(name: '_rewardEpoch', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getRewardExpiryOffsetSeconds()`.
   static final AbiFunction getRewardExpiryOffsetSecondsFn = AbiFunction(
     name: 'getRewardExpiryOffsetSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `notInitializedFtsos(address)`.
   static final AbiFunction notInitializedFtsosFn = AbiFunction(
     name: 'notInitializedFtsos',
-    inputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `rewardEpochDurationSeconds()`.
   static final AbiFunction rewardEpochDurationSecondsFn = AbiFunction(
     name: 'rewardEpochDurationSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -263,11 +257,8 @@ class IIFtsoManagerContract {
   /// ABI descriptor for `rewardEpochsStartTs()`.
   static final AbiFunction rewardEpochsStartTsFn = AbiFunction(
     name: 'rewardEpochsStartTs',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -307,12 +298,27 @@ class IIFtsoManagerContract {
   /// Calls `getCurrentPriceEpochData()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt priceEpochId, BigInt priceEpochStartTimestamp, BigInt priceEpochEndTimestamp, BigInt priceEpochRevealEndTimestamp, BigInt currentTimestamp})> getCurrentPriceEpochData() async {
+  Future<
+    ({
+      BigInt priceEpochId,
+      BigInt priceEpochStartTimestamp,
+      BigInt priceEpochEndTimestamp,
+      BigInt priceEpochRevealEndTimestamp,
+      BigInt currentTimestamp,
+    })
+  >
+  getCurrentPriceEpochData() async {
     final out = await client.callFunction(
       contract: address,
       function: getCurrentPriceEpochDataFn,
     );
-    return (priceEpochId: out[0]! as BigInt, priceEpochStartTimestamp: out[1]! as BigInt, priceEpochEndTimestamp: out[2]! as BigInt, priceEpochRevealEndTimestamp: out[3]! as BigInt, currentTimestamp: out[4]! as BigInt);
+    return (
+      priceEpochId: out[0]! as BigInt,
+      priceEpochStartTimestamp: out[1]! as BigInt,
+      priceEpochEndTimestamp: out[2]! as BigInt,
+      priceEpochRevealEndTimestamp: out[3]! as BigInt,
+      currentTimestamp: out[4]! as BigInt,
+    );
   }
 
   /// Calls `getCurrentPriceEpochId()`.
@@ -352,12 +358,19 @@ class IIFtsoManagerContract {
   /// Calls `getFallbackMode()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({bool fallbackMode, List<EthAddress> ftsos, List<bool> ftsoInFallbackMode})> getFallbackMode() async {
+  Future<
+    ({bool fallbackMode, List<EthAddress> ftsos, List<bool> ftsoInFallbackMode})
+  >
+  getFallbackMode() async {
     final out = await client.callFunction(
       contract: address,
       function: getFallbackModeFn,
     );
-    return (fallbackMode: out[0]! as bool, ftsos: (out[1]! as List).cast<EthAddress>(), ftsoInFallbackMode: (out[2]! as List).cast<bool>());
+    return (
+      fallbackMode: out[0]! as bool,
+      ftsos: (out[1]! as List).cast<EthAddress>(),
+      ftsoInFallbackMode: (out[2]! as List).cast<bool>(),
+    );
   }
 
   /// Calls `getFtsos()`.
@@ -374,34 +387,60 @@ class IIFtsoManagerContract {
   /// Calls `getLastUnprocessedPriceEpochData()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt lastUnprocessedPriceEpoch, BigInt lastUnprocessedPriceEpochRevealEnds, bool lastUnprocessedPriceEpochInitialized})> getLastUnprocessedPriceEpochData() async {
+  Future<
+    ({
+      BigInt lastUnprocessedPriceEpoch,
+      BigInt lastUnprocessedPriceEpochRevealEnds,
+      bool lastUnprocessedPriceEpochInitialized,
+    })
+  >
+  getLastUnprocessedPriceEpochData() async {
     final out = await client.callFunction(
       contract: address,
       function: getLastUnprocessedPriceEpochDataFn,
     );
-    return (lastUnprocessedPriceEpoch: out[0]! as BigInt, lastUnprocessedPriceEpochRevealEnds: out[1]! as BigInt, lastUnprocessedPriceEpochInitialized: out[2]! as bool);
+    return (
+      lastUnprocessedPriceEpoch: out[0]! as BigInt,
+      lastUnprocessedPriceEpochRevealEnds: out[1]! as BigInt,
+      lastUnprocessedPriceEpochInitialized: out[2]! as bool,
+    );
   }
 
   /// Calls `getPriceEpochConfiguration()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt firstPriceEpochStartTs, BigInt priceEpochDurationSeconds, BigInt revealEpochDurationSeconds})> getPriceEpochConfiguration() async {
+  Future<
+    ({
+      BigInt firstPriceEpochStartTs,
+      BigInt priceEpochDurationSeconds,
+      BigInt revealEpochDurationSeconds,
+    })
+  >
+  getPriceEpochConfiguration() async {
     final out = await client.callFunction(
       contract: address,
       function: getPriceEpochConfigurationFn,
     );
-    return (firstPriceEpochStartTs: out[0]! as BigInt, priceEpochDurationSeconds: out[1]! as BigInt, revealEpochDurationSeconds: out[2]! as BigInt);
+    return (
+      firstPriceEpochStartTs: out[0]! as BigInt,
+      priceEpochDurationSeconds: out[1]! as BigInt,
+      revealEpochDurationSeconds: out[2]! as BigInt,
+    );
   }
 
   /// Calls `getRewardEpochConfiguration()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt firstRewardEpochStartTs, BigInt rewardEpochDurationSeconds})> getRewardEpochConfiguration() async {
+  Future<({BigInt firstRewardEpochStartTs, BigInt rewardEpochDurationSeconds})>
+  getRewardEpochConfiguration() async {
     final out = await client.callFunction(
       contract: address,
       function: getRewardEpochConfigurationFn,
     );
-    return (firstRewardEpochStartTs: out[0]! as BigInt, rewardEpochDurationSeconds: out[1]! as BigInt);
+    return (
+      firstRewardEpochStartTs: out[0]! as BigInt,
+      rewardEpochDurationSeconds: out[1]! as BigInt,
+    );
   }
 
   /// Calls `getRewardEpochData(uint256)`.
@@ -476,13 +515,18 @@ class IIFtsoManagerContract {
   /// Calls `rewardEpochs(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt votepowerBlock, BigInt startBlock, BigInt startTimestamp})> rewardEpochs(BigInt rewardEpochId) async {
+  Future<({BigInt votepowerBlock, BigInt startBlock, BigInt startTimestamp})>
+  rewardEpochs(BigInt rewardEpochId) async {
     final out = await client.callFunction(
       contract: address,
       function: rewardEpochsFn,
       args: [rewardEpochId],
     );
-    return (votepowerBlock: out[0]! as BigInt, startBlock: out[1]! as BigInt, startTimestamp: out[2]! as BigInt);
+    return (
+      votepowerBlock: out[0]! as BigInt,
+      startBlock: out[1]! as BigInt,
+      startTimestamp: out[2]! as BigInt,
+    );
   }
 
   /// Calls `rewardEpochsStartTs()`.
@@ -495,5 +539,4 @@ class IIFtsoManagerContract {
     );
     return out[0]! as BigInt;
   }
-
 }

@@ -30,38 +30,32 @@ class IICustomFeedContract {
     ContractRegistry? registry,
     String registryName = 'IICustomFeed',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IICustomFeedContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `calculateFee()`.
   static final AbiFunction calculateFeeFn = AbiFunction(
     name: 'calculateFee',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '_fee', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '_fee', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `feedId()`.
   static final AbiFunction feedIdFn = AbiFunction(
     name: 'feedId',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '_feedId', type: AbiType.parse('bytes21')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '_feedId', type: AbiType.parse('bytes21'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCurrentFeed()`.
   static final AbiFunction getCurrentFeedFn = AbiFunction(
     name: 'getCurrentFeed',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_value', type: AbiType.parse('uint256')),
       AbiParameter(name: '_decimals', type: AbiType.parse('int8')),
@@ -95,12 +89,16 @@ class IICustomFeedContract {
   /// Calls `getCurrentFeed()`.
   ///
   /// Declared `payable` in Solidity; read via `eth_call`.
-  Future<({BigInt value, BigInt decimals, BigInt timestamp})> getCurrentFeed() async {
+  Future<({BigInt value, BigInt decimals, BigInt timestamp})>
+  getCurrentFeed() async {
     final out = await client.callFunction(
       contract: address,
       function: getCurrentFeedFn,
     );
-    return (value: out[0]! as BigInt, decimals: out[1]! as BigInt, timestamp: out[2]! as BigInt);
+    return (
+      value: out[0]! as BigInt,
+      decimals: out[1]! as BigInt,
+      timestamp: out[2]! as BigInt,
+    );
   }
-
 }

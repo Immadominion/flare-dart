@@ -22,7 +22,10 @@ class ICoreVaultManagerContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const ICoreVaultManagerContract({required this.client, required this.address});
+  const ICoreVaultManagerContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `ICoreVaultManager` through the [ContractRegistry].
   static Future<ICoreVaultManagerContract> resolve(
@@ -30,93 +33,72 @@ class ICoreVaultManagerContract {
     ContractRegistry? registry,
     String registryName = 'ICoreVaultManager',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return ICoreVaultManagerContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `assetManager()`.
   static final AbiFunction assetManagerFn = AbiFunction(
     name: 'assetManager',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `availableFunds()`.
   static final AbiFunction availableFundsFn = AbiFunction(
     name: 'availableFunds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint128')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint128'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `coreVaultAddress()`.
   static final AbiFunction coreVaultAddressFn = AbiFunction(
     name: 'coreVaultAddress',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `coreVaultAddressHash()`.
   static final AbiFunction coreVaultAddressHashFn = AbiFunction(
     name: 'coreVaultAddressHash',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bytes32')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bytes32'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `custodianAddress()`.
   static final AbiFunction custodianAddressFn = AbiFunction(
     name: 'custodianAddress',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `escrowedFunds()`.
   static final AbiFunction escrowedFundsFn = AbiFunction(
     name: 'escrowedFunds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint128')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint128'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getAllowedDestinationAddresses()`.
   static final AbiFunction getAllowedDestinationAddressesFn = AbiFunction(
     name: 'getAllowedDestinationAddresses',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCancelableTransferRequests()`.
   static final AbiFunction getCancelableTransferRequestsFn = AbiFunction(
     name: 'getCancelableTransferRequests',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '', type: AbiType.parse('(string,bytes32,uint128)[]')),
     ],
@@ -126,33 +108,28 @@ class ICoreVaultManagerContract {
   /// ABI descriptor for `getEmergencyPauseSenders()`.
   static final AbiFunction getEmergencyPauseSendersFn = AbiFunction(
     name: 'getEmergencyPauseSenders',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getEmergencyUnpauseSenders()`.
   static final AbiFunction getEmergencyUnpauseSendersFn = AbiFunction(
     name: 'getEmergencyUnpauseSenders',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getEscrowByIndex(uint256)`.
   static final AbiFunction getEscrowByIndexFn = AbiFunction(
     name: 'getEscrowByIndex',
-    inputs: [
-      AbiParameter(name: '_index', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_index', type: AbiType.parse('uint256'))],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(bytes32,uint128,uint64,bool)')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse('(bytes32,uint128,uint64,bool)'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -164,7 +141,10 @@ class ICoreVaultManagerContract {
       AbiParameter(name: '_preimageHash', type: AbiType.parse('bytes32')),
     ],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(bytes32,uint128,uint64,bool)')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse('(bytes32,uint128,uint64,bool)'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -172,19 +152,15 @@ class ICoreVaultManagerContract {
   /// ABI descriptor for `getEscrowsCount()`.
   static final AbiFunction getEscrowsCountFn = AbiFunction(
     name: 'getEscrowsCount',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getNonCancelableTransferRequests()`.
   static final AbiFunction getNonCancelableTransferRequestsFn = AbiFunction(
     name: 'getNonCancelableTransferRequests',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '', type: AbiType.parse('(string,bytes32,uint128)[]')),
     ],
@@ -194,33 +170,28 @@ class ICoreVaultManagerContract {
   /// ABI descriptor for `getPreimageHash(uint256)`.
   static final AbiFunction getPreimageHashFn = AbiFunction(
     name: 'getPreimageHash',
-    inputs: [
-      AbiParameter(name: '_index', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bytes32')),
-    ],
+    inputs: [AbiParameter(name: '_index', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bytes32'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getPreimageHashesCount()`.
   static final AbiFunction getPreimageHashesCountFn = AbiFunction(
     name: 'getPreimageHashesCount',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getSettings()`.
   static final AbiFunction getSettingsFn = AbiFunction(
     name: 'getSettings',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_escrowEndTimeSeconds', type: AbiType.parse('uint128')),
+      AbiParameter(
+        name: '_escrowEndTimeSeconds',
+        type: AbiType.parse('uint128'),
+      ),
       AbiParameter(name: '_escrowAmount', type: AbiType.parse('uint128')),
       AbiParameter(name: '_minimalAmount', type: AbiType.parse('uint128')),
       AbiParameter(name: '_fee', type: AbiType.parse('uint128')),
@@ -231,21 +202,20 @@ class ICoreVaultManagerContract {
   /// ABI descriptor for `getTriggeringAccounts()`.
   static final AbiFunction getTriggeringAccountsFn = AbiFunction(
     name: 'getTriggeringAccounts',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getUnprocessedEscrows()`.
   static final AbiFunction getUnprocessedEscrowsFn = AbiFunction(
     name: 'getUnprocessedEscrows',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(bytes32,uint128,uint64,bool)[]')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse('(bytes32,uint128,uint64,bool)[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -253,67 +223,48 @@ class ICoreVaultManagerContract {
   /// ABI descriptor for `getUnusedPreimageHashes()`.
   static final AbiFunction getUnusedPreimageHashesFn = AbiFunction(
     name: 'getUnusedPreimageHashes',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bytes32[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bytes32[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `isDestinationAddressAllowed(string)`.
   static final AbiFunction isDestinationAddressAllowedFn = AbiFunction(
     name: 'isDestinationAddressAllowed',
-    inputs: [
-      AbiParameter(name: '_address', type: AbiType.parse('string')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [AbiParameter(name: '_address', type: AbiType.parse('string'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `nextUnprocessedEscrowIndex()`.
   static final AbiFunction nextUnprocessedEscrowIndexFn = AbiFunction(
     name: 'nextUnprocessedEscrowIndex',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `nextUnusedPreimageHashIndex()`.
   static final AbiFunction nextUnusedPreimageHashIndexFn = AbiFunction(
     name: 'nextUnusedPreimageHashIndex',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `paused()`.
   static final AbiFunction pausedFn = AbiFunction(
     name: 'paused',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `totalRequestAmountWithFee()`.
   static final AbiFunction totalRequestAmountWithFeeFn = AbiFunction(
     name: 'totalRequestAmountWithFee',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -499,12 +450,25 @@ class ICoreVaultManagerContract {
   /// Calls `getSettings()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt escrowEndTimeSeconds, BigInt escrowAmount, BigInt minimalAmount, BigInt fee})> getSettings() async {
+  Future<
+    ({
+      BigInt escrowEndTimeSeconds,
+      BigInt escrowAmount,
+      BigInt minimalAmount,
+      BigInt fee,
+    })
+  >
+  getSettings() async {
     final out = await client.callFunction(
       contract: address,
       function: getSettingsFn,
     );
-    return (escrowEndTimeSeconds: out[0]! as BigInt, escrowAmount: out[1]! as BigInt, minimalAmount: out[2]! as BigInt, fee: out[3]! as BigInt);
+    return (
+      escrowEndTimeSeconds: out[0]! as BigInt,
+      escrowAmount: out[1]! as BigInt,
+      minimalAmount: out[2]! as BigInt,
+      fee: out[3]! as BigInt,
+    );
   }
 
   /// Calls `getTriggeringAccounts()`.
@@ -595,5 +559,4 @@ class ICoreVaultManagerContract {
     );
     return out[0]! as BigInt;
   }
-
 }

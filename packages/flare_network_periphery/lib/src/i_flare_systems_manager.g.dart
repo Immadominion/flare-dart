@@ -20,7 +20,10 @@ class IFlareSystemsManagerContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IFlareSystemsManagerContract({required this.client, required this.address});
+  const IFlareSystemsManagerContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IFlareSystemsManager` through the [ContractRegistry].
   static Future<IFlareSystemsManagerContract> resolve(
@@ -28,63 +31,49 @@ class IFlareSystemsManagerContract {
     ContractRegistry? registry,
     String registryName = 'IFlareSystemsManager',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IFlareSystemsManagerContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `firstRewardEpochStartTs()`.
   static final AbiFunction firstRewardEpochStartTsFn = AbiFunction(
     name: 'firstRewardEpochStartTs',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `firstVotingRoundStartTs()`.
   static final AbiFunction firstVotingRoundStartTsFn = AbiFunction(
     name: 'firstVotingRoundStartTs',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCurrentRewardEpoch()`.
   static final AbiFunction getCurrentRewardEpochFn = AbiFunction(
     name: 'getCurrentRewardEpoch',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCurrentRewardEpochId()`.
   static final AbiFunction getCurrentRewardEpochIdFn = AbiFunction(
     name: 'getCurrentRewardEpochId',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint24')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint24'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCurrentVotingEpochId()`.
   static final AbiFunction getCurrentVotingEpochIdFn = AbiFunction(
     name: 'getCurrentVotingEpochId',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint32')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint32'))],
     stateMutability: StateMutability.view,
   );
 
@@ -94,9 +83,7 @@ class IFlareSystemsManagerContract {
     inputs: [
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -106,9 +93,7 @@ class IFlareSystemsManagerContract {
     inputs: [
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint32')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint32'))],
     stateMutability: StateMutability.view,
   );
 
@@ -118,9 +103,7 @@ class IFlareSystemsManagerContract {
     inputs: [
       AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint16')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint16'))],
     stateMutability: StateMutability.view,
   );
 
@@ -152,33 +135,24 @@ class IFlareSystemsManagerContract {
   /// ABI descriptor for `isVoterRegistrationEnabled()`.
   static final AbiFunction isVoterRegistrationEnabledFn = AbiFunction(
     name: 'isVoterRegistrationEnabled',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `rewardEpochDurationSeconds()`.
   static final AbiFunction rewardEpochDurationSecondsFn = AbiFunction(
     name: 'rewardEpochDurationSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `votingEpochDurationSeconds()`.
   static final AbiFunction votingEpochDurationSecondsFn = AbiFunction(
     name: 'votingEpochDurationSeconds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint64')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
     stateMutability: StateMutability.view,
   );
 
@@ -288,7 +262,9 @@ class IFlareSystemsManagerContract {
   /// Calls `getVoterRegistrationData(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt votePowerBlock, bool enabled})> getVoterRegistrationData(BigInt rewardEpochId) async {
+  Future<({BigInt votePowerBlock, bool enabled})> getVoterRegistrationData(
+    BigInt rewardEpochId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getVoterRegistrationDataFn,
@@ -329,5 +305,4 @@ class IFlareSystemsManagerContract {
     );
     return out[0]! as BigInt;
   }
-
 }

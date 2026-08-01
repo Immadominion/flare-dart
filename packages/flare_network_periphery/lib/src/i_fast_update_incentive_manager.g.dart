@@ -20,7 +20,10 @@ class IFastUpdateIncentiveManagerContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IFastUpdateIncentiveManagerContract({required this.client, required this.address});
+  const IFastUpdateIncentiveManagerContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IFastUpdateIncentiveManager` through the [ContractRegistry].
   static Future<IFastUpdateIncentiveManagerContract> resolve(
@@ -28,118 +31,92 @@ class IFastUpdateIncentiveManagerContract {
     ContractRegistry? registry,
     String registryName = 'IFastUpdateIncentiveManager',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
-    return IFastUpdateIncentiveManagerContract(client: client, address: resolved);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
+    return IFastUpdateIncentiveManagerContract(
+      client: client,
+      address: resolved,
+    );
   }
 
   /// ABI descriptor for `getBaseScale()`.
   static final AbiFunction getBaseScaleFn = AbiFunction(
     name: 'getBaseScale',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getCurrentSampleSizeIncreasePrice()`.
   static final AbiFunction getCurrentSampleSizeIncreasePriceFn = AbiFunction(
     name: 'getCurrentSampleSizeIncreasePrice',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getExpectedSampleSize()`.
   static final AbiFunction getExpectedSampleSizeFn = AbiFunction(
     name: 'getExpectedSampleSize',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getIncentiveDuration()`.
   static final AbiFunction getIncentiveDurationFn = AbiFunction(
     name: 'getIncentiveDuration',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getPrecision()`.
   static final AbiFunction getPrecisionFn = AbiFunction(
     name: 'getPrecision',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getRange()`.
   static final AbiFunction getRangeFn = AbiFunction(
     name: 'getRange',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getScale()`.
   static final AbiFunction getScaleFn = AbiFunction(
     name: 'getScale',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `rangeIncreaseLimit()`.
   static final AbiFunction rangeIncreaseLimitFn = AbiFunction(
     name: 'rangeIncreaseLimit',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `rangeIncreasePrice()`.
   static final AbiFunction rangeIncreasePriceFn = AbiFunction(
     name: 'rangeIncreasePrice',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `sampleIncreaseLimit()`.
   static final AbiFunction sampleIncreaseLimitFn = AbiFunction(
     name: 'sampleIncreaseLimit',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -252,5 +229,4 @@ class IFastUpdateIncentiveManagerContract {
     );
     return out[0]! as BigInt;
   }
-
 }

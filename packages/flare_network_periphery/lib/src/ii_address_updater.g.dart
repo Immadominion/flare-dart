@@ -30,44 +30,33 @@ class IIAddressUpdaterContract {
     ContractRegistry? registry,
     String registryName = 'IIAddressUpdater',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIAddressUpdaterContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getContractAddress(string)`.
   static final AbiFunction getContractAddressFn = AbiFunction(
     name: 'getContractAddress',
-    inputs: [
-      AbiParameter(name: '_name', type: AbiType.parse('string')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_name', type: AbiType.parse('string'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getContractAddressByHash(bytes32)`.
   static final AbiFunction getContractAddressByHashFn = AbiFunction(
     name: 'getContractAddressByHash',
-    inputs: [
-      AbiParameter(name: '_nameHash', type: AbiType.parse('bytes32')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [AbiParameter(name: '_nameHash', type: AbiType.parse('bytes32'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getContractAddresses(string[])`.
   static final AbiFunction getContractAddressesFn = AbiFunction(
     name: 'getContractAddresses',
-    inputs: [
-      AbiParameter(name: '_names', type: AbiType.parse('string[]')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    inputs: [AbiParameter(name: '_names', type: AbiType.parse('string[]'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
@@ -77,20 +66,20 @@ class IIAddressUpdaterContract {
     inputs: [
       AbiParameter(name: '_nameHashes', type: AbiType.parse('bytes32[]')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getContractNamesAndAddresses()`.
   static final AbiFunction getContractNamesAndAddressesFn = AbiFunction(
     name: 'getContractNamesAndAddresses',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_contractNames', type: AbiType.parse('string[]')),
-      AbiParameter(name: '_contractAddresses', type: AbiType.parse('address[]')),
+      AbiParameter(
+        name: '_contractAddresses',
+        type: AbiType.parse('address[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -134,7 +123,9 @@ class IIAddressUpdaterContract {
   /// Calls `getContractAddressesByHash(bytes32[])`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<EthAddress>> getContractAddressesByHash(List<Uint8List> nameHashes) async {
+  Future<List<EthAddress>> getContractAddressesByHash(
+    List<Uint8List> nameHashes,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getContractAddressesByHashFn,
@@ -146,12 +137,15 @@ class IIAddressUpdaterContract {
   /// Calls `getContractNamesAndAddresses()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<String> contractNames, List<EthAddress> contractAddresses})> getContractNamesAndAddresses() async {
+  Future<({List<String> contractNames, List<EthAddress> contractAddresses})>
+  getContractNamesAndAddresses() async {
     final out = await client.callFunction(
       contract: address,
       function: getContractNamesAndAddressesFn,
     );
-    return (contractNames: (out[0]! as List).cast<String>(), contractAddresses: (out[1]! as List).cast<EthAddress>());
+    return (
+      contractNames: (out[0]! as List).cast<String>(),
+      contractAddresses: (out[1]! as List).cast<EthAddress>(),
+    );
   }
-
 }

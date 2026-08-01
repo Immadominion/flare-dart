@@ -28,19 +28,17 @@ class IIncreaseManagerContract {
     ContractRegistry? registry,
     String registryName = 'IIncreaseManager',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIncreaseManagerContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getIncentiveDuration()`.
   static final AbiFunction getIncentiveDurationFn = AbiFunction(
     name: 'getIncentiveDuration',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
@@ -54,5 +52,4 @@ class IIncreaseManagerContract {
     );
     return out[0]! as BigInt;
   }
-
 }

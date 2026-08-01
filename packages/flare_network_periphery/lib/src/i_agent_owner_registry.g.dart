@@ -20,7 +20,10 @@ class IAgentOwnerRegistryContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IAgentOwnerRegistryContract({required this.client, required this.address});
+  const IAgentOwnerRegistryContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IAgentOwnerRegistry` through the [ContractRegistry].
   static Future<IAgentOwnerRegistryContract> resolve(
@@ -28,8 +31,9 @@ class IAgentOwnerRegistryContract {
     ContractRegistry? registry,
     String registryName = 'IAgentOwnerRegistry',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IAgentOwnerRegistryContract(client: client, address: resolved);
   }
 
@@ -39,9 +43,7 @@ class IAgentOwnerRegistryContract {
     inputs: [
       AbiParameter(name: '_managementAddress', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
@@ -51,9 +53,7 @@ class IAgentOwnerRegistryContract {
     inputs: [
       AbiParameter(name: '_managementAddress', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
@@ -63,9 +63,7 @@ class IAgentOwnerRegistryContract {
     inputs: [
       AbiParameter(name: '_managementAddress', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
@@ -75,9 +73,7 @@ class IAgentOwnerRegistryContract {
     inputs: [
       AbiParameter(name: '_managementAddress', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('string')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
@@ -87,9 +83,7 @@ class IAgentOwnerRegistryContract {
     inputs: [
       AbiParameter(name: '_workAddress', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -99,21 +93,15 @@ class IAgentOwnerRegistryContract {
     inputs: [
       AbiParameter(name: '_managementAddress', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `isWhitelisted(address)`.
   static final AbiFunction isWhitelistedFn = AbiFunction(
     name: 'isWhitelisted',
-    inputs: [
-      AbiParameter(name: '_address', type: AbiType.parse('address')),
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [AbiParameter(name: '_address', type: AbiType.parse('address'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -200,5 +188,4 @@ class IAgentOwnerRegistryContract {
     );
     return out[0]! as bool;
   }
-
 }

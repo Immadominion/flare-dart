@@ -14,8 +14,8 @@ Future<void> main() async {
     final wnat = await registry.addressOf(FlareContract.wNat);
     print('WNat: $wnat');
 
-    Future<Object?> read(String name, String returns) => client
-        .callFunctionSingle(
+    Future<Object?> read(String name, String returns) =>
+        client.callFunctionSingle(
           contract: wnat,
           function: AbiFunction(
             name: name,

@@ -22,7 +22,10 @@ class TestFtsoV2InterfaceContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const TestFtsoV2InterfaceContract({required this.client, required this.address});
+  const TestFtsoV2InterfaceContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `TestFtsoV2Interface` through the [ContractRegistry].
   static Future<TestFtsoV2InterfaceContract> resolve(
@@ -30,41 +33,32 @@ class TestFtsoV2InterfaceContract {
     ContractRegistry? registry,
     String registryName = 'TestFtsoV2Interface',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return TestFtsoV2InterfaceContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `calculateFeeById(bytes21)`.
   static final AbiFunction calculateFeeByIdFn = AbiFunction(
     name: 'calculateFeeById',
-    inputs: [
-      AbiParameter(name: '_feedId', type: AbiType.parse('bytes21')),
-    ],
-    outputs: [
-      AbiParameter(name: '_fee', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_feedId', type: AbiType.parse('bytes21'))],
+    outputs: [AbiParameter(name: '_fee', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `calculateFeeByIds(bytes21[])`.
   static final AbiFunction calculateFeeByIdsFn = AbiFunction(
     name: 'calculateFeeByIds',
-    inputs: [
-      AbiParameter(name: '_feedIds', type: AbiType.parse('bytes21[]')),
-    ],
-    outputs: [
-      AbiParameter(name: '_fee', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_feedIds', type: AbiType.parse('bytes21[]'))],
+    outputs: [AbiParameter(name: '_fee', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getFeedById(bytes21)`.
   static final AbiFunction getFeedByIdFn = AbiFunction(
     name: 'getFeedById',
-    inputs: [
-      AbiParameter(name: '_feedId', type: AbiType.parse('bytes21')),
-    ],
+    inputs: [AbiParameter(name: '_feedId', type: AbiType.parse('bytes21'))],
     outputs: [
       AbiParameter(name: '_value', type: AbiType.parse('uint256')),
       AbiParameter(name: '_decimals', type: AbiType.parse('int8')),
@@ -76,9 +70,7 @@ class TestFtsoV2InterfaceContract {
   /// ABI descriptor for `getFeedByIdInWei(bytes21)`.
   static final AbiFunction getFeedByIdInWeiFn = AbiFunction(
     name: 'getFeedByIdInWei',
-    inputs: [
-      AbiParameter(name: '_feedId', type: AbiType.parse('bytes21')),
-    ],
+    inputs: [AbiParameter(name: '_feedId', type: AbiType.parse('bytes21'))],
     outputs: [
       AbiParameter(name: '_value', type: AbiType.parse('uint256')),
       AbiParameter(name: '_timestamp', type: AbiType.parse('uint64')),
@@ -89,10 +81,12 @@ class TestFtsoV2InterfaceContract {
   /// ABI descriptor for `getFeedIdChanges()`.
   static final AbiFunction getFeedIdChangesFn = AbiFunction(
     name: 'getFeedIdChanges',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '_feedIdChanges', type: AbiType.parse('(bytes21,bytes21)[]')),
+      AbiParameter(
+        name: '_feedIdChanges',
+        type: AbiType.parse('(bytes21,bytes21)[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -100,9 +94,7 @@ class TestFtsoV2InterfaceContract {
   /// ABI descriptor for `getFeedsById(bytes21[])`.
   static final AbiFunction getFeedsByIdFn = AbiFunction(
     name: 'getFeedsById',
-    inputs: [
-      AbiParameter(name: '_feedIds', type: AbiType.parse('bytes21[]')),
-    ],
+    inputs: [AbiParameter(name: '_feedIds', type: AbiType.parse('bytes21[]'))],
     outputs: [
       AbiParameter(name: '_values', type: AbiType.parse('uint256[]')),
       AbiParameter(name: '_decimals', type: AbiType.parse('int8[]')),
@@ -114,9 +106,7 @@ class TestFtsoV2InterfaceContract {
   /// ABI descriptor for `getFeedsByIdInWei(bytes21[])`.
   static final AbiFunction getFeedsByIdInWeiFn = AbiFunction(
     name: 'getFeedsByIdInWei',
-    inputs: [
-      AbiParameter(name: '_feedIds', type: AbiType.parse('bytes21[]')),
-    ],
+    inputs: [AbiParameter(name: '_feedIds', type: AbiType.parse('bytes21[]'))],
     outputs: [
       AbiParameter(name: '_values', type: AbiType.parse('uint256[]')),
       AbiParameter(name: '_timestamp', type: AbiType.parse('uint64')),
@@ -127,22 +117,16 @@ class TestFtsoV2InterfaceContract {
   /// ABI descriptor for `getFtsoProtocolId()`.
   static final AbiFunction getFtsoProtocolIdFn = AbiFunction(
     name: 'getFtsoProtocolId',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('uint256')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getSupportedFeedIds()`.
   static final AbiFunction getSupportedFeedIdsFn = AbiFunction(
     name: 'getSupportedFeedIds',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '_feedIds', type: AbiType.parse('bytes21[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '_feedIds', type: AbiType.parse('bytes21[]'))],
     stateMutability: StateMutability.view,
   );
 
@@ -150,11 +134,12 @@ class TestFtsoV2InterfaceContract {
   static final AbiFunction verifyFeedDataFn = AbiFunction(
     name: 'verifyFeedData',
     inputs: [
-      AbiParameter(name: '_feedData', type: AbiType.parse('(bytes32[],(uint32,bytes21,int32,uint16,int8))')),
+      AbiParameter(
+        name: '_feedData',
+        type: AbiType.parse('(bytes32[],(uint32,bytes21,int32,uint16,int8))'),
+      ),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -185,19 +170,27 @@ class TestFtsoV2InterfaceContract {
   /// Calls `getFeedById(bytes21)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt value, BigInt decimals, BigInt timestamp})> getFeedById(Uint8List feedId) async {
+  Future<({BigInt value, BigInt decimals, BigInt timestamp})> getFeedById(
+    Uint8List feedId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getFeedByIdFn,
       args: [feedId],
     );
-    return (value: out[0]! as BigInt, decimals: out[1]! as BigInt, timestamp: out[2]! as BigInt);
+    return (
+      value: out[0]! as BigInt,
+      decimals: out[1]! as BigInt,
+      timestamp: out[2]! as BigInt,
+    );
   }
 
   /// Calls `getFeedByIdInWei(bytes21)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt value, BigInt timestamp})> getFeedByIdInWei(Uint8List feedId) async {
+  Future<({BigInt value, BigInt timestamp})> getFeedByIdInWei(
+    Uint8List feedId,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getFeedByIdInWeiFn,
@@ -220,25 +213,35 @@ class TestFtsoV2InterfaceContract {
   /// Calls `getFeedsById(bytes21[])`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<BigInt> values, List<BigInt> decimals, BigInt timestamp})> getFeedsById(List<Uint8List> feedIds) async {
+  Future<({List<BigInt> values, List<BigInt> decimals, BigInt timestamp})>
+  getFeedsById(List<Uint8List> feedIds) async {
     final out = await client.callFunction(
       contract: address,
       function: getFeedsByIdFn,
       args: [feedIds],
     );
-    return (values: (out[0]! as List).cast<BigInt>(), decimals: (out[1]! as List).cast<BigInt>(), timestamp: out[2]! as BigInt);
+    return (
+      values: (out[0]! as List).cast<BigInt>(),
+      decimals: (out[1]! as List).cast<BigInt>(),
+      timestamp: out[2]! as BigInt,
+    );
   }
 
   /// Calls `getFeedsByIdInWei(bytes21[])`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<BigInt> values, BigInt timestamp})> getFeedsByIdInWei(List<Uint8List> feedIds) async {
+  Future<({List<BigInt> values, BigInt timestamp})> getFeedsByIdInWei(
+    List<Uint8List> feedIds,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getFeedsByIdInWeiFn,
       args: [feedIds],
     );
-    return (values: (out[0]! as List).cast<BigInt>(), timestamp: out[1]! as BigInt);
+    return (
+      values: (out[0]! as List).cast<BigInt>(),
+      timestamp: out[1]! as BigInt,
+    );
   }
 
   /// Calls `getFtsoProtocolId()`.
@@ -274,5 +277,4 @@ class TestFtsoV2InterfaceContract {
     );
     return out[0]! as bool;
   }
-
 }

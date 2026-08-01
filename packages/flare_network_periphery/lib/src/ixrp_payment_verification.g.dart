@@ -20,7 +20,10 @@ class IXRPPaymentVerificationContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IXRPPaymentVerificationContract({required this.client, required this.address});
+  const IXRPPaymentVerificationContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IXRPPaymentVerification` through the [ContractRegistry].
   static Future<IXRPPaymentVerificationContract> resolve(
@@ -28,8 +31,9 @@ class IXRPPaymentVerificationContract {
     ContractRegistry? registry,
     String registryName = 'IXRPPaymentVerification',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IXRPPaymentVerificationContract(client: client, address: resolved);
   }
 
@@ -37,11 +41,14 @@ class IXRPPaymentVerificationContract {
   static final AbiFunction verifyXRPPaymentFn = AbiFunction(
     name: 'verifyXRPPayment',
     inputs: [
-      AbiParameter(name: '_proof', type: AbiType.parse('(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,address),(uint64,uint64,string,bytes32,bytes32,bytes32,int256,int256,int256,int256,bool,bytes,bool,uint256,uint8)))')),
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,address),(uint64,uint64,string,bytes32,bytes32,bytes32,int256,int256,int256,int256,bool,bytes,bool,uint256,uint8)))',
+        ),
+      ),
     ],
-    outputs: [
-      AbiParameter(name: '_proved', type: AbiType.parse('bool')),
-    ],
+    outputs: [AbiParameter(name: '_proved', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -56,5 +63,4 @@ class IXRPPaymentVerificationContract {
     );
     return out[0]! as bool;
   }
-
 }

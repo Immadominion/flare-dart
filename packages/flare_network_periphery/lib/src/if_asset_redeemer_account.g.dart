@@ -20,7 +20,10 @@ class IFAssetRedeemerAccountContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IFAssetRedeemerAccountContract({required this.client, required this.address});
+  const IFAssetRedeemerAccountContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IFAssetRedeemerAccount` through the [ContractRegistry].
   static Future<IFAssetRedeemerAccountContract> resolve(
@@ -28,30 +31,25 @@ class IFAssetRedeemerAccountContract {
     ContractRegistry? registry,
     String registryName = 'IFAssetRedeemerAccount',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IFAssetRedeemerAccountContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `composer()`.
   static final AbiFunction composerFn = AbiFunction(
     name: 'composer',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `owner()`.
   static final AbiFunction ownerFn = AbiFunction(
     name: 'owner',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
   );
 
@@ -70,11 +68,7 @@ class IFAssetRedeemerAccountContract {
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
   Future<EthAddress> owner() async {
-    final out = await client.callFunction(
-      contract: address,
-      function: ownerFn,
-    );
+    final out = await client.callFunction(contract: address, function: ownerFn);
     return out[0]! as EthAddress;
   }
-
 }

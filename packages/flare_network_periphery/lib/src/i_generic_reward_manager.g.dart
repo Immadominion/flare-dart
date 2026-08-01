@@ -20,7 +20,10 @@ class IGenericRewardManagerContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IGenericRewardManagerContract({required this.client, required this.address});
+  const IGenericRewardManagerContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IGenericRewardManager` through the [ContractRegistry].
   static Future<IGenericRewardManagerContract> resolve(
@@ -28,19 +31,17 @@ class IGenericRewardManagerContract {
     ContractRegistry? registry,
     String registryName = 'IGenericRewardManager',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IGenericRewardManagerContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `active()`.
   static final AbiFunction activeFn = AbiFunction(
     name: 'active',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('bool')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
   );
 
@@ -50,9 +51,7 @@ class IGenericRewardManagerContract {
     inputs: [
       AbiParameter(name: '_rewardOwner', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
@@ -62,9 +61,7 @@ class IGenericRewardManagerContract {
     inputs: [
       AbiParameter(name: '_rewardOwner', type: AbiType.parse('address')),
     ],
-    outputs: [
-      AbiParameter(name: '', type: AbiType.parse('address[]')),
-    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
@@ -95,7 +92,9 @@ class IGenericRewardManagerContract {
   /// Calls `allowedClaimRecipients(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<EthAddress>> allowedClaimRecipients(EthAddress rewardOwner) async {
+  Future<List<EthAddress>> allowedClaimRecipients(
+    EthAddress rewardOwner,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: allowedClaimRecipientsFn,
@@ -119,7 +118,9 @@ class IGenericRewardManagerContract {
   /// Calls `getStateOfRewards(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt totalReward, BigInt claimedReward})> getStateOfRewards(EthAddress beneficiary) async {
+  Future<({BigInt totalReward, BigInt claimedReward})> getStateOfRewards(
+    EthAddress beneficiary,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getStateOfRewardsFn,
@@ -127,5 +128,4 @@ class IGenericRewardManagerContract {
     );
     return (totalReward: out[0]! as BigInt, claimedReward: out[1]! as BigInt);
   }
-
 }

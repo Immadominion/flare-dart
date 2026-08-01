@@ -28,18 +28,21 @@ class IIFtsoRegistryContract {
     ContractRegistry? registry,
     String registryName = 'IIFtsoRegistry',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IIFtsoRegistryContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getAllCurrentPrices()`.
   static final AbiFunction getAllCurrentPricesFn = AbiFunction(
     name: 'getAllCurrentPrices',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(uint256,uint256,uint256,uint256)[]')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse('(uint256,uint256,uint256,uint256)[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -47,9 +50,7 @@ class IIFtsoRegistryContract {
   /// ABI descriptor for `getCurrentPrice(string)`.
   static final AbiFunction getCurrentPriceFn = AbiFunction(
     name: 'getCurrentPrice',
-    inputs: [
-      AbiParameter(name: '_symbol', type: AbiType.parse('string')),
-    ],
+    inputs: [AbiParameter(name: '_symbol', type: AbiType.parse('string'))],
     outputs: [
       AbiParameter(name: '_price', type: AbiType.parse('uint256')),
       AbiParameter(name: '_timestamp', type: AbiType.parse('uint256')),
@@ -60,9 +61,7 @@ class IIFtsoRegistryContract {
   /// ABI descriptor for `getCurrentPrice(uint256)`.
   static final AbiFunction getCurrentPrice2Fn = AbiFunction(
     name: 'getCurrentPrice',
-    inputs: [
-      AbiParameter(name: '_ftsoIndex', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_ftsoIndex', type: AbiType.parse('uint256'))],
     outputs: [
       AbiParameter(name: '_price', type: AbiType.parse('uint256')),
       AbiParameter(name: '_timestamp', type: AbiType.parse('uint256')),
@@ -73,13 +72,14 @@ class IIFtsoRegistryContract {
   /// ABI descriptor for `getCurrentPriceWithDecimals(uint256)`.
   static final AbiFunction getCurrentPriceWithDecimalsFn = AbiFunction(
     name: 'getCurrentPriceWithDecimals',
-    inputs: [
-      AbiParameter(name: '_assetIndex', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_assetIndex', type: AbiType.parse('uint256'))],
     outputs: [
       AbiParameter(name: '_price', type: AbiType.parse('uint256')),
       AbiParameter(name: '_timestamp', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_assetPriceUsdDecimals', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_assetPriceUsdDecimals',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -87,13 +87,14 @@ class IIFtsoRegistryContract {
   /// ABI descriptor for `getCurrentPriceWithDecimals(string)`.
   static final AbiFunction getCurrentPriceWithDecimals2Fn = AbiFunction(
     name: 'getCurrentPriceWithDecimals',
-    inputs: [
-      AbiParameter(name: '_symbol', type: AbiType.parse('string')),
-    ],
+    inputs: [AbiParameter(name: '_symbol', type: AbiType.parse('string'))],
     outputs: [
       AbiParameter(name: '_price', type: AbiType.parse('uint256')),
       AbiParameter(name: '_timestamp', type: AbiType.parse('uint256')),
-      AbiParameter(name: '_assetPriceUsdDecimals', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_assetPriceUsdDecimals',
+        type: AbiType.parse('uint256'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -101,11 +102,12 @@ class IIFtsoRegistryContract {
   /// ABI descriptor for `getCurrentPricesByIndices(uint256[])`.
   static final AbiFunction getCurrentPricesByIndicesFn = AbiFunction(
     name: 'getCurrentPricesByIndices',
-    inputs: [
-      AbiParameter(name: '_indices', type: AbiType.parse('uint256[]')),
-    ],
+    inputs: [AbiParameter(name: '_indices', type: AbiType.parse('uint256[]'))],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(uint256,uint256,uint256,uint256)[]')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse('(uint256,uint256,uint256,uint256)[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -113,11 +115,12 @@ class IIFtsoRegistryContract {
   /// ABI descriptor for `getCurrentPricesBySymbols(string[])`.
   static final AbiFunction getCurrentPricesBySymbolsFn = AbiFunction(
     name: 'getCurrentPricesBySymbols',
-    inputs: [
-      AbiParameter(name: '_symbols', type: AbiType.parse('string[]')),
-    ],
+    inputs: [AbiParameter(name: '_symbols', type: AbiType.parse('string[]'))],
     outputs: [
-      AbiParameter(name: '', type: AbiType.parse('(uint256,uint256,uint256,uint256)[]')),
+      AbiParameter(
+        name: '',
+        type: AbiType.parse('(uint256,uint256,uint256,uint256)[]'),
+      ),
     ],
     stateMutability: StateMutability.view,
   );
@@ -125,9 +128,7 @@ class IIFtsoRegistryContract {
   /// ABI descriptor for `getFtso(uint256)`.
   static final AbiFunction getFtsoFn = AbiFunction(
     name: 'getFtso',
-    inputs: [
-      AbiParameter(name: '_ftsoIndex', type: AbiType.parse('uint256')),
-    ],
+    inputs: [AbiParameter(name: '_ftsoIndex', type: AbiType.parse('uint256'))],
     outputs: [
       AbiParameter(name: '_activeFtsoAddress', type: AbiType.parse('address')),
     ],
@@ -137,9 +138,7 @@ class IIFtsoRegistryContract {
   /// ABI descriptor for `getFtsoBySymbol(string)`.
   static final AbiFunction getFtsoBySymbolFn = AbiFunction(
     name: 'getFtsoBySymbol',
-    inputs: [
-      AbiParameter(name: '_symbol', type: AbiType.parse('string')),
-    ],
+    inputs: [AbiParameter(name: '_symbol', type: AbiType.parse('string'))],
     outputs: [
       AbiParameter(name: '_activeFtsoAddress', type: AbiType.parse('address')),
     ],
@@ -149,9 +148,7 @@ class IIFtsoRegistryContract {
   /// ABI descriptor for `getFtsoIndex(string)`.
   static final AbiFunction getFtsoIndexFn = AbiFunction(
     name: 'getFtsoIndex',
-    inputs: [
-      AbiParameter(name: '_symbol', type: AbiType.parse('string')),
-    ],
+    inputs: [AbiParameter(name: '_symbol', type: AbiType.parse('string'))],
     outputs: [
       AbiParameter(name: '_assetIndex', type: AbiType.parse('uint256')),
     ],
@@ -161,43 +158,31 @@ class IIFtsoRegistryContract {
   /// ABI descriptor for `getFtsoSymbol(uint256)`.
   static final AbiFunction getFtsoSymbolFn = AbiFunction(
     name: 'getFtsoSymbol',
-    inputs: [
-      AbiParameter(name: '_ftsoIndex', type: AbiType.parse('uint256')),
-    ],
-    outputs: [
-      AbiParameter(name: '_symbol', type: AbiType.parse('string')),
-    ],
+    inputs: [AbiParameter(name: '_ftsoIndex', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '_symbol', type: AbiType.parse('string'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getFtsos(uint256[])`.
   static final AbiFunction getFtsosFn = AbiFunction(
     name: 'getFtsos',
-    inputs: [
-      AbiParameter(name: '_indices', type: AbiType.parse('uint256[]')),
-    ],
-    outputs: [
-      AbiParameter(name: '_ftsos', type: AbiType.parse('address[]')),
-    ],
+    inputs: [AbiParameter(name: '_indices', type: AbiType.parse('uint256[]'))],
+    outputs: [AbiParameter(name: '_ftsos', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getSupportedFtsos()`.
   static final AbiFunction getSupportedFtsosFn = AbiFunction(
     name: 'getSupportedFtsos',
-    inputs: [
-    ],
-    outputs: [
-      AbiParameter(name: '_ftsos', type: AbiType.parse('address[]')),
-    ],
+    inputs: [],
+    outputs: [AbiParameter(name: '_ftsos', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
   /// ABI descriptor for `getSupportedIndices()`.
   static final AbiFunction getSupportedIndicesFn = AbiFunction(
     name: 'getSupportedIndices',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_supportedIndices', type: AbiType.parse('uint256[]')),
     ],
@@ -207,8 +192,7 @@ class IIFtsoRegistryContract {
   /// ABI descriptor for `getSupportedIndicesAndFtsos()`.
   static final AbiFunction getSupportedIndicesAndFtsosFn = AbiFunction(
     name: 'getSupportedIndicesAndFtsos',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_supportedIndices', type: AbiType.parse('uint256[]')),
       AbiParameter(name: '_ftsos', type: AbiType.parse('address[]')),
@@ -219,8 +203,7 @@ class IIFtsoRegistryContract {
   /// ABI descriptor for `getSupportedIndicesAndSymbols()`.
   static final AbiFunction getSupportedIndicesAndSymbolsFn = AbiFunction(
     name: 'getSupportedIndicesAndSymbols',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_supportedIndices', type: AbiType.parse('uint256[]')),
       AbiParameter(name: '_supportedSymbols', type: AbiType.parse('string[]')),
@@ -231,8 +214,7 @@ class IIFtsoRegistryContract {
   /// ABI descriptor for `getSupportedIndicesSymbolsAndFtsos()`.
   static final AbiFunction getSupportedIndicesSymbolsAndFtsosFn = AbiFunction(
     name: 'getSupportedIndicesSymbolsAndFtsos',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_supportedIndices', type: AbiType.parse('uint256[]')),
       AbiParameter(name: '_supportedSymbols', type: AbiType.parse('string[]')),
@@ -244,8 +226,7 @@ class IIFtsoRegistryContract {
   /// ABI descriptor for `getSupportedSymbols()`.
   static final AbiFunction getSupportedSymbolsFn = AbiFunction(
     name: 'getSupportedSymbols',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_supportedSymbols', type: AbiType.parse('string[]')),
     ],
@@ -255,8 +236,7 @@ class IIFtsoRegistryContract {
   /// ABI descriptor for `getSupportedSymbolsAndFtsos()`.
   static final AbiFunction getSupportedSymbolsAndFtsosFn = AbiFunction(
     name: 'getSupportedSymbolsAndFtsos',
-    inputs: [
-    ],
+    inputs: [],
     outputs: [
       AbiParameter(name: '_supportedSymbols', type: AbiType.parse('string[]')),
       AbiParameter(name: '_ftsos', type: AbiType.parse('address[]')),
@@ -278,7 +258,9 @@ class IIFtsoRegistryContract {
   /// Calls `getCurrentPrice(string)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt price, BigInt timestamp})> getCurrentPrice(String symbol) async {
+  Future<({BigInt price, BigInt timestamp})> getCurrentPrice(
+    String symbol,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getCurrentPriceFn,
@@ -290,7 +272,9 @@ class IIFtsoRegistryContract {
   /// Calls `getCurrentPrice(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt price, BigInt timestamp})> getCurrentPrice2(BigInt ftsoIndex) async {
+  Future<({BigInt price, BigInt timestamp})> getCurrentPrice2(
+    BigInt ftsoIndex,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getCurrentPrice2Fn,
@@ -302,31 +286,43 @@ class IIFtsoRegistryContract {
   /// Calls `getCurrentPriceWithDecimals(uint256)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt price, BigInt timestamp, BigInt assetPriceUsdDecimals})> getCurrentPriceWithDecimals(BigInt assetIndex) async {
+  Future<({BigInt price, BigInt timestamp, BigInt assetPriceUsdDecimals})>
+  getCurrentPriceWithDecimals(BigInt assetIndex) async {
     final out = await client.callFunction(
       contract: address,
       function: getCurrentPriceWithDecimalsFn,
       args: [assetIndex],
     );
-    return (price: out[0]! as BigInt, timestamp: out[1]! as BigInt, assetPriceUsdDecimals: out[2]! as BigInt);
+    return (
+      price: out[0]! as BigInt,
+      timestamp: out[1]! as BigInt,
+      assetPriceUsdDecimals: out[2]! as BigInt,
+    );
   }
 
   /// Calls `getCurrentPriceWithDecimals(string)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({BigInt price, BigInt timestamp, BigInt assetPriceUsdDecimals})> getCurrentPriceWithDecimals2(String symbol) async {
+  Future<({BigInt price, BigInt timestamp, BigInt assetPriceUsdDecimals})>
+  getCurrentPriceWithDecimals2(String symbol) async {
     final out = await client.callFunction(
       contract: address,
       function: getCurrentPriceWithDecimals2Fn,
       args: [symbol],
     );
-    return (price: out[0]! as BigInt, timestamp: out[1]! as BigInt, assetPriceUsdDecimals: out[2]! as BigInt);
+    return (
+      price: out[0]! as BigInt,
+      timestamp: out[1]! as BigInt,
+      assetPriceUsdDecimals: out[2]! as BigInt,
+    );
   }
 
   /// Calls `getCurrentPricesByIndices(uint256[])`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<List<Object?>>> getCurrentPricesByIndices(List<BigInt> indices) async {
+  Future<List<List<Object?>>> getCurrentPricesByIndices(
+    List<BigInt> indices,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getCurrentPricesByIndicesFn,
@@ -338,7 +334,9 @@ class IIFtsoRegistryContract {
   /// Calls `getCurrentPricesBySymbols(string[])`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<List<List<Object?>>> getCurrentPricesBySymbols(List<String> symbols) async {
+  Future<List<List<Object?>>> getCurrentPricesBySymbols(
+    List<String> symbols,
+  ) async {
     final out = await client.callFunction(
       contract: address,
       function: getCurrentPricesBySymbolsFn,
@@ -432,34 +430,53 @@ class IIFtsoRegistryContract {
   /// Calls `getSupportedIndicesAndFtsos()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<BigInt> supportedIndices, List<EthAddress> ftsos})> getSupportedIndicesAndFtsos() async {
+  Future<({List<BigInt> supportedIndices, List<EthAddress> ftsos})>
+  getSupportedIndicesAndFtsos() async {
     final out = await client.callFunction(
       contract: address,
       function: getSupportedIndicesAndFtsosFn,
     );
-    return (supportedIndices: (out[0]! as List).cast<BigInt>(), ftsos: (out[1]! as List).cast<EthAddress>());
+    return (
+      supportedIndices: (out[0]! as List).cast<BigInt>(),
+      ftsos: (out[1]! as List).cast<EthAddress>(),
+    );
   }
 
   /// Calls `getSupportedIndicesAndSymbols()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<BigInt> supportedIndices, List<String> supportedSymbols})> getSupportedIndicesAndSymbols() async {
+  Future<({List<BigInt> supportedIndices, List<String> supportedSymbols})>
+  getSupportedIndicesAndSymbols() async {
     final out = await client.callFunction(
       contract: address,
       function: getSupportedIndicesAndSymbolsFn,
     );
-    return (supportedIndices: (out[0]! as List).cast<BigInt>(), supportedSymbols: (out[1]! as List).cast<String>());
+    return (
+      supportedIndices: (out[0]! as List).cast<BigInt>(),
+      supportedSymbols: (out[1]! as List).cast<String>(),
+    );
   }
 
   /// Calls `getSupportedIndicesSymbolsAndFtsos()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<BigInt> supportedIndices, List<String> supportedSymbols, List<EthAddress> ftsos})> getSupportedIndicesSymbolsAndFtsos() async {
+  Future<
+    ({
+      List<BigInt> supportedIndices,
+      List<String> supportedSymbols,
+      List<EthAddress> ftsos,
+    })
+  >
+  getSupportedIndicesSymbolsAndFtsos() async {
     final out = await client.callFunction(
       contract: address,
       function: getSupportedIndicesSymbolsAndFtsosFn,
     );
-    return (supportedIndices: (out[0]! as List).cast<BigInt>(), supportedSymbols: (out[1]! as List).cast<String>(), ftsos: (out[2]! as List).cast<EthAddress>());
+    return (
+      supportedIndices: (out[0]! as List).cast<BigInt>(),
+      supportedSymbols: (out[1]! as List).cast<String>(),
+      ftsos: (out[2]! as List).cast<EthAddress>(),
+    );
   }
 
   /// Calls `getSupportedSymbols()`.
@@ -476,12 +493,15 @@ class IIFtsoRegistryContract {
   /// Calls `getSupportedSymbolsAndFtsos()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
-  Future<({List<String> supportedSymbols, List<EthAddress> ftsos})> getSupportedSymbolsAndFtsos() async {
+  Future<({List<String> supportedSymbols, List<EthAddress> ftsos})>
+  getSupportedSymbolsAndFtsos() async {
     final out = await client.callFunction(
       contract: address,
       function: getSupportedSymbolsAndFtsosFn,
     );
-    return (supportedSymbols: (out[0]! as List).cast<String>(), ftsos: (out[1]! as List).cast<EthAddress>());
+    return (
+      supportedSymbols: (out[0]! as List).cast<String>(),
+      ftsos: (out[1]! as List).cast<EthAddress>(),
+    );
   }
-
 }

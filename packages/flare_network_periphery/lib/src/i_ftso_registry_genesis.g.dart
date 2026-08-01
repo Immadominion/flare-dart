@@ -20,7 +20,10 @@ class IFtsoRegistryGenesisContract {
   /// Resolved address on [client]'s network.
   final EthAddress address;
 
-  const IFtsoRegistryGenesisContract({required this.client, required this.address});
+  const IFtsoRegistryGenesisContract({
+    required this.client,
+    required this.address,
+  });
 
   /// Resolves `IFtsoRegistryGenesis` through the [ContractRegistry].
   static Future<IFtsoRegistryGenesisContract> resolve(
@@ -28,20 +31,17 @@ class IFtsoRegistryGenesisContract {
     ContractRegistry? registry,
     String registryName = 'IFtsoRegistryGenesis',
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(registryName);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      registryName,
+    );
     return IFtsoRegistryGenesisContract(client: client, address: resolved);
   }
 
   /// ABI descriptor for `getFtsos(uint256[])`.
   static final AbiFunction getFtsosFn = AbiFunction(
     name: 'getFtsos',
-    inputs: [
-      AbiParameter(name: '_indices', type: AbiType.parse('uint256[]')),
-    ],
-    outputs: [
-      AbiParameter(name: '_ftsos', type: AbiType.parse('address[]')),
-    ],
+    inputs: [AbiParameter(name: '_indices', type: AbiType.parse('uint256[]'))],
+    outputs: [AbiParameter(name: '_ftsos', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
   );
 
@@ -56,5 +56,4 @@ class IFtsoRegistryGenesisContract {
     );
     return (out[0]! as List).cast<EthAddress>();
   }
-
 }
