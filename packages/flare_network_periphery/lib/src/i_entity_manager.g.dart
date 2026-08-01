@@ -403,4 +403,331 @@ class IEntityManagerContract {
     );
     return out[0]! as EthAddress;
   }
+
+  /// `DelegationAddressProposed(address,address)`
+  ///
+  /// Decode a matching log with
+  /// `delegationAddressProposedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent delegationAddressProposedEvent = AbiEvent(
+    name: 'DelegationAddressProposed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'delegationAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `DelegationAddressRegistrationConfirmed(address,address)`
+  ///
+  /// Decode a matching log with
+  /// `delegationAddressRegistrationConfirmedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent delegationAddressRegistrationConfirmedEvent = AbiEvent(
+    name: 'DelegationAddressRegistrationConfirmed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'delegationAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `MaxNodeIdsPerEntitySet(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `maxNodeIdsPerEntitySetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent maxNodeIdsPerEntitySetEvent = AbiEvent(
+    name: 'MaxNodeIdsPerEntitySet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'maxNodeIdsPerEntity',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `NodeIdRegistered(address,bytes20)`
+  ///
+  /// Decode a matching log with
+  /// `nodeIdRegisteredEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent nodeIdRegisteredEvent = AbiEvent(
+    name: 'NodeIdRegistered',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'nodeId',
+        type: AbiType.parse('bytes20'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `NodeIdUnregistered(address,bytes20)`
+  ///
+  /// Decode a matching log with
+  /// `nodeIdUnregisteredEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent nodeIdUnregisteredEvent = AbiEvent(
+    name: 'NodeIdUnregistered',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'nodeId',
+        type: AbiType.parse('bytes20'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `PublicKeyRegistered(address,bytes32,bytes32)`
+  ///
+  /// Decode a matching log with
+  /// `publicKeyRegisteredEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent publicKeyRegisteredEvent = AbiEvent(
+    name: 'PublicKeyRegistered',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'part1',
+        type: AbiType.parse('bytes32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'part2',
+        type: AbiType.parse('bytes32'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `PublicKeyUnregistered(address,bytes32,bytes32)`
+  ///
+  /// Decode a matching log with
+  /// `publicKeyUnregisteredEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent publicKeyUnregisteredEvent = AbiEvent(
+    name: 'PublicKeyUnregistered',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'part1',
+        type: AbiType.parse('bytes32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'part2',
+        type: AbiType.parse('bytes32'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `SigningPolicyAddressProposed(address,address)`
+  ///
+  /// Decode a matching log with
+  /// `signingPolicyAddressProposedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent signingPolicyAddressProposedEvent = AbiEvent(
+    name: 'SigningPolicyAddressProposed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'signingPolicyAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `SigningPolicyAddressRegistrationConfirmed(address,address)`
+  ///
+  /// Decode a matching log with
+  /// `signingPolicyAddressRegistrationConfirmedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent signingPolicyAddressRegistrationConfirmedEvent =
+      AbiEvent(
+        name: 'SigningPolicyAddressRegistrationConfirmed',
+        anonymous: false,
+        parameters: [
+          AbiEventParameter(
+            name: 'voter',
+            type: AbiType.parse('address'),
+            indexed: true,
+          ),
+          AbiEventParameter(
+            name: 'signingPolicyAddress',
+            type: AbiType.parse('address'),
+            indexed: true,
+          ),
+        ],
+      );
+
+  /// `SubmitAddressProposed(address,address)`
+  ///
+  /// Decode a matching log with
+  /// `submitAddressProposedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent submitAddressProposedEvent = AbiEvent(
+    name: 'SubmitAddressProposed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'submitAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `SubmitAddressRegistrationConfirmed(address,address)`
+  ///
+  /// Decode a matching log with
+  /// `submitAddressRegistrationConfirmedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent submitAddressRegistrationConfirmedEvent = AbiEvent(
+    name: 'SubmitAddressRegistrationConfirmed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'submitAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `SubmitSignaturesAddressProposed(address,address)`
+  ///
+  /// Decode a matching log with
+  /// `submitSignaturesAddressProposedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent submitSignaturesAddressProposedEvent = AbiEvent(
+    name: 'SubmitSignaturesAddressProposed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'submitSignaturesAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `SubmitSignaturesAddressRegistrationConfirmed(address,address)`
+  ///
+  /// Decode a matching log with
+  /// `submitSignaturesAddressRegistrationConfirmedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent submitSignaturesAddressRegistrationConfirmedEvent =
+      AbiEvent(
+        name: 'SubmitSignaturesAddressRegistrationConfirmed',
+        anonymous: false,
+        parameters: [
+          AbiEventParameter(
+            name: 'voter',
+            type: AbiType.parse('address'),
+            indexed: true,
+          ),
+          AbiEventParameter(
+            name: 'submitSignaturesAddress',
+            type: AbiType.parse('address'),
+            indexed: true,
+          ),
+        ],
+      );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    delegationAddressProposedEvent,
+    delegationAddressRegistrationConfirmedEvent,
+    maxNodeIdsPerEntitySetEvent,
+    nodeIdRegisteredEvent,
+    nodeIdUnregisteredEvent,
+    publicKeyRegisteredEvent,
+    publicKeyUnregisteredEvent,
+    signingPolicyAddressProposedEvent,
+    signingPolicyAddressRegistrationConfirmedEvent,
+    submitAddressProposedEvent,
+    submitAddressRegistrationConfirmedEvent,
+    submitSignaturesAddressProposedEvent,
+    submitSignaturesAddressRegistrationConfirmedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

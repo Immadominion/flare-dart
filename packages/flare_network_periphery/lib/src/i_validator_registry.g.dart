@@ -118,4 +118,71 @@ class IValidatorRegistryContract {
     );
     return (nodeId: out[0]! as String, pChainPublicKey: out[1]! as String);
   }
+
+  /// `DataProviderRegistered(address,string,string)`
+  ///
+  /// Decode a matching log with
+  /// `dataProviderRegisteredEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent dataProviderRegisteredEvent = AbiEvent(
+    name: 'DataProviderRegistered',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'dataProvider',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'nodeId',
+        type: AbiType.parse('string'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'pChainPublicKey',
+        type: AbiType.parse('string'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `DataProviderUnregistered(address)`
+  ///
+  /// Decode a matching log with
+  /// `dataProviderUnregisteredEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent dataProviderUnregisteredEvent = AbiEvent(
+    name: 'DataProviderUnregistered',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'dataProvider',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    dataProviderRegisteredEvent,
+    dataProviderUnregisteredEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

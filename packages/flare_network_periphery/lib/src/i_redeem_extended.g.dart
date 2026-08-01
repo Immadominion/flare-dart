@@ -164,4 +164,126 @@ class IRedeemExtendedContract {
     );
     return (out[0]! as List).cast<Object?>();
   }
+
+  /// `RedemptionAmountIncomplete(address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `redemptionAmountIncompleteEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent redemptionAmountIncompleteEvent = AbiEvent(
+    name: 'RedemptionAmountIncomplete',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'redeemer',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'remainingAmountUBA',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RedemptionWithTagRequested(address,address,uint256,string,uint256,uint256,uint256,uint256,uint256,bytes32,address,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `redemptionWithTagRequestedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent redemptionWithTagRequestedEvent = AbiEvent(
+    name: 'RedemptionWithTagRequested',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'agentVault',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'redeemer',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'requestId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'paymentAddress',
+        type: AbiType.parse('string'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'valueUBA',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'feeUBA',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'firstUnderlyingBlock',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'lastUnderlyingBlock',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'lastUnderlyingTimestamp',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'paymentReference',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executor',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executorFeeNatWei',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'destinationTag',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    redemptionAmountIncompleteEvent,
+    redemptionWithTagRequestedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

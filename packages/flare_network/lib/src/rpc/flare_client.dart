@@ -2,12 +2,14 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 
+import '../abi/abi_event.dart';
 import '../abi/abi_function.dart';
 import '../abi/eth_address.dart';
 import '../abi/hex.dart';
 import '../network/flare_chain.dart';
 import 'flare_exception.dart';
 import 'json_rpc_client.dart';
+import 'logs.dart';
 
 /// Block tags accepted where a block parameter is required.
 enum BlockTag {
@@ -188,6 +190,124 @@ class FlareClient {
       block: block,
     );
     return out.single;
+  }
+
+  /// Largest block span Flare's public RPC accepts in one `eth_getLogs`.
+  ///
+  /// Measured on 2026-08-02 against both Coston2 and Flare mainnet: a span of
+  /// 30 succeeds, 31 fails with *"requested too many blocks … maximum is set to
+  /// 30"*. At roughly 1.8 s per block that is about 54 seconds of history per
+  /// request, so any useful query has to be split. [getLogs] does that for you.
+  static const maxLogBlockSpan = 30;
+
+  /// Fetches logs matching [filter], splitting the range to fit the node's
+  /// limit.
+  ///
+  /// A single `eth_getLogs` covering more than [maxLogBlockSpan] blocks is
+  /// rejected outright by Flare's public endpoints, so this issues as many
+  /// requests as the range needs and concatenates the results in block order.
+  ///
+  /// Block tags such as `latest` are resolved to concrete heights first,
+  /// otherwise the windows could not be computed. That means a very wide range
+  /// is many round trips: prefer [streamLogs] for large scans so results
+  /// arrive as they are found.
+  Future<List<FlareLog>> getLogs(LogFilter filter) async {
+    final out = <FlareLog>[];
+    await for (final log in streamLogs(filter)) {
+      out.add(log);
+    }
+    return out;
+  }
+
+  /// Like [getLogs], but yields each log as its window returns.
+  ///
+  /// Preferred for wide ranges: a scan of 10,000 blocks is 334 requests, and
+  /// buffering all of it before returning anything is both slow to first result
+  /// and memory-hungry on a phone.
+  Stream<FlareLog> streamLogs(LogFilter filter) async* {
+    final from = await _resolveBlock(filter.fromBlock);
+    final to = await _resolveBlock(filter.toBlock);
+
+    if (from > to) {
+      throw FlareRpcException(
+        'fromBlock ($from) is after toBlock ($to)',
+        code: -32602,
+        method: 'eth_getLogs',
+      );
+    }
+
+    final span = BigInt.from(maxLogBlockSpan);
+    for (var start = from; start <= to; start += span) {
+      final end =
+          (start + span - BigInt.one) > to ? to : start + span - BigInt.one;
+      final result = await _rpc.call('eth_getLogs', [
+        filter.forRange(start, end).toJson(),
+      ]);
+
+      if (result is! List) {
+        throw FlareTransportException(
+          'Expected a JSON array from eth_getLogs, got ${result.runtimeType}',
+          endpoint: chain.rpcUrl,
+        );
+      }
+      for (final entry in result) {
+        if (entry is Map) {
+          yield FlareLog.fromJson(entry.cast<String, Object?>());
+        }
+      }
+    }
+  }
+
+  /// Fetches logs for [event] and decodes them.
+  ///
+  /// Logs whose topics do not match [event] are skipped rather than throwing:
+  /// one address can emit several event types, and a filter constrained only by
+  /// address will return all of them.
+  ///
+  /// ```dart
+  /// final transfers = await client.getEventLogs(
+  ///   event: erc20Abi.event('Transfer'),
+  ///   addresses: [token],
+  ///   fromBlock: BlockRef.height(head - 100),
+  /// );
+  /// for (final t in transfers) print(t['value']);
+  /// ```
+  Future<List<DecodedLog>> getEventLogs({
+    required AbiEvent event,
+    List<EthAddress> addresses = const [],
+    List<Object?> indexedValues = const [],
+    BlockRef fromBlock = BlockRef.latest,
+    BlockRef toBlock = BlockRef.latest,
+  }) async {
+    final filter = LogFilter(
+      addresses: addresses,
+      topics: event.encodeTopicFilter(indexedValues),
+      fromBlock: fromBlock,
+      toBlock: toBlock,
+    );
+
+    final out = <DecodedLog>[];
+    await for (final log in streamLogs(filter)) {
+      if (!event.matches(log.topics)) continue;
+      out.add(
+        DecodedLog(
+          log: log,
+          event: event,
+          values: event.decode(topics: log.topics, data: log.data),
+        ),
+      );
+    }
+    return out;
+  }
+
+  /// Resolves a block tag such as `latest` to a concrete height.
+  Future<BigInt> _resolveBlock(BlockRef ref) async {
+    final n = ref.asNumber;
+    if (n != null) return n;
+    if (ref == BlockRef.earliest) return BigInt.zero;
+    // `latest`, `pending` and `finalized` all resolve against the head; the
+    // distinction does not survive being turned into a fixed window anyway.
+    return getBlockNumber();
   }
 
   /// Releases the underlying HTTP connection.

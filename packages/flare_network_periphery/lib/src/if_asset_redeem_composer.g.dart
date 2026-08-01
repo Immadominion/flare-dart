@@ -389,4 +389,415 @@ class IFAssetRedeemComposerContract {
     final out = await client.callFunction(contract: address, function: wNatFn);
     return out[0]! as EthAddress;
   }
+
+  /// `CallTimelocked(bytes,bytes32,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `callTimelockedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent callTimelockedEvent = AbiEvent(
+    name: 'CallTimelocked',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'encodedCall',
+        type: AbiType.parse('bytes'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'encodedCallHash',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'allowedAfterTimestamp',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ComposerFeeCollected(bytes32,uint32,address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `composerFeeCollectedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent composerFeeCollectedEvent = AbiEvent(
+    name: 'ComposerFeeCollected',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'guid',
+        type: AbiType.parse('bytes32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'srcEid',
+        type: AbiType.parse('uint32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'composerFeeRecipient',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'composerFee',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ComposerFeeRecipientSet(address)`
+  ///
+  /// Decode a matching log with
+  /// `composerFeeRecipientSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent composerFeeRecipientSetEvent = AbiEvent(
+    name: 'ComposerFeeRecipientSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'composerFeeRecipient',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `ComposerFeeRemoved(uint32)`
+  ///
+  /// Decode a matching log with
+  /// `composerFeeRemovedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent composerFeeRemovedEvent = AbiEvent(
+    name: 'ComposerFeeRemoved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'srcEid',
+        type: AbiType.parse('uint32'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `ComposerFeeSet(uint32,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `composerFeeSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent composerFeeSetEvent = AbiEvent(
+    name: 'ComposerFeeSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'srcEid',
+        type: AbiType.parse('uint32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'composerFeePPM',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `DefaultComposerFeeSet(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `defaultComposerFeeSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent defaultComposerFeeSetEvent = AbiEvent(
+    name: 'DefaultComposerFeeSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'defaultComposerFeePPM',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `DefaultExecutorSet(address)`
+  ///
+  /// Decode a matching log with
+  /// `defaultExecutorSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent defaultExecutorSetEvent = AbiEvent(
+    name: 'DefaultExecutorSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'executor',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `FAssetRedeemFailed(bytes32,uint32,address,address,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `fAssetRedeemFailedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent fAssetRedeemFailedEvent = AbiEvent(
+    name: 'FAssetRedeemFailed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'guid',
+        type: AbiType.parse('bytes32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'srcEid',
+        type: AbiType.parse('uint32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'redeemer',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'redeemerAccount',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amountToRedeemUBA',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'wrappedAmount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `FAssetRedeemed(bytes32,uint32,address,address,uint256,string,bool,uint256,address,uint256,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `fAssetRedeemedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent fAssetRedeemedEvent = AbiEvent(
+    name: 'FAssetRedeemed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'guid',
+        type: AbiType.parse('bytes32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'srcEid',
+        type: AbiType.parse('uint32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'redeemer',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'redeemerAccount',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amountToRedeemUBA',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'redeemerUnderlyingAddress',
+        type: AbiType.parse('string'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'redeemWithTag',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'destinationTag',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executor',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executorFee',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'redeemedAmountUBA',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'wrappedAmount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `FAssetTransferred(address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `fAssetTransferredEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent fAssetTransferredEvent = AbiEvent(
+    name: 'FAssetTransferred',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'to',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RedeemerAccountCreated(address,address)`
+  ///
+  /// Decode a matching log with
+  /// `redeemerAccountCreatedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent redeemerAccountCreatedEvent = AbiEvent(
+    name: 'RedeemerAccountCreated',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'redeemer',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'account',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `RedeemerAccountImplementationSet(address)`
+  ///
+  /// Decode a matching log with
+  /// `redeemerAccountImplementationSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent redeemerAccountImplementationSetEvent = AbiEvent(
+    name: 'RedeemerAccountImplementationSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'implementation',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `TimelockDurationSet(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `timelockDurationSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent timelockDurationSetEvent = AbiEvent(
+    name: 'TimelockDurationSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'timelockDurationSeconds',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `TimelockedCallCanceled(bytes32)`
+  ///
+  /// Decode a matching log with
+  /// `timelockedCallCanceledEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent timelockedCallCanceledEvent = AbiEvent(
+    name: 'TimelockedCallCanceled',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'encodedCallHash',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `TimelockedCallExecuted(bytes32)`
+  ///
+  /// Decode a matching log with
+  /// `timelockedCallExecutedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent timelockedCallExecutedEvent = AbiEvent(
+    name: 'TimelockedCallExecuted',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'encodedCallHash',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    callTimelockedEvent,
+    composerFeeCollectedEvent,
+    composerFeeRecipientSetEvent,
+    composerFeeRemovedEvent,
+    composerFeeSetEvent,
+    defaultComposerFeeSetEvent,
+    defaultExecutorSetEvent,
+    fAssetRedeemFailedEvent,
+    fAssetRedeemedEvent,
+    fAssetTransferredEvent,
+    redeemerAccountCreatedEvent,
+    redeemerAccountImplementationSetEvent,
+    timelockDurationSetEvent,
+    timelockedCallCanceledEvent,
+    timelockedCallExecutedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

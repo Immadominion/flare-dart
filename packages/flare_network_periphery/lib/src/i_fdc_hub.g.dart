@@ -94,4 +94,94 @@ class IFdcHubContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// `AttestationRequest(bytes,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `attestationRequestEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent attestationRequestEvent = AbiEvent(
+    name: 'AttestationRequest',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'data',
+        type: AbiType.parse('bytes'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'fee',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `InflationRewardsOffered(uint24,(bytes32,bytes32,uint24,uint8,uint224)[],uint256)`
+  ///
+  /// Decode a matching log with
+  /// `inflationRewardsOfferedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent inflationRewardsOfferedEvent = AbiEvent(
+    name: 'InflationRewardsOffered',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint24'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'fdcConfigurations',
+        type: AbiType.parse('(bytes32,bytes32,uint24,uint8,uint224)[]'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RequestsOffsetSet(uint8)`
+  ///
+  /// Decode a matching log with
+  /// `requestsOffsetSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent requestsOffsetSetEvent = AbiEvent(
+    name: 'RequestsOffsetSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'requestsOffsetSeconds',
+        type: AbiType.parse('uint8'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    attestationRequestEvent,
+    inflationRewardsOfferedEvent,
+    requestsOffsetSetEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

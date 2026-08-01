@@ -426,4 +426,129 @@ class IRelayContract {
     );
     return out[0]! as bool;
   }
+
+  /// `ProtocolMessageRelayed(uint8,uint32,bool,bytes32)`
+  ///
+  /// Decode a matching log with
+  /// `protocolMessageRelayedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent protocolMessageRelayedEvent = AbiEvent(
+    name: 'ProtocolMessageRelayed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'protocolId',
+        type: AbiType.parse('uint8'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'votingRoundId',
+        type: AbiType.parse('uint32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'isSecureRandom',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'merkleRoot',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `SigningPolicyInitialized(uint24,uint32,uint16,uint256,address[],uint16[],bytes,uint64)`
+  ///
+  /// Decode a matching log with
+  /// `signingPolicyInitializedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent signingPolicyInitializedEvent = AbiEvent(
+    name: 'SigningPolicyInitialized',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint24'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'startVotingRoundId',
+        type: AbiType.parse('uint32'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'threshold',
+        type: AbiType.parse('uint16'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'seed',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'voters',
+        type: AbiType.parse('address[]'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'weights',
+        type: AbiType.parse('uint16[]'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'signingPolicyBytes',
+        type: AbiType.parse('bytes'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'timestamp',
+        type: AbiType.parse('uint64'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `SigningPolicyRelayed(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `signingPolicyRelayedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent signingPolicyRelayedEvent = AbiEvent(
+    name: 'SigningPolicyRelayed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    protocolMessageRelayedEvent,
+    signingPolicyInitializedEvent,
+    signingPolicyRelayedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

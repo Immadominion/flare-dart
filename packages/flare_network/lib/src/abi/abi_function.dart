@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:meta/meta.dart';
 
 import '../rpc/flare_exception.dart';
+import 'abi_event.dart';
 import 'abi_type.dart';
 import 'hex.dart';
 import 'keccak.dart';
@@ -159,27 +160,41 @@ final class ContractAbi {
   /// Functions by name. Overloads share a name, so the value is a list.
   final Map<String, List<AbiFunction>> functionsByName;
 
-  const ContractAbi(this.functionsByName);
+  /// Events by name. Overloads share a name, so the value is a list.
+  final Map<String, List<AbiEvent>> eventsByName;
+
+  const ContractAbi(this.functionsByName, [this.eventsByName = const {}]);
 
   /// Parses an ABI JSON array.
   ///
   /// Flare's published artifacts are **bare JSON arrays**, not Hardhat
-  /// `{abi, bytecode}` objects — verified across all 112 contracts in
+  /// `{abi, bytecode}` objects — verified across all 187 contracts in
   /// `flare-periphery-contract-artifacts@0.1.52`.
   factory ContractAbi.fromJson(List<Object?> json) {
-    final map = <String, List<AbiFunction>>{};
+    final functions = <String, List<AbiFunction>>{};
+    final events = <String, List<AbiEvent>>{};
+
     for (final entry in json) {
       if (entry is! Map) continue;
-      if (entry['type'] != 'function') continue;
-      final fn = AbiFunction.fromJson(entry.cast<String, Object?>());
-      (map[fn.name] ??= []).add(fn);
+      final map = entry.cast<String, Object?>();
+      switch (map['type']) {
+        case 'function':
+          final fn = AbiFunction.fromJson(map);
+          (functions[fn.name] ??= []).add(fn);
+        case 'event':
+          final ev = AbiEvent.fromJson(map);
+          (events[ev.name] ??= []).add(ev);
+      }
     }
-    return ContractAbi(map);
+    return ContractAbi(functions, events);
   }
 
   /// All functions, flattened.
   List<AbiFunction> get functions =>
       functionsByName.values.expand((f) => f).toList();
+
+  /// All events, flattened.
+  List<AbiEvent> get events => eventsByName.values.expand((e) => e).toList();
 
   /// Looks up a function by name.
   ///

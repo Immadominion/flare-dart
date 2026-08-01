@@ -217,4 +217,164 @@ class IPChainStakeMirrorMultiSigVotingContract {
     );
     return out[0]! as bool;
   }
+
+  /// `PChainStakeMirrorValidatorUptimeVoteSubmitted(uint256,uint256,address,bytes20[])`
+  ///
+  /// Decode a matching log with
+  /// `pChainStakeMirrorValidatorUptimeVoteSubmittedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent pChainStakeMirrorValidatorUptimeVoteSubmittedEvent =
+      AbiEvent(
+        name: 'PChainStakeMirrorValidatorUptimeVoteSubmitted',
+        anonymous: false,
+        parameters: [
+          AbiEventParameter(
+            name: 'rewardEpochId',
+            type: AbiType.parse('uint256'),
+            indexed: true,
+          ),
+          AbiEventParameter(
+            name: 'timestamp',
+            type: AbiType.parse('uint256'),
+            indexed: true,
+          ),
+          AbiEventParameter(
+            name: 'voter',
+            type: AbiType.parse('address'),
+            indexed: false,
+          ),
+          AbiEventParameter(
+            name: 'nodeIds',
+            type: AbiType.parse('bytes20[]'),
+            indexed: false,
+          ),
+        ],
+      );
+
+  /// `PChainStakeMirrorVoteSubmitted(uint256,address,bytes32)`
+  ///
+  /// Decode a matching log with
+  /// `pChainStakeMirrorVoteSubmittedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent pChainStakeMirrorVoteSubmittedEvent = AbiEvent(
+    name: 'PChainStakeMirrorVoteSubmitted',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'epochId',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'merkleRoot',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `PChainStakeMirrorVotersSet(address[])`
+  ///
+  /// Decode a matching log with
+  /// `pChainStakeMirrorVotersSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent pChainStakeMirrorVotersSetEvent = AbiEvent(
+    name: 'PChainStakeMirrorVotersSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voters',
+        type: AbiType.parse('address[]'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `PChainStakeMirrorVotingFinalized(uint256,bytes32)`
+  ///
+  /// Decode a matching log with
+  /// `pChainStakeMirrorVotingFinalizedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent pChainStakeMirrorVotingFinalizedEvent = AbiEvent(
+    name: 'PChainStakeMirrorVotingFinalized',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'epochId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'merkleRoot',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `PChainStakeMirrorVotingReset(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `pChainStakeMirrorVotingResetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent pChainStakeMirrorVotingResetEvent = AbiEvent(
+    name: 'PChainStakeMirrorVotingReset',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'epochId',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `PChainStakeMirrorVotingThresholdSet(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `pChainStakeMirrorVotingThresholdSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent pChainStakeMirrorVotingThresholdSetEvent = AbiEvent(
+    name: 'PChainStakeMirrorVotingThresholdSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'votingThreshold',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    pChainStakeMirrorValidatorUptimeVoteSubmittedEvent,
+    pChainStakeMirrorVoteSubmittedEvent,
+    pChainStakeMirrorVotersSetEvent,
+    pChainStakeMirrorVotingFinalizedEvent,
+    pChainStakeMirrorVotingResetEvent,
+    pChainStakeMirrorVotingThresholdSetEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

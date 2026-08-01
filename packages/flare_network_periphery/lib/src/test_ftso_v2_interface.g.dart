@@ -281,4 +281,46 @@ class TestFtsoV2InterfaceContract {
     );
     return out[0]! as bool;
   }
+
+  /// `FeedIdChanged(bytes21,bytes21)`
+  ///
+  /// Decode a matching log with
+  /// `feedIdChangedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent feedIdChangedEvent = AbiEvent(
+    name: 'FeedIdChanged',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'oldFeedId',
+        type: AbiType.parse('bytes21'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'newFeedId',
+        type: AbiType.parse('bytes21'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [feedIdChangedEvent];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

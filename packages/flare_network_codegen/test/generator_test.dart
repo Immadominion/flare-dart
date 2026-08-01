@@ -252,9 +252,36 @@ void main() {
       expect(binding, isNull);
     });
 
-    test('returns null for an events-only interface', () {
+    test('emits an events-only interface rather than skipping it', () {
+      // IAssetManagerEvents declares 55 events and no functions. Those logs
+      // are the entire point of the contract, so a binding is still useful.
       final binding = generator.generate('IEvents', [
-        {'type': 'event', 'name': 'Thing', 'inputs': const []},
+        {
+          'type': 'event',
+          'name': 'Thing',
+          'inputs': [
+            {'name': 'who', 'type': 'address', 'indexed': true},
+          ],
+        },
+      ]);
+
+      expect(binding, isNotNull);
+      expect(binding!.methodCount, 0);
+      expect(binding.eventCount, 1);
+      expect(binding.source, contains('static final AbiEvent thingEvent'));
+      expect(binding.source, contains('indexed: true'));
+      expect(binding.source, contains('static DecodedLog? decodeLog'));
+    });
+
+    test('returns null when there is neither a read nor an event', () {
+      final binding = generator.generate('X', [
+        fn(
+          'setThing',
+          inputs: [
+            {'name': 'v', 'type': 'uint256'},
+          ],
+          mutability: 'nonpayable',
+        ),
       ]);
       expect(binding, isNull);
     });

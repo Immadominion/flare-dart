@@ -200,4 +200,51 @@ class IFtsoFeedDecimalsContract {
       fixed: (out[2]! as List).cast<bool>(),
     );
   }
+
+  /// `DecimalsChanged(bytes21,int8,uint24)`
+  ///
+  /// Decode a matching log with
+  /// `decimalsChangedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent decimalsChangedEvent = AbiEvent(
+    name: 'DecimalsChanged',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'feedId',
+        type: AbiType.parse('bytes21'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'decimals',
+        type: AbiType.parse('int8'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint24'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [decimalsChangedEvent];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

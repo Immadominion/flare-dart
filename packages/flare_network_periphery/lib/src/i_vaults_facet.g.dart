@@ -72,4 +72,51 @@ class IVaultsFacetContract {
       vaultTypes: (out[2]! as List).cast<BigInt>(),
     );
   }
+
+  /// `VaultAdded(uint256,address,uint8)`
+  ///
+  /// Decode a matching log with
+  /// `vaultAddedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent vaultAddedEvent = AbiEvent(
+    name: 'VaultAdded',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'vaultId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'vaultAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'vaultType',
+        type: AbiType.parse('uint8'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [vaultAddedEvent];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

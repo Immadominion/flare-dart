@@ -395,4 +395,260 @@ class IMintingTagManagerContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// `AllowedExecutorChangeCancelled(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `allowedExecutorChangeCancelledEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent allowedExecutorChangeCancelledEvent = AbiEvent(
+    name: 'AllowedExecutorChangeCancelled',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'tag',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `AllowedExecutorChangePending(uint256,address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `allowedExecutorChangePendingEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent allowedExecutorChangePendingEvent = AbiEvent(
+    name: 'AllowedExecutorChangePending',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'tag',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executor',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'activeAfterTs',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `AllowedExecutorCleared(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `allowedExecutorClearedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent allowedExecutorClearedEvent = AbiEvent(
+    name: 'AllowedExecutorCleared',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'tag',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `Approval(address,address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `approvalEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent approvalEvent = AbiEvent(
+    name: 'Approval',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'owner',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'approved',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'tokenId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `ApprovalForAll(address,address,bool)`
+  ///
+  /// Decode a matching log with
+  /// `approvalForAllEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent approvalForAllEvent = AbiEvent(
+    name: 'ApprovalForAll',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'owner',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'operator',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'approved',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ExecutorChangeAfterSecondsChanged(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `executorChangeAfterSecondsChangedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent executorChangeAfterSecondsChangedEvent = AbiEvent(
+    name: 'ExecutorChangeAfterSecondsChanged',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'executorChangeAfterSeconds',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `MintingTagReserved(uint256,address)`
+  ///
+  /// Decode a matching log with
+  /// `mintingTagReservedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent mintingTagReservedEvent = AbiEvent(
+    name: 'MintingTagReserved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'tag',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'owner',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RecipientChanged(uint256,address)`
+  ///
+  /// Decode a matching log with
+  /// `recipientChangedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent recipientChangedEvent = AbiEvent(
+    name: 'RecipientChanged',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'tag',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'recipient',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ReservationFeeChanged(uint256,address)`
+  ///
+  /// Decode a matching log with
+  /// `reservationFeeChangedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent reservationFeeChangedEvent = AbiEvent(
+    name: 'ReservationFeeChanged',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'reservationFee',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'recipient',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `Transfer(address,address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `transferEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent transferEvent = AbiEvent(
+    name: 'Transfer',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'from',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'to',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'tokenId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    allowedExecutorChangeCancelledEvent,
+    allowedExecutorChangePendingEvent,
+    allowedExecutorClearedEvent,
+    approvalEvent,
+    approvalForAllEvent,
+    executorChangeAfterSecondsChangedEvent,
+    mintingTagReservedEvent,
+    recipientChangedEvent,
+    reservationFeeChangedEvent,
+    transferEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

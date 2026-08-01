@@ -544,4 +544,335 @@ class IIFtsoManagerContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// `AccruingUnearnedRewardsFailed(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `accruingUnearnedRewardsFailedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent accruingUnearnedRewardsFailedEvent = AbiEvent(
+    name: 'AccruingUnearnedRewardsFailed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'epochId',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ChillingNonrevealingDataProvidersFailed()`
+  ///
+  /// Decode a matching log with
+  /// `chillingNonrevealingDataProvidersFailedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent chillingNonrevealingDataProvidersFailedEvent = AbiEvent(
+    name: 'ChillingNonrevealingDataProvidersFailed',
+    anonymous: false,
+    parameters: [],
+  );
+
+  /// `CleanupBlockNumberManagerFailedForBlock(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `cleanupBlockNumberManagerFailedForBlockEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent cleanupBlockNumberManagerFailedForBlockEvent = AbiEvent(
+    name: 'CleanupBlockNumberManagerFailedForBlock',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'blockNumber',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ClosingExpiredRewardEpochFailed(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `closingExpiredRewardEpochFailedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent closingExpiredRewardEpochFailedEvent = AbiEvent(
+    name: 'ClosingExpiredRewardEpochFailed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'rewardEpoch',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `DistributingRewardsFailed(address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `distributingRewardsFailedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent distributingRewardsFailedEvent = AbiEvent(
+    name: 'DistributingRewardsFailed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'ftso',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'epochId',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `FallbackMode(bool)`
+  ///
+  /// Decode a matching log with
+  /// `fallbackModeEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent fallbackModeEvent = AbiEvent(
+    name: 'FallbackMode',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'fallbackMode',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `FinalizingPriceEpochFailed(address,uint256,uint8)`
+  ///
+  /// Decode a matching log with
+  /// `finalizingPriceEpochFailedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent finalizingPriceEpochFailedEvent = AbiEvent(
+    name: 'FinalizingPriceEpochFailed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'ftso',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'epochId',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'failingType',
+        type: AbiType.parse('uint8'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `FtsoAdded(address,bool)`
+  ///
+  /// Decode a matching log with
+  /// `ftsoAddedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent ftsoAddedEvent = AbiEvent(
+    name: 'FtsoAdded',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'ftso',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'add',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `FtsoDeactivationFailed(address)`
+  ///
+  /// Decode a matching log with
+  /// `ftsoDeactivationFailedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent ftsoDeactivationFailedEvent = AbiEvent(
+    name: 'FtsoDeactivationFailed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'ftso',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `FtsoFallbackMode(address,bool)`
+  ///
+  /// Decode a matching log with
+  /// `ftsoFallbackModeEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent ftsoFallbackModeEvent = AbiEvent(
+    name: 'FtsoFallbackMode',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'ftso',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'fallbackMode',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `InitializingCurrentEpochStateForRevealFailed(address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `initializingCurrentEpochStateForRevealFailedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent initializingCurrentEpochStateForRevealFailedEvent =
+      AbiEvent(
+        name: 'InitializingCurrentEpochStateForRevealFailed',
+        anonymous: false,
+        parameters: [
+          AbiEventParameter(
+            name: 'ftso',
+            type: AbiType.parse('address'),
+            indexed: false,
+          ),
+          AbiEventParameter(
+            name: 'epochId',
+            type: AbiType.parse('uint256'),
+            indexed: false,
+          ),
+        ],
+      );
+
+  /// `PriceEpochFinalized(address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `priceEpochFinalizedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent priceEpochFinalizedEvent = AbiEvent(
+    name: 'PriceEpochFinalized',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'chosenFtso',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RewardEpochFinalized(uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `rewardEpochFinalizedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent rewardEpochFinalizedEvent = AbiEvent(
+    name: 'RewardEpochFinalized',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'votepowerBlock',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'startBlock',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `UpdatingActiveValidatorsTriggerFailed(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `updatingActiveValidatorsTriggerFailedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent updatingActiveValidatorsTriggerFailedEvent = AbiEvent(
+    name: 'UpdatingActiveValidatorsTriggerFailed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'rewardEpoch',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `UseGoodRandomSet(bool,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `useGoodRandomSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent useGoodRandomSetEvent = AbiEvent(
+    name: 'UseGoodRandomSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'useGoodRandom',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'maxWaitForGoodRandomSeconds',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    accruingUnearnedRewardsFailedEvent,
+    chillingNonrevealingDataProvidersFailedEvent,
+    cleanupBlockNumberManagerFailedForBlockEvent,
+    closingExpiredRewardEpochFailedEvent,
+    distributingRewardsFailedEvent,
+    fallbackModeEvent,
+    finalizingPriceEpochFailedEvent,
+    ftsoAddedEvent,
+    ftsoDeactivationFailedEvent,
+    ftsoFallbackModeEvent,
+    initializingCurrentEpochStateForRevealFailedEvent,
+    priceEpochFinalizedEvent,
+    rewardEpochFinalizedEvent,
+    updatingActiveValidatorsTriggerFailedEvent,
+    useGoodRandomSetEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

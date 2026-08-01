@@ -799,4 +799,1101 @@ class IMasterAccountControllerContract {
     );
     return (out[0]! as List).cast<List<Object?>>();
   }
+
+  /// `AgentVaultAdded(uint256,address)`
+  ///
+  /// Decode a matching log with
+  /// `agentVaultAddedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent agentVaultAddedEvent = AbiEvent(
+    name: 'AgentVaultAdded',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'agentVaultId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'agentVaultAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `AgentVaultRemoved(uint256,address)`
+  ///
+  /// Decode a matching log with
+  /// `agentVaultRemovedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent agentVaultRemovedEvent = AbiEvent(
+    name: 'AgentVaultRemoved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'agentVaultId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'agentVaultAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `Approved(address,address,address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `approvedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent approvedEvent = AbiEvent(
+    name: 'Approved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'personalAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'fxrp',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'vault',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `CallTimelocked(bytes,bytes32,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `callTimelockedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent callTimelockedEvent = AbiEvent(
+    name: 'CallTimelocked',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'encodedCall',
+        type: AbiType.parse('bytes'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'encodedCallHash',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'allowedAfterTimestamp',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `Claimed(address,address,uint256,uint256,uint256,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `claimedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent claimedEvent = AbiEvent(
+    name: 'Claimed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'personalAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'vault',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'year',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'month',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'day',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'shares',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `CollateralReserved(address,bytes32,bytes32,string,uint256,address,uint256,address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `collateralReservedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent collateralReservedEvent = AbiEvent(
+    name: 'CollateralReserved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'personalAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'transactionId',
+        type: AbiType.parse('bytes32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'paymentReference',
+        type: AbiType.parse('bytes32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'xrplOwner',
+        type: AbiType.parse('string'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'collateralReservationId',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'agentVault',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'lots',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executor',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executorFee',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `DefaultInstructionFeeSet(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `defaultInstructionFeeSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent defaultInstructionFeeSetEvent = AbiEvent(
+    name: 'DefaultInstructionFeeSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'defaultInstructionFee',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `Deposited(address,address,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `depositedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent depositedEvent = AbiEvent(
+    name: 'Deposited',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'personalAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'vault',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'shares',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `DiamondCut((address,uint8,bytes4[])[],address,bytes)`
+  ///
+  /// Decode a matching log with
+  /// `diamondCutEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent diamondCutEvent = AbiEvent(
+    name: 'DiamondCut',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: '_diamondCut',
+        type: AbiType.parse('(address,uint8,bytes4[])[]'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: '_init',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: '_calldata',
+        type: AbiType.parse('bytes'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `DirectMintingExecuted(address,bytes32,string,uint256,uint256,address)`
+  ///
+  /// Decode a matching log with
+  /// `directMintingExecutedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent directMintingExecutedEvent = AbiEvent(
+    name: 'DirectMintingExecuted',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'personalAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'transactionId',
+        type: AbiType.parse('bytes32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'sourceAddress',
+        type: AbiType.parse('string'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executorFee',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executor',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ExecutorFeeSet(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `executorFeeSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent executorFeeSetEvent = AbiEvent(
+    name: 'ExecutorFeeSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'executorFee',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ExecutorRemoved(address)`
+  ///
+  /// Decode a matching log with
+  /// `executorRemovedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent executorRemovedEvent = AbiEvent(
+    name: 'ExecutorRemoved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'personalAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `ExecutorSet(address)`
+  ///
+  /// Decode a matching log with
+  /// `executorSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent executorSetEvent = AbiEvent(
+    name: 'ExecutorSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'executor',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ExecutorSet(address,address)`
+  ///
+  /// Decode a matching log with
+  /// `executorSet2Event.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent executorSet2Event = AbiEvent(
+    name: 'ExecutorSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'personalAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'executor',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `FXrpRedeemed(address,uint256,uint256,address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `fXrpRedeemedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent fXrpRedeemedEvent = AbiEvent(
+    name: 'FXrpRedeemed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'personalAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'lots',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executor',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executorFee',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `FXrpTransferred(address,address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `fXrpTransferredEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent fXrpTransferredEvent = AbiEvent(
+    name: 'FXrpTransferred',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'personalAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'to',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `IgnoreMemoSet(address,bytes32)`
+  ///
+  /// Decode a matching log with
+  /// `ignoreMemoSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent ignoreMemoSetEvent = AbiEvent(
+    name: 'IgnoreMemoSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'personalAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'targetTxId',
+        type: AbiType.parse('bytes32'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `InstructionExecuted(address,bytes32,bytes32,string,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `instructionExecutedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent instructionExecutedEvent = AbiEvent(
+    name: 'InstructionExecuted',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'personalAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'transactionId',
+        type: AbiType.parse('bytes32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'paymentReference',
+        type: AbiType.parse('bytes32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'xrplOwner',
+        type: AbiType.parse('string'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'instructionId',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `InstructionFeeRemoved(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `instructionFeeRemovedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent instructionFeeRemovedEvent = AbiEvent(
+    name: 'InstructionFeeRemoved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'instructionId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `InstructionFeeSet(uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `instructionFeeSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent instructionFeeSetEvent = AbiEvent(
+    name: 'InstructionFeeSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'instructionId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'instructionFee',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `NonceIncreased(address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `nonceIncreasedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent nonceIncreasedEvent = AbiEvent(
+    name: 'NonceIncreased',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'personalAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'newNonce',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `OwnershipTransferred(address,address)`
+  ///
+  /// Decode a matching log with
+  /// `ownershipTransferredEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent ownershipTransferredEvent = AbiEvent(
+    name: 'OwnershipTransferred',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'previousOwner',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'newOwner',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `Paused(address)`
+  ///
+  /// Decode a matching log with
+  /// `pausedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent pausedEvent = AbiEvent(
+    name: 'Paused',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'account',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `PauserAdded(address)`
+  ///
+  /// Decode a matching log with
+  /// `pauserAddedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent pauserAddedEvent = AbiEvent(
+    name: 'PauserAdded',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'account',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `PauserRemoved(address)`
+  ///
+  /// Decode a matching log with
+  /// `pauserRemovedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent pauserRemovedEvent = AbiEvent(
+    name: 'PauserRemoved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'account',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `PaymentProofValidityDurationSecondsSet(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `paymentProofValidityDurationSecondsSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent paymentProofValidityDurationSecondsSetEvent = AbiEvent(
+    name: 'PaymentProofValidityDurationSecondsSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'paymentProofValidityDurationSeconds',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `PersonalAccountCreated(address,string)`
+  ///
+  /// Decode a matching log with
+  /// `personalAccountCreatedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent personalAccountCreatedEvent = AbiEvent(
+    name: 'PersonalAccountCreated',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'personalAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'xrplOwner',
+        type: AbiType.parse('string'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `PersonalAccountImplementationSet(address)`
+  ///
+  /// Decode a matching log with
+  /// `personalAccountImplementationSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent personalAccountImplementationSetEvent = AbiEvent(
+    name: 'PersonalAccountImplementationSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'newImplementation',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RedeemRequested(address,address,uint256,uint256,uint256,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `redeemRequestedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent redeemRequestedEvent = AbiEvent(
+    name: 'RedeemRequested',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'personalAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'vault',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'shares',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'claimableEpoch',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'year',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'month',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'day',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `Redeemed(address,address,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `redeemedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent redeemedEvent = AbiEvent(
+    name: 'Redeemed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'personalAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'vault',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'shares',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ReplacementFeeSet(address,bytes32,uint64)`
+  ///
+  /// Decode a matching log with
+  /// `replacementFeeSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent replacementFeeSetEvent = AbiEvent(
+    name: 'ReplacementFeeSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'personalAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'targetTxId',
+        type: AbiType.parse('bytes32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'newFee',
+        type: AbiType.parse('uint64'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `TimelockDurationSet(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `timelockDurationSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent timelockDurationSetEvent = AbiEvent(
+    name: 'TimelockDurationSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'timelockDurationSeconds',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `TimelockedCallCanceled(bytes32)`
+  ///
+  /// Decode a matching log with
+  /// `timelockedCallCanceledEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent timelockedCallCanceledEvent = AbiEvent(
+    name: 'TimelockedCallCanceled',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'encodedCallHash',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `TimelockedCallExecuted(bytes32)`
+  ///
+  /// Decode a matching log with
+  /// `timelockedCallExecutedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent timelockedCallExecutedEvent = AbiEvent(
+    name: 'TimelockedCallExecuted',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'encodedCallHash',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `Unpaused(address)`
+  ///
+  /// Decode a matching log with
+  /// `unpausedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent unpausedEvent = AbiEvent(
+    name: 'Unpaused',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'account',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `UnpauserAdded(address)`
+  ///
+  /// Decode a matching log with
+  /// `unpauserAddedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent unpauserAddedEvent = AbiEvent(
+    name: 'UnpauserAdded',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'account',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `UnpauserRemoved(address)`
+  ///
+  /// Decode a matching log with
+  /// `unpauserRemovedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent unpauserRemovedEvent = AbiEvent(
+    name: 'UnpauserRemoved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'account',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `UserOperationExecuted(address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `userOperationExecutedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent userOperationExecutedEvent = AbiEvent(
+    name: 'UserOperationExecuted',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'personalAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'nonce',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `VaultAdded(uint256,address,uint8)`
+  ///
+  /// Decode a matching log with
+  /// `vaultAddedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent vaultAddedEvent = AbiEvent(
+    name: 'VaultAdded',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'vaultId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'vaultAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'vaultType',
+        type: AbiType.parse('uint8'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `WithdrawalClaimed(address,address,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `withdrawalClaimedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent withdrawalClaimedEvent = AbiEvent(
+    name: 'WithdrawalClaimed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'personalAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'vault',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'period',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `XrplProviderWalletAdded(string)`
+  ///
+  /// Decode a matching log with
+  /// `xrplProviderWalletAddedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent xrplProviderWalletAddedEvent = AbiEvent(
+    name: 'XrplProviderWalletAdded',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'xrplProviderWallet',
+        type: AbiType.parse('string'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `XrplProviderWalletRemoved(string)`
+  ///
+  /// Decode a matching log with
+  /// `xrplProviderWalletRemovedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent xrplProviderWalletRemovedEvent = AbiEvent(
+    name: 'XrplProviderWalletRemoved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'xrplProviderWallet',
+        type: AbiType.parse('string'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    agentVaultAddedEvent,
+    agentVaultRemovedEvent,
+    approvedEvent,
+    callTimelockedEvent,
+    claimedEvent,
+    collateralReservedEvent,
+    defaultInstructionFeeSetEvent,
+    depositedEvent,
+    diamondCutEvent,
+    directMintingExecutedEvent,
+    executorFeeSetEvent,
+    executorRemovedEvent,
+    executorSetEvent,
+    executorSet2Event,
+    fXrpRedeemedEvent,
+    fXrpTransferredEvent,
+    ignoreMemoSetEvent,
+    instructionExecutedEvent,
+    instructionFeeRemovedEvent,
+    instructionFeeSetEvent,
+    nonceIncreasedEvent,
+    ownershipTransferredEvent,
+    pausedEvent,
+    pauserAddedEvent,
+    pauserRemovedEvent,
+    paymentProofValidityDurationSecondsSetEvent,
+    personalAccountCreatedEvent,
+    personalAccountImplementationSetEvent,
+    redeemRequestedEvent,
+    redeemedEvent,
+    replacementFeeSetEvent,
+    timelockDurationSetEvent,
+    timelockedCallCanceledEvent,
+    timelockedCallExecutedEvent,
+    unpausedEvent,
+    unpauserAddedEvent,
+    unpauserRemovedEvent,
+    userOperationExecutedEvent,
+    vaultAddedEvent,
+    withdrawalClaimedEvent,
+    xrplProviderWalletAddedEvent,
+    xrplProviderWalletRemovedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

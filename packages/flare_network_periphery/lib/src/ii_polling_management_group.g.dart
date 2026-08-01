@@ -295,4 +295,284 @@ class IIPollingManagementGroupContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// `MaintainerSet(address)`
+  ///
+  /// Decode a matching log with
+  /// `maintainerSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent maintainerSetEvent = AbiEvent(
+    name: 'MaintainerSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'newMaintainer',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ManagementGroupMemberAdded(address)`
+  ///
+  /// Decode a matching log with
+  /// `managementGroupMemberAddedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent managementGroupMemberAddedEvent = AbiEvent(
+    name: 'ManagementGroupMemberAdded',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'addedMember',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ManagementGroupMemberRemoved(address)`
+  ///
+  /// Decode a matching log with
+  /// `managementGroupMemberRemovedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent managementGroupMemberRemovedEvent = AbiEvent(
+    name: 'ManagementGroupMemberRemoved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'removedMember',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ManagementGroupProposalCreated(uint256,address,string,uint256,uint256,uint256,uint256,address[],bool)`
+  ///
+  /// Decode a matching log with
+  /// `managementGroupProposalCreatedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent managementGroupProposalCreatedEvent = AbiEvent(
+    name: 'ManagementGroupProposalCreated',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'proposalId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'proposer',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'description',
+        type: AbiType.parse('string'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'voteStartTime',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'voteEndTime',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'thresholdConditionBIPS',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'majorityConditionBIPS',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'eligibleMembers',
+        type: AbiType.parse('address[]'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'accept',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ParametersSet(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `parametersSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent parametersSetEvent = AbiEvent(
+    name: 'ParametersSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'votingDelaySeconds',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'votingPeriodSeconds',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'thresholdConditionBIPS',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'majorityConditionBIPS',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'proposalFeeValueWei',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'addAfterRewardedEpochs',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'addAfterNotChilledEpochs',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'removeAfterNotRewardedEpochs',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'removeAfterEligibleProposals',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'removeAfterNonParticipatingProposals',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'removeForDays',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ProposalCanceled(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `proposalCanceledEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent proposalCanceledEvent = AbiEvent(
+    name: 'ProposalCanceled',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'proposalId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `ProxyVoterSet(address,address)`
+  ///
+  /// Decode a matching log with
+  /// `proxyVoterSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent proxyVoterSetEvent = AbiEvent(
+    name: 'ProxyVoterSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'account',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'proxyVoter',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `VoteCast(address,uint256,uint8,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `voteCastEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent voteCastEvent = AbiEvent(
+    name: 'VoteCast',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'proposalId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'support',
+        type: AbiType.parse('uint8'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'forVotePower',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'againstVotePower',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    maintainerSetEvent,
+    managementGroupMemberAddedEvent,
+    managementGroupMemberRemovedEvent,
+    managementGroupProposalCreatedEvent,
+    parametersSetEvent,
+    proposalCanceledEvent,
+    proxyVoterSetEvent,
+    voteCastEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

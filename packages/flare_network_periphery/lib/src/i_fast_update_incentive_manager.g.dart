@@ -233,4 +233,86 @@ class IFastUpdateIncentiveManagerContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// `IncentiveOffered(uint24,uint256,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `incentiveOfferedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent incentiveOfferedEvent = AbiEvent(
+    name: 'IncentiveOffered',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint24'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'rangeIncrease',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'sampleSizeIncrease',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'offerAmount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `InflationRewardsOffered(uint24,(bytes21,uint32,uint24)[],uint256)`
+  ///
+  /// Decode a matching log with
+  /// `inflationRewardsOfferedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent inflationRewardsOfferedEvent = AbiEvent(
+    name: 'InflationRewardsOffered',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint24'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'feedConfigurations',
+        type: AbiType.parse('(bytes21,uint32,uint24)[]'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    incentiveOfferedEvent,
+    inflationRewardsOfferedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

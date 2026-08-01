@@ -255,4 +255,132 @@ class IFastUpdaterContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// `FastUpdateFeedRemoved(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `fastUpdateFeedRemovedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent fastUpdateFeedRemovedEvent = AbiEvent(
+    name: 'FastUpdateFeedRemoved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'index',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `FastUpdateFeedReset(uint256,uint256,bytes21,uint256,int8)`
+  ///
+  /// Decode a matching log with
+  /// `fastUpdateFeedResetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent fastUpdateFeedResetEvent = AbiEvent(
+    name: 'FastUpdateFeedReset',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'votingRoundId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'index',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'id',
+        type: AbiType.parse('bytes21'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'value',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'decimals',
+        type: AbiType.parse('int8'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `FastUpdateFeeds(uint256,uint256[],int8[])`
+  ///
+  /// Decode a matching log with
+  /// `fastUpdateFeedsEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent fastUpdateFeedsEvent = AbiEvent(
+    name: 'FastUpdateFeeds',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'votingEpochId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'feeds',
+        type: AbiType.parse('uint256[]'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'decimals',
+        type: AbiType.parse('int8[]'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `FastUpdateFeedsSubmitted(uint32,address)`
+  ///
+  /// Decode a matching log with
+  /// `fastUpdateFeedsSubmittedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent fastUpdateFeedsSubmittedEvent = AbiEvent(
+    name: 'FastUpdateFeedsSubmitted',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'votingRoundId',
+        type: AbiType.parse('uint32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'signingPolicyAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    fastUpdateFeedRemovedEvent,
+    fastUpdateFeedResetEvent,
+    fastUpdateFeedsEvent,
+    fastUpdateFeedsSubmittedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

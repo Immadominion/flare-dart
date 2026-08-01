@@ -35,6 +35,8 @@
 library;
 
 // ABI
+export 'src/abi/abi_event.dart'
+    show AbiEvent, AbiEventParameter, ContractAbiEvents, IndexedHash;
 export 'src/abi/abi_function.dart'
     show AbiFunction, AbiParameter, ContractAbi, StateMutability;
 export 'src/abi/abi_type.dart'
@@ -52,6 +54,10 @@ export 'src/abi/abi_type.dart'
         AbiType;
 export 'src/abi/eth_address.dart' show EthAddress;
 export 'src/abi/hex.dart' show bytesToHex, hexToBigInt, hexToBytes;
+// Exported because computing a topic hash is a legitimate caller need:
+// filtering on an indexed dynamic parameter requires hashing the value
+// yourself, since the chain stores keccak256(value) rather than the value.
+export 'src/abi/keccak.dart' show functionSelector, keccak256, keccak256Utf8;
 
 // DA Layer (Scaling anchor feeds)
 export 'src/dalayer/da_layer_client.dart'
@@ -84,6 +90,7 @@ export 'src/registry/contract_registry.dart'
 
 // RPC
 export 'src/rpc/flare_client.dart' show BlockTag, FlareClient;
+export 'src/rpc/logs.dart' show BlockRef, DecodedLog, FlareLog, LogFilter;
 export 'src/rpc/flare_exception.dart'
     show
         FlareAbiException,

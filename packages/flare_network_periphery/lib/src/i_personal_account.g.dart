@@ -95,4 +95,317 @@ class IPersonalAccountContract {
     );
     return out[0]! as String;
   }
+
+  /// `Approved(address,address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `approvedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent approvedEvent = AbiEvent(
+    name: 'Approved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'fxrp',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'vault',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `Claimed(address,uint256,uint256,uint256,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `claimedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent claimedEvent = AbiEvent(
+    name: 'Claimed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'vault',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'year',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'month',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'day',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'shares',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `CollateralReserved(address,uint256,address,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `collateralReservedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent collateralReservedEvent = AbiEvent(
+    name: 'CollateralReserved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'agentVault',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'lots',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executor',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executorFee',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'collateralReservationId',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `Deposited(address,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `depositedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent depositedEvent = AbiEvent(
+    name: 'Deposited',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'vault',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'shares',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `FXrpRedeemed(uint256,uint256,address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `fXrpRedeemedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent fXrpRedeemedEvent = AbiEvent(
+    name: 'FXrpRedeemed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'lots',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executor',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executorFee',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `FXrpTransferred(address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `fXrpTransferredEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent fXrpTransferredEvent = AbiEvent(
+    name: 'FXrpTransferred',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'to',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RedeemRequested(address,uint256,uint256,uint256,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `redeemRequestedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent redeemRequestedEvent = AbiEvent(
+    name: 'RedeemRequested',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'vault',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'shares',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'claimableEpoch',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'year',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'month',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'day',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `Redeemed(address,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `redeemedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent redeemedEvent = AbiEvent(
+    name: 'Redeemed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'vault',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'shares',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `WithdrawalClaimed(address,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `withdrawalClaimedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent withdrawalClaimedEvent = AbiEvent(
+    name: 'WithdrawalClaimed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'vault',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'period',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    approvedEvent,
+    claimedEvent,
+    collateralReservedEvent,
+    depositedEvent,
+    fXrpRedeemedEvent,
+    fXrpTransferredEvent,
+    redeemRequestedEvent,
+    redeemedEvent,
+    withdrawalClaimedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

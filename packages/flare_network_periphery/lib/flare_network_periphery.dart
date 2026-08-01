@@ -1,7 +1,7 @@
 // GENERATED CODE — DO NOT EDIT BY HAND.
 //
 // Typed bindings for @flarenetwork/flare-periphery-contract-artifacts@0.1.52
-// 142 contracts, 1049 read methods.
+// 149 contracts, 1049 read methods.
 
 export 'src/aggregator_v3_interface.g.dart';
 export 'src/ftso_v2_interface.g.dart';
@@ -9,15 +9,20 @@ export 'src/i_address_binder.g.dart';
 export 'src/i_address_validity_verification.g.dart';
 export 'src/i_agent_always_allowed_minters.g.dart';
 export 'src/i_agent_owner_registry.g.dart';
+export 'src/i_agent_ping.g.dart';
 export 'src/i_agent_vaults_facet.g.dart';
 export 'src/i_asset_manager.g.dart';
 export 'src/i_asset_manager_controller.g.dart';
+export 'src/i_asset_manager_events.g.dart';
 export 'src/i_balance_decreasing_transaction_verification.g.dart';
 export 'src/i_claim_setup_manager.g.dart';
 export 'src/i_confirmed_block_height_exists_verification.g.dart';
 export 'src/i_core_vault_client.g.dart';
 export 'src/i_core_vault_client_settings.g.dart';
 export 'src/i_core_vault_manager.g.dart';
+export 'src/i_delegation_account.g.dart';
+export 'src/i_diamond.g.dart';
+export 'src/i_diamond_cut.g.dart';
 export 'src/i_diamond_loupe.g.dart';
 export 'src/i_direct_minting.g.dart';
 export 'src/i_direct_minting_settings.g.dart';
@@ -79,6 +84,7 @@ export 'src/i_submission.g.dart';
 export 'src/i_timelock_facet.g.dart';
 export 'src/i_type_template_verification.g.dart';
 export 'src/i_validator_registry.g.dart';
+export 'src/i_validator_reward_offers_manager.g.dart';
 export 'src/i_vaults_facet.g.dart';
 export 'src/i_voter_pre_registry.g.dart';
 export 'src/i_voter_registry.g.dart';
@@ -137,6 +143,7 @@ export 'src/ip_chain_stake_mirror_multi_sig_voting.g.dart';
 export 'src/ip_chain_vote_power.g.dart';
 export 'src/ir_nat.g.dart';
 export 'src/ir_nat_account.g.dart';
+export 'src/ivp_contract_events.g.dart';
 export 'src/ivp_token.g.dart';
 export 'src/iw_nat_delegation_fee.g.dart';
 export 'src/ixrp_payment_nonexistence_verification.g.dart';

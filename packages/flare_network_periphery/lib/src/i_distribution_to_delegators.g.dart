@@ -170,4 +170,122 @@ class IDistributionToDelegatorsContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// `AccountClaimed(address,address,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `accountClaimedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent accountClaimedEvent = AbiEvent(
+    name: 'AccountClaimed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'whoClaimed',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'sentTo',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'month',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amountWei',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `AccountOptOut(address,bool)`
+  ///
+  /// Decode a matching log with
+  /// `accountOptOutEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent accountOptOutEvent = AbiEvent(
+    name: 'AccountOptOut',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'theAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'confirmed',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `EntitlementStart(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `entitlementStartEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent entitlementStartEvent = AbiEvent(
+    name: 'EntitlementStart',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'entitlementStartTs',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `UseGoodRandomSet(bool,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `useGoodRandomSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent useGoodRandomSetEvent = AbiEvent(
+    name: 'UseGoodRandomSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'useGoodRandom',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'maxWaitForGoodRandomSeconds',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    accountClaimedEvent,
+    accountOptOutEvent,
+    entitlementStartEvent,
+    useGoodRandomSetEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

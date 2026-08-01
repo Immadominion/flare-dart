@@ -119,4 +119,76 @@ class IFlareSystemsCalculatorContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// `VoterRegistrationInfo(address,uint32,address,uint16,uint256,uint256,bytes20[],uint256[])`
+  ///
+  /// Decode a matching log with
+  /// `voterRegistrationInfoEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent voterRegistrationInfoEvent = AbiEvent(
+    name: 'VoterRegistrationInfo',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'delegationAddress',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'delegationFeeBIPS',
+        type: AbiType.parse('uint16'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'wNatWeight',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'wNatCappedWeight',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'nodeIds',
+        type: AbiType.parse('bytes20[]'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'nodeWeights',
+        type: AbiType.parse('uint256[]'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [voterRegistrationInfoEvent];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

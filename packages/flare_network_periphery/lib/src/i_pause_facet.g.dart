@@ -135,4 +135,133 @@ class IPauseFacetContract {
     );
     return out[0]! as bool;
   }
+
+  /// `Paused(address)`
+  ///
+  /// Decode a matching log with
+  /// `pausedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent pausedEvent = AbiEvent(
+    name: 'Paused',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'account',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `PauserAdded(address)`
+  ///
+  /// Decode a matching log with
+  /// `pauserAddedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent pauserAddedEvent = AbiEvent(
+    name: 'PauserAdded',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'account',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `PauserRemoved(address)`
+  ///
+  /// Decode a matching log with
+  /// `pauserRemovedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent pauserRemovedEvent = AbiEvent(
+    name: 'PauserRemoved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'account',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `Unpaused(address)`
+  ///
+  /// Decode a matching log with
+  /// `unpausedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent unpausedEvent = AbiEvent(
+    name: 'Unpaused',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'account',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `UnpauserAdded(address)`
+  ///
+  /// Decode a matching log with
+  /// `unpauserAddedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent unpauserAddedEvent = AbiEvent(
+    name: 'UnpauserAdded',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'account',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `UnpauserRemoved(address)`
+  ///
+  /// Decode a matching log with
+  /// `unpauserRemovedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent unpauserRemovedEvent = AbiEvent(
+    name: 'UnpauserRemoved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'account',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    pausedEvent,
+    pauserAddedEvent,
+    pauserRemovedEvent,
+    unpausedEvent,
+    unpauserAddedEvent,
+    unpauserRemovedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

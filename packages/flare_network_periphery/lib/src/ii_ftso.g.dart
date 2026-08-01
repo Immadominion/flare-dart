@@ -629,4 +629,187 @@ class IIFtsoContract {
     final out = await client.callFunction(contract: address, function: wNatFn);
     return out[0]! as EthAddress;
   }
+
+  /// `LowTurnout(uint256,uint256,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `lowTurnoutEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent lowTurnoutEvent = AbiEvent(
+    name: 'LowTurnout',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'epochId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'natTurnout',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'lowNatTurnoutThresholdBIPS',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'timestamp',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `PriceEpochInitializedOnFtso(uint256,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `priceEpochInitializedOnFtsoEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent priceEpochInitializedOnFtsoEvent = AbiEvent(
+    name: 'PriceEpochInitializedOnFtso',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'epochId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'endTime',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'timestamp',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `PriceFinalized(uint256,uint256,bool,uint256,uint256,uint256,uint256,uint8,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `priceFinalizedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent priceFinalizedEvent = AbiEvent(
+    name: 'PriceFinalized',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'epochId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'price',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'rewardedFtso',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'lowIQRRewardPrice',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'highIQRRewardPrice',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'lowElasticBandRewardPrice',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'highElasticBandRewardPrice',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'finalizationType',
+        type: AbiType.parse('uint8'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'timestamp',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `PriceRevealed(address,uint256,uint256,uint256,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `priceRevealedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent priceRevealedEvent = AbiEvent(
+    name: 'PriceRevealed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'epochId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'price',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'timestamp',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'votePowerNat',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'votePowerAsset',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    lowTurnoutEvent,
+    priceEpochInitializedOnFtsoEvent,
+    priceFinalizedEvent,
+    priceRevealedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

@@ -547,4 +547,273 @@ class IIFtsoRewardManagerContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// `DailyAuthorizedInflationSet(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `dailyAuthorizedInflationSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent dailyAuthorizedInflationSetEvent = AbiEvent(
+    name: 'DailyAuthorizedInflationSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'authorizedAmountWei',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `FeePercentageChanged(address,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `feePercentageChangedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent feePercentageChangedEvent = AbiEvent(
+    name: 'FeePercentageChanged',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'dataProvider',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'value',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'validFromEpoch',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `FtsoRewardManagerActivated(address)`
+  ///
+  /// Decode a matching log with
+  /// `ftsoRewardManagerActivatedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent ftsoRewardManagerActivatedEvent = AbiEvent(
+    name: 'FtsoRewardManagerActivated',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'ftsoRewardManager',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `FtsoRewardManagerDeactivated(address)`
+  ///
+  /// Decode a matching log with
+  /// `ftsoRewardManagerDeactivatedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent ftsoRewardManagerDeactivatedEvent = AbiEvent(
+    name: 'FtsoRewardManagerDeactivated',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'ftsoRewardManager',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `InflationReceived(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `inflationReceivedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent inflationReceivedEvent = AbiEvent(
+    name: 'InflationReceived',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'amountReceivedWei',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RewardClaimed(address,address,address,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `rewardClaimedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent rewardClaimedEvent = AbiEvent(
+    name: 'RewardClaimed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'dataProvider',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'whoClaimed',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'sentTo',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'rewardEpoch',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RewardClaimsEnabled(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `rewardClaimsEnabledEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent rewardClaimsEnabledEvent = AbiEvent(
+    name: 'RewardClaimsEnabled',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RewardClaimsExpired(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `rewardClaimsExpiredEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent rewardClaimsExpiredEvent = AbiEvent(
+    name: 'RewardClaimsExpired',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RewardsBurned(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `rewardsBurnedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent rewardsBurnedEvent = AbiEvent(
+    name: 'RewardsBurned',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'amountBurnedWei',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RewardsDistributed(address,uint256,address[],uint256[])`
+  ///
+  /// Decode a matching log with
+  /// `rewardsDistributedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent rewardsDistributedEvent = AbiEvent(
+    name: 'RewardsDistributed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'ftso',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'epochId',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'addresses',
+        type: AbiType.parse('address[]'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'rewards',
+        type: AbiType.parse('uint256[]'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `UnearnedRewardsAccrued(uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `unearnedRewardsAccruedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent unearnedRewardsAccruedEvent = AbiEvent(
+    name: 'UnearnedRewardsAccrued',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'epochId',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'reward',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    dailyAuthorizedInflationSetEvent,
+    feePercentageChangedEvent,
+    ftsoRewardManagerActivatedEvent,
+    ftsoRewardManagerDeactivatedEvent,
+    inflationReceivedEvent,
+    rewardClaimedEvent,
+    rewardClaimsEnabledEvent,
+    rewardClaimsExpiredEvent,
+    rewardsBurnedEvent,
+    rewardsDistributedEvent,
+    unearnedRewardsAccruedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

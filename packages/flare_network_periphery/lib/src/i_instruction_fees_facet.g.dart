@@ -82,4 +82,84 @@ class IInstructionFeesFacetContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// `DefaultInstructionFeeSet(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `defaultInstructionFeeSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent defaultInstructionFeeSetEvent = AbiEvent(
+    name: 'DefaultInstructionFeeSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'defaultInstructionFee',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `InstructionFeeRemoved(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `instructionFeeRemovedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent instructionFeeRemovedEvent = AbiEvent(
+    name: 'InstructionFeeRemoved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'instructionId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `InstructionFeeSet(uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `instructionFeeSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent instructionFeeSetEvent = AbiEvent(
+    name: 'InstructionFeeSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'instructionId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'instructionFee',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    defaultInstructionFeeSetEvent,
+    instructionFeeRemovedEvent,
+    instructionFeeSetEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

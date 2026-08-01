@@ -356,4 +356,286 @@ class IIClaimSetupManagerContract {
     final out = await client.callFunction(contract: address, function: wNatFn);
     return out[0]! as EthAddress;
   }
+
+  /// `AllowedClaimRecipientsChanged(address,address[])`
+  ///
+  /// Decode a matching log with
+  /// `allowedClaimRecipientsChangedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent allowedClaimRecipientsChangedEvent = AbiEvent(
+    name: 'AllowedClaimRecipientsChanged',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'owner',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'recipients',
+        type: AbiType.parse('address[]'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ClaimExecutorFeeValueChanged(address,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `claimExecutorFeeValueChangedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent claimExecutorFeeValueChangedEvent = AbiEvent(
+    name: 'ClaimExecutorFeeValueChanged',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'executor',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'validFromRewardEpoch',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'feeValueWei',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ClaimExecutorsChanged(address,address[])`
+  ///
+  /// Decode a matching log with
+  /// `claimExecutorsChangedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent claimExecutorsChangedEvent = AbiEvent(
+    name: 'ClaimExecutorsChanged',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'owner',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executors',
+        type: AbiType.parse('address[]'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `DelegationAccountCreated(address,address)`
+  ///
+  /// Decode a matching log with
+  /// `delegationAccountCreatedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent delegationAccountCreatedEvent = AbiEvent(
+    name: 'DelegationAccountCreated',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'owner',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'delegationAccount',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `DelegationAccountUpdated(address,address,bool)`
+  ///
+  /// Decode a matching log with
+  /// `delegationAccountUpdatedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent delegationAccountUpdatedEvent = AbiEvent(
+    name: 'DelegationAccountUpdated',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'owner',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'delegationAccount',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'enabled',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ExecutorRegistered(address)`
+  ///
+  /// Decode a matching log with
+  /// `executorRegisteredEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent executorRegisteredEvent = AbiEvent(
+    name: 'ExecutorRegistered',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'executor',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ExecutorUnregistered(address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `executorUnregisteredEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent executorUnregisteredEvent = AbiEvent(
+    name: 'ExecutorUnregistered',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'executor',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'validFromRewardEpoch',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `MaxFeeSet(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `maxFeeSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent maxFeeSetEvent = AbiEvent(
+    name: 'MaxFeeSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'maxFeeValueWei',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `MinFeeSet(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `minFeeSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent minFeeSetEvent = AbiEvent(
+    name: 'MinFeeSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'minFeeValueWei',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RegisterExecutorFeeSet(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `registerExecutorFeeSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent registerExecutorFeeSetEvent = AbiEvent(
+    name: 'RegisterExecutorFeeSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'registerExecutorFeeValueWei',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `SetExecutorsExcessAmountRefunded(address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `setExecutorsExcessAmountRefundedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent setExecutorsExcessAmountRefundedEvent = AbiEvent(
+    name: 'SetExecutorsExcessAmountRefunded',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'owner',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'excessAmount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `SetLibraryAddress(address)`
+  ///
+  /// Decode a matching log with
+  /// `setLibraryAddressEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent setLibraryAddressEvent = AbiEvent(
+    name: 'SetLibraryAddress',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'libraryAddress',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    allowedClaimRecipientsChangedEvent,
+    claimExecutorFeeValueChangedEvent,
+    claimExecutorsChangedEvent,
+    delegationAccountCreatedEvent,
+    delegationAccountUpdatedEvent,
+    executorRegisteredEvent,
+    executorUnregisteredEvent,
+    maxFeeSetEvent,
+    minFeeSetEvent,
+    registerExecutorFeeSetEvent,
+    setExecutorsExcessAmountRefundedEvent,
+    setLibraryAddressEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

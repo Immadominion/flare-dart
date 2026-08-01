@@ -144,4 +144,94 @@ class IVoterWhitelisterContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// `VoterChilled(address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `voterChilledEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent voterChilledEvent = AbiEvent(
+    name: 'VoterChilled',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'untilRewardEpoch',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `VoterRemovedFromWhitelist(address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `voterRemovedFromWhitelistEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent voterRemovedFromWhitelistEvent = AbiEvent(
+    name: 'VoterRemovedFromWhitelist',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'ftsoIndex',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `VoterWhitelisted(address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `voterWhitelistedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent voterWhitelistedEvent = AbiEvent(
+    name: 'VoterWhitelisted',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'ftsoIndex',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    voterChilledEvent,
+    voterRemovedFromWhitelistEvent,
+    voterWhitelistedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

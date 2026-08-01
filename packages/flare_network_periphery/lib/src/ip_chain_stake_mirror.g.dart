@@ -374,4 +374,203 @@ class IPChainStakeMirrorContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// `MaxUpdatesPerBlockSet(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `maxUpdatesPerBlockSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent maxUpdatesPerBlockSetEvent = AbiEvent(
+    name: 'MaxUpdatesPerBlockSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'maxUpdatesPerBlock',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `StakeConfirmed(address,bytes20,bytes32,uint256,bytes32)`
+  ///
+  /// Decode a matching log with
+  /// `stakeConfirmedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent stakeConfirmedEvent = AbiEvent(
+    name: 'StakeConfirmed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'owner',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'nodeId',
+        type: AbiType.parse('bytes20'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'txHash',
+        type: AbiType.parse('bytes32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'amountWei',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'pChainTxId',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `StakeEnded(address,bytes20,bytes32,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `stakeEndedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent stakeEndedEvent = AbiEvent(
+    name: 'StakeEnded',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'owner',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'nodeId',
+        type: AbiType.parse('bytes20'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'txHash',
+        type: AbiType.parse('bytes32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'amountWei',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `StakeRevoked(address,bytes20,bytes32,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `stakeRevokedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent stakeRevokedEvent = AbiEvent(
+    name: 'StakeRevoked',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'owner',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'nodeId',
+        type: AbiType.parse('bytes20'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'txHash',
+        type: AbiType.parse('bytes32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'amountWei',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `VotePowerCacheCreated(bytes20,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `votePowerCacheCreatedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent votePowerCacheCreatedEvent = AbiEvent(
+    name: 'VotePowerCacheCreated',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'nodeId',
+        type: AbiType.parse('bytes20'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'blockNumber',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `VotePowerChanged(address,bytes20,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `votePowerChangedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent votePowerChangedEvent = AbiEvent(
+    name: 'VotePowerChanged',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'owner',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'nodeId',
+        type: AbiType.parse('bytes20'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'priorVotePower',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'newVotePower',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    maxUpdatesPerBlockSetEvent,
+    stakeConfirmedEvent,
+    stakeEndedEvent,
+    stakeRevokedEvent,
+    votePowerCacheCreatedEvent,
+    votePowerChangedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

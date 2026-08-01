@@ -309,4 +309,294 @@ class IFlareSystemsManagerContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// `RandomAcquisitionStarted(uint24,uint64)`
+  ///
+  /// Decode a matching log with
+  /// `randomAcquisitionStartedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent randomAcquisitionStartedEvent = AbiEvent(
+    name: 'RandomAcquisitionStarted',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint24'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'timestamp',
+        type: AbiType.parse('uint64'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RewardEpochStarted(uint24,uint32,uint64)`
+  ///
+  /// Decode a matching log with
+  /// `rewardEpochStartedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent rewardEpochStartedEvent = AbiEvent(
+    name: 'RewardEpochStarted',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint24'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'startVotingRoundId',
+        type: AbiType.parse('uint32'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'timestamp',
+        type: AbiType.parse('uint64'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RewardsSigned(uint24,address,address,bytes32,(uint256,uint256)[],uint64,bool)`
+  ///
+  /// Decode a matching log with
+  /// `rewardsSignedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent rewardsSignedEvent = AbiEvent(
+    name: 'RewardsSigned',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint24'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'signingPolicyAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'rewardsHash',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'noOfWeightBasedClaims',
+        type: AbiType.parse('(uint256,uint256)[]'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'timestamp',
+        type: AbiType.parse('uint64'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'thresholdReached',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `SignUptimeVoteEnabled(uint24,uint64)`
+  ///
+  /// Decode a matching log with
+  /// `signUptimeVoteEnabledEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent signUptimeVoteEnabledEvent = AbiEvent(
+    name: 'SignUptimeVoteEnabled',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint24'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'timestamp',
+        type: AbiType.parse('uint64'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `SigningPolicySigned(uint24,address,address,uint64,bool)`
+  ///
+  /// Decode a matching log with
+  /// `signingPolicySignedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent signingPolicySignedEvent = AbiEvent(
+    name: 'SigningPolicySigned',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint24'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'signingPolicyAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'timestamp',
+        type: AbiType.parse('uint64'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'thresholdReached',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `UptimeVoteSigned(uint24,address,address,bytes32,uint64,bool)`
+  ///
+  /// Decode a matching log with
+  /// `uptimeVoteSignedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent uptimeVoteSignedEvent = AbiEvent(
+    name: 'UptimeVoteSigned',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint24'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'signingPolicyAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'uptimeVoteHash',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'timestamp',
+        type: AbiType.parse('uint64'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'thresholdReached',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `UptimeVoteSubmitted(uint24,address,address,bytes20[],uint64)`
+  ///
+  /// Decode a matching log with
+  /// `uptimeVoteSubmittedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent uptimeVoteSubmittedEvent = AbiEvent(
+    name: 'UptimeVoteSubmitted',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint24'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'signingPolicyAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'nodeIds',
+        type: AbiType.parse('bytes20[]'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'timestamp',
+        type: AbiType.parse('uint64'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `VotePowerBlockSelected(uint24,uint64,uint64)`
+  ///
+  /// Decode a matching log with
+  /// `votePowerBlockSelectedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent votePowerBlockSelectedEvent = AbiEvent(
+    name: 'VotePowerBlockSelected',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint24'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'votePowerBlock',
+        type: AbiType.parse('uint64'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'timestamp',
+        type: AbiType.parse('uint64'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    randomAcquisitionStartedEvent,
+    rewardEpochStartedEvent,
+    rewardsSignedEvent,
+    signUptimeVoteEnabledEvent,
+    signingPolicySignedEvent,
+    uptimeVoteSignedEvent,
+    uptimeVoteSubmittedEvent,
+    votePowerBlockSelectedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

@@ -108,4 +108,130 @@ class IRNatAccountContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// `ClaimExecutorsSet(address[])`
+  ///
+  /// Decode a matching log with
+  /// `claimExecutorsSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent claimExecutorsSetEvent = AbiEvent(
+    name: 'ClaimExecutorsSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'executors',
+        type: AbiType.parse('address[]'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ExternalTokenTransferred(address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `externalTokenTransferredEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent externalTokenTransferredEvent = AbiEvent(
+    name: 'ExternalTokenTransferred',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'token',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `FundsWithdrawn(uint256,bool)`
+  ///
+  /// Decode a matching log with
+  /// `fundsWithdrawnEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent fundsWithdrawnEvent = AbiEvent(
+    name: 'FundsWithdrawn',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'wrap',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `Initialized(address,address)`
+  ///
+  /// Decode a matching log with
+  /// `initializedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent initializedEvent = AbiEvent(
+    name: 'Initialized',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'owner',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'rNat',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `LockedAmountBurned(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `lockedAmountBurnedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent lockedAmountBurnedEvent = AbiEvent(
+    name: 'LockedAmountBurned',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    claimExecutorsSetEvent,
+    externalTokenTransferredEvent,
+    fundsWithdrawnEvent,
+    initializedEvent,
+    lockedAmountBurnedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

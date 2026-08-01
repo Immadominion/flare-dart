@@ -47,6 +47,37 @@ class AbiFn {
           stateMutability == 'payable');
 }
 
+/// An event parsed from an ABI array.
+class AbiEv {
+  final String name;
+  final List<AbiParam> inputs;
+  final List<bool> indexed;
+  final bool anonymous;
+
+  AbiEv({
+    required this.name,
+    required this.inputs,
+    required this.indexed,
+    required this.anonymous,
+  });
+
+  factory AbiEv.fromJson(Map<String, Object?> json) {
+    final raw =
+        ((json['inputs'] as List<Object?>?) ?? const [])
+            .cast<Map<String, Object?>>();
+    return AbiEv(
+      name: (json['name'] as String?) ?? '',
+      inputs: raw.map(AbiParam.fromJson).toList(),
+      indexed: raw.map((e) => e['indexed'] == true).toList(),
+      anonymous: json['anonymous'] == true,
+    );
+  }
+
+  /// The signature the topic hash is derived from. Indexing does not change it.
+  String get canonicalSignature =>
+      '$name(${inputs.map((i) => i.canonicalType).join(',')})';
+}
+
 /// Result of generating one contract binding.
 class GeneratedBinding {
   final String contractName;
@@ -54,6 +85,7 @@ class GeneratedBinding {
   final String source;
   final int methodCount;
   final int skippedCount;
+  final int eventCount;
 
   GeneratedBinding({
     required this.contractName,
@@ -61,6 +93,7 @@ class GeneratedBinding {
     required this.source,
     required this.methodCount,
     required this.skippedCount,
+    this.eventCount = 0,
   });
 }
 
@@ -93,8 +126,17 @@ class BindingGenerator {
           AbiFn.fromJson(entry.cast<String, Object?>()),
     ];
 
+    final events = [
+      for (final entry in abi)
+        if (entry is Map && entry['type'] == 'event')
+          AbiEv.fromJson(entry.cast<String, Object?>()),
+    ];
+
     final readable = all.where((f) => f.isReadable).toList();
-    if (readable.isEmpty) return null;
+    // An events-only interface is still worth emitting: IAssetManagerEvents
+    // declares 55 events and no functions, and those logs are the whole point
+    // of the contract.
+    if (readable.isEmpty && events.isEmpty) return null;
 
     final className = '${toDartClassName(contractName)}Contract';
     final buffer = StringBuffer();
@@ -135,6 +177,16 @@ class BindingGenerator {
       _writeMethod(buffer, readable[i], methodNames[i]);
     }
 
+    if (events.isNotEmpty) {
+      final eventNames = deduplicate([
+        for (final e in events) toDartIdentifier(e.name, fallback: 'event'),
+      ]);
+      for (var i = 0; i < events.length; i++) {
+        _writeEvent(buffer, events[i], eventNames[i]);
+      }
+      _writeEventIndex(buffer, events, eventNames);
+    }
+
     buffer.writeln('}');
 
     return GeneratedBinding(
@@ -143,7 +195,69 @@ class BindingGenerator {
       source: buffer.toString(),
       methodCount: readable.length,
       skippedCount: all.length - readable.length,
+      eventCount: events.length,
     );
+  }
+
+  void _writeEvent(StringBuffer b, AbiEv ev, String fieldName) {
+    b
+      ..writeln('  /// `${ev.canonicalSignature}`')
+      ..writeln('  ///')
+      ..writeln('  /// Decode a matching log with')
+      ..writeln('  /// `${fieldName}Event.decode(topics: …, data: …)`, or use')
+      ..writeln('  /// [decodeLog] to dispatch automatically.')
+      ..writeln('  static final AbiEvent ${fieldName}Event = AbiEvent(')
+      ..writeln("    name: '${ev.name}',")
+      ..writeln('    anonymous: ${ev.anonymous},')
+      ..writeln('    parameters: [');
+    for (var i = 0; i < ev.inputs.length; i++) {
+      final p = ev.inputs[i];
+      b.writeln(
+        "      AbiEventParameter(name: '${p.name}', "
+        "type: AbiType.parse('${p.canonicalType}'), "
+        'indexed: ${ev.indexed[i]}),',
+      );
+    }
+    b
+      ..writeln('    ],')
+      ..writeln('  );')
+      ..writeln();
+  }
+
+  void _writeEventIndex(
+    StringBuffer b,
+    List<AbiEv> events,
+    List<String> fieldNames,
+  ) {
+    b
+      ..writeln('  /// Every event this contract declares.')
+      ..writeln('  static final List<AbiEvent> allEvents = [');
+    for (final n in fieldNames) {
+      b.writeln('    ${n}Event,');
+    }
+    b
+      ..writeln('  ];')
+      ..writeln()
+      ..writeln('  /// Decodes [log] into whichever of [allEvents] it matches.')
+      ..writeln('  ///')
+      ..writeln('  /// Returns null when the log belongs to a different event,')
+      ..writeln('  /// which is normal: one address emits many event types and')
+      ..writeln('  /// an address-only filter returns all of them.')
+      ..writeln('  static DecodedLog? decodeLog(FlareLog log) {')
+      ..writeln('    for (final event in allEvents) {')
+      ..writeln('      if (!event.matches(log.topics)) continue;')
+      ..writeln('      return DecodedLog(')
+      ..writeln('        log: log,')
+      ..writeln('        event: event,')
+      ..writeln('        values: event.decode(')
+      ..writeln('          topics: log.topics,')
+      ..writeln('          data: log.data,')
+      ..writeln('        ),')
+      ..writeln('      );')
+      ..writeln('    }')
+      ..writeln('    return null;')
+      ..writeln('  }')
+      ..writeln();
   }
 
   void _writeHeader(

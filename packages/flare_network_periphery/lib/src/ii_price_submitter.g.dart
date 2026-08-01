@@ -173,4 +173,101 @@ class IIPriceSubmitterContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// `HashSubmitted(address,uint256,bytes32,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `hashSubmittedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent hashSubmittedEvent = AbiEvent(
+    name: 'HashSubmitted',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'submitter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'epochId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'hash',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'timestamp',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `PricesRevealed(address,uint256,address[],uint256[],uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `pricesRevealedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent pricesRevealedEvent = AbiEvent(
+    name: 'PricesRevealed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'epochId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'ftsos',
+        type: AbiType.parse('address[]'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'prices',
+        type: AbiType.parse('uint256[]'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'random',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'timestamp',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    hashSubmittedEvent,
+    pricesRevealedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

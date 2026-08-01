@@ -80,4 +80,51 @@ class IAddressBinderContract {
     );
     return out[0]! as EthAddress;
   }
+
+  /// `AddressesRegistered(bytes,bytes20,address)`
+  ///
+  /// Decode a matching log with
+  /// `addressesRegisteredEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent addressesRegisteredEvent = AbiEvent(
+    name: 'AddressesRegistered',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'publicKey',
+        type: AbiType.parse('bytes'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'pAddress',
+        type: AbiType.parse('bytes20'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'cAddress',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [addressesRegisteredEvent];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

@@ -60,4 +60,61 @@ class IExecutorsFacetContract {
     );
     return (executor: out[0]! as EthAddress, executorFee: out[1]! as BigInt);
   }
+
+  /// `ExecutorFeeSet(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `executorFeeSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent executorFeeSetEvent = AbiEvent(
+    name: 'ExecutorFeeSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'executorFee',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ExecutorSet(address)`
+  ///
+  /// Decode a matching log with
+  /// `executorSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent executorSetEvent = AbiEvent(
+    name: 'ExecutorSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'executor',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    executorFeeSetEvent,
+    executorSetEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

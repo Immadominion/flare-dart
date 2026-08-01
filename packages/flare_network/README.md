@@ -178,6 +178,44 @@ Voting round timing must also be read at runtime. `fdc.timing()` fetches
 and caches them; `votingRoundIdAt(when)` derives the round a past event belongs
 to, which is what a proof lookup needs.
 
+## Event logs
+
+Every contract's events are decoded, including the indexed parameters that live
+in topics rather than in the data section.
+
+```dart
+final transfer = fxrpAbi.event('Transfer');
+
+final logs = await client.getEventLogs(
+  event: transfer,
+  addresses: [fxrpToken],
+  fromBlock: BlockRef.height(head - 300),
+);
+
+for (final t in logs) {
+  print('${t['from']} -> ${t['to']}  ${t['value']}');
+}
+```
+
+Filter on any indexed parameter; `null` leaves a position unconstrained and a
+list means any-of:
+
+```dart
+// Transfers from one sender, to anyone.
+indexedValues: [sender, null]
+```
+
+> **`eth_getLogs` is capped at 30 blocks** on Flare's public RPC — measured, and
+> identical on Coston2 and mainnet. A wider request is rejected outright, so
+> `getLogs` splits the range automatically. For large scans prefer
+> `streamLogs`, which yields each log as its window returns instead of
+> buffering everything.
+
+**Indexed dynamic values are hashes, not values.** The EVM cannot fit a `string`
+or `bytes` into a 32-byte topic, so it stores `keccak256(value)` and the original
+is not in the log at all. Those decode to `IndexedHash` rather than a
+plausible-looking wrong value; use `hash.matches('candidate')` to test one.
+
 ## Calling any contract
 
 ```dart

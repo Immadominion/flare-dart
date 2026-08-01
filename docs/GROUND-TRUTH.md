@@ -197,6 +197,35 @@ values for both parameters, so that specific discrepancy does not exist between
 those two networks. Coston (the Songbird testnet) was not checked. Read the
 values at runtime regardless — the cost is one `eth_call` at init.
 
+## 7a. `eth_getLogs` is capped at 30 blocks
+
+Measured 2026-08-02 by bisecting the span on both networks:
+
+| Network | span 30 | span 31 |
+|---|---|---|
+| Coston2 | OK, 221 logs | `requested too many blocks … maximum is set to 30` |
+| Flare mainnet | OK, 258 logs | same error |
+
+At roughly 1.8 s per block that is about **54 seconds of history per request**,
+so scanning an hour needs ~67 calls. Any log query worth making has to be split,
+which is why `FlareClient.getLogs` chunks automatically and
+`streamLogs` exists for wide scans.
+
+An integration test asserts that an unsplit 90-block request **is** rejected, so
+if Flare ever raises the cap the test fails and `maxLogBlockSpan` gets revisited.
+
+## 7c. Event corpus
+
+Measured across all Coston2 artifacts:
+
+- **592 events**, 1,713 parameters
+- **0 anonymous** — every event carries a signature topic
+- Indexed-count histogram: 238 events index nothing, 160 index one, 139 two,
+  55 three. Three is the EVM's limit, because `topics[0]` takes the fourth slot.
+- **0 dynamic indexed parameters.** No Flare event indexes a `string`, `bytes`,
+  array or struct, so the keccak-instead-of-value case never arises in practice.
+  `IndexedHash` handles it anyway, for third-party contracts.
+
 ## 7b. The periphery barrel costs zero bytes
 
 Two `dart compile exe` binaries — one importing only `flare_network`, one also

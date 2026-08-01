@@ -82,4 +82,43 @@ class IPaymentProofsFacetContract {
     );
     return out[0]! as Uint8List;
   }
+
+  /// `PaymentProofValidityDurationSecondsSet(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `paymentProofValidityDurationSecondsSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent paymentProofValidityDurationSecondsSetEvent = AbiEvent(
+    name: 'PaymentProofValidityDurationSecondsSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'paymentProofValidityDurationSeconds',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    paymentProofValidityDurationSecondsSetEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

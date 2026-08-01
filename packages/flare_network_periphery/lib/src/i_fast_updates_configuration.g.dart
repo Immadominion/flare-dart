@@ -160,4 +160,114 @@ class IFastUpdatesConfigurationContract {
     );
     return (out[0]! as List).cast<BigInt>();
   }
+
+  /// `FeedAdded(bytes21,uint32,uint24,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `feedAddedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent feedAddedEvent = AbiEvent(
+    name: 'FeedAdded',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'feedId',
+        type: AbiType.parse('bytes21'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'rewardBandValue',
+        type: AbiType.parse('uint32'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'inflationShare',
+        type: AbiType.parse('uint24'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'index',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `FeedRemoved(bytes21,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `feedRemovedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent feedRemovedEvent = AbiEvent(
+    name: 'FeedRemoved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'feedId',
+        type: AbiType.parse('bytes21'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'index',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `FeedUpdated(bytes21,uint32,uint24,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `feedUpdatedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent feedUpdatedEvent = AbiEvent(
+    name: 'FeedUpdated',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'feedId',
+        type: AbiType.parse('bytes21'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'rewardBandValue',
+        type: AbiType.parse('uint32'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'inflationShare',
+        type: AbiType.parse('uint24'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'index',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    feedAddedEvent,
+    feedRemovedEvent,
+    feedUpdatedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

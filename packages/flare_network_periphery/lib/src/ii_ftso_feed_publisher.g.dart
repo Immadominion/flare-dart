@@ -134,4 +134,61 @@ class IIFtsoFeedPublisherContract {
     );
     return (out[0]! as List).cast<Object?>();
   }
+
+  /// `FtsoFeedPublished(uint32,bytes21,int32,uint16,int8)`
+  ///
+  /// Decode a matching log with
+  /// `ftsoFeedPublishedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent ftsoFeedPublishedEvent = AbiEvent(
+    name: 'FtsoFeedPublished',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'votingRoundId',
+        type: AbiType.parse('uint32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'id',
+        type: AbiType.parse('bytes21'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'value',
+        type: AbiType.parse('int32'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'turnoutBIPS',
+        type: AbiType.parse('uint16'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'decimals',
+        type: AbiType.parse('int8'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [ftsoFeedPublishedEvent];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

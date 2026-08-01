@@ -193,4 +193,127 @@ class IAgentOwnerRegistryContract {
     );
     return out[0]! as bool;
   }
+
+  /// `AgentDataChanged(address,string,string,string,string)`
+  ///
+  /// Decode a matching log with
+  /// `agentDataChangedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent agentDataChangedEvent = AbiEvent(
+    name: 'AgentDataChanged',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'managementAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'name',
+        type: AbiType.parse('string'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'description',
+        type: AbiType.parse('string'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'iconUrl',
+        type: AbiType.parse('string'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'termsOfUseUrl',
+        type: AbiType.parse('string'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `Whitelisted(address)`
+  ///
+  /// Decode a matching log with
+  /// `whitelistedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent whitelistedEvent = AbiEvent(
+    name: 'Whitelisted',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'value',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `WhitelistingRevoked(address)`
+  ///
+  /// Decode a matching log with
+  /// `whitelistingRevokedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent whitelistingRevokedEvent = AbiEvent(
+    name: 'WhitelistingRevoked',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'value',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `WorkAddressChanged(address,address,address)`
+  ///
+  /// Decode a matching log with
+  /// `workAddressChangedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent workAddressChangedEvent = AbiEvent(
+    name: 'WorkAddressChanged',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'managementAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'prevWorkAddress',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'workAddress',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    agentDataChangedEvent,
+    whitelistedEvent,
+    whitelistingRevokedEvent,
+    workAddressChangedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

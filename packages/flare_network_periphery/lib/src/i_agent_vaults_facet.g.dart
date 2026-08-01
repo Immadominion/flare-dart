@@ -70,4 +70,71 @@ class IAgentVaultsFacetContract {
       agentVaultAddresses: (out[1]! as List).cast<EthAddress>(),
     );
   }
+
+  /// `AgentVaultAdded(uint256,address)`
+  ///
+  /// Decode a matching log with
+  /// `agentVaultAddedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent agentVaultAddedEvent = AbiEvent(
+    name: 'AgentVaultAdded',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'agentVaultId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'agentVaultAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `AgentVaultRemoved(uint256,address)`
+  ///
+  /// Decode a matching log with
+  /// `agentVaultRemovedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent agentVaultRemovedEvent = AbiEvent(
+    name: 'AgentVaultRemoved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'agentVaultId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'agentVaultAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    agentVaultAddedEvent,
+    agentVaultRemovedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

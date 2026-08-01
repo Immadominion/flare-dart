@@ -90,4 +90,213 @@ class IDirectMintingContract {
     );
     return out[0]! as String;
   }
+
+  /// `DirectMintingDelayed(bytes32,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `directMintingDelayedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent directMintingDelayedEvent = AbiEvent(
+    name: 'DirectMintingDelayed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'transactionId',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executionAllowedAt',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `DirectMintingExecuted(bytes32,address,address,uint256,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `directMintingExecutedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent directMintingExecutedEvent = AbiEvent(
+    name: 'DirectMintingExecuted',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'transactionId',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'targetAddress',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executor',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'mintedAmountUBA',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'mintingFeeUBA',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executorFeeUBA',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `DirectMintingExecutedToSmartAccount(bytes32,string,address,uint256,uint256,bytes)`
+  ///
+  /// Decode a matching log with
+  /// `directMintingExecutedToSmartAccountEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent directMintingExecutedToSmartAccountEvent = AbiEvent(
+    name: 'DirectMintingExecutedToSmartAccount',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'transactionId',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'sourceAddress',
+        type: AbiType.parse('string'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executor',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'mintedAmountUBA',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'mintingFeeUBA',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'memoData',
+        type: AbiType.parse('bytes'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `DirectMintingPaymentTooSmallForFee(bytes32,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `directMintingPaymentTooSmallForFeeEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent directMintingPaymentTooSmallForFeeEvent = AbiEvent(
+    name: 'DirectMintingPaymentTooSmallForFee',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'transactionId',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'receivedAmountUBA',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'minimumMintingFeeUBA',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `DirectMintingsUnblocked(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `directMintingsUnblockedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent directMintingsUnblockedEvent = AbiEvent(
+    name: 'DirectMintingsUnblocked',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'startedUntilTimestamp',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `LargeDirectMintingDelayed(bytes32,uint256,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `largeDirectMintingDelayedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent largeDirectMintingDelayedEvent = AbiEvent(
+    name: 'LargeDirectMintingDelayed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'transactionId',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'executionAllowedAt',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    directMintingDelayedEvent,
+    directMintingExecutedEvent,
+    directMintingExecutedToSmartAccountEvent,
+    directMintingPaymentTooSmallForFeeEvent,
+    directMintingsUnblockedEvent,
+    largeDirectMintingDelayedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

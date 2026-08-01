@@ -89,4 +89,107 @@ class IOwnableWithTimelockContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// `CallTimelocked(bytes,bytes32,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `callTimelockedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent callTimelockedEvent = AbiEvent(
+    name: 'CallTimelocked',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'encodedCall',
+        type: AbiType.parse('bytes'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'encodedCallHash',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'allowedAfterTimestamp',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `TimelockDurationSet(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `timelockDurationSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent timelockDurationSetEvent = AbiEvent(
+    name: 'TimelockDurationSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'timelockDurationSeconds',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `TimelockedCallCanceled(bytes32)`
+  ///
+  /// Decode a matching log with
+  /// `timelockedCallCanceledEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent timelockedCallCanceledEvent = AbiEvent(
+    name: 'TimelockedCallCanceled',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'encodedCallHash',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `TimelockedCallExecuted(bytes32)`
+  ///
+  /// Decode a matching log with
+  /// `timelockedCallExecutedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent timelockedCallExecutedEvent = AbiEvent(
+    name: 'TimelockedCallExecuted',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'encodedCallHash',
+        type: AbiType.parse('bytes32'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    callTimelockedEvent,
+    timelockDurationSetEvent,
+    timelockedCallCanceledEvent,
+    timelockedCallExecutedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

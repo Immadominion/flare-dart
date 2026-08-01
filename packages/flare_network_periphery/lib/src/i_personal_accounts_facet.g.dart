@@ -80,4 +80,66 @@ class IPersonalAccountsFacetContract {
     );
     return out[0]! as EthAddress;
   }
+
+  /// `PersonalAccountCreated(address,string)`
+  ///
+  /// Decode a matching log with
+  /// `personalAccountCreatedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent personalAccountCreatedEvent = AbiEvent(
+    name: 'PersonalAccountCreated',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'personalAccount',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'xrplOwner',
+        type: AbiType.parse('string'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `PersonalAccountImplementationSet(address)`
+  ///
+  /// Decode a matching log with
+  /// `personalAccountImplementationSetEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent personalAccountImplementationSetEvent = AbiEvent(
+    name: 'PersonalAccountImplementationSet',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'newImplementation',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    personalAccountCreatedEvent,
+    personalAccountImplementationSetEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

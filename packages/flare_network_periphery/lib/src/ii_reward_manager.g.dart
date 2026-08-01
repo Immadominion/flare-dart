@@ -421,4 +421,104 @@ class IIRewardManagerContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// `RewardClaimed(address,address,address,uint24,uint8,uint120)`
+  ///
+  /// Decode a matching log with
+  /// `rewardClaimedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent rewardClaimedEvent = AbiEvent(
+    name: 'RewardClaimed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'beneficiary',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'rewardOwner',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'recipient',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint24'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'claimType',
+        type: AbiType.parse('uint8'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint120'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RewardClaimsEnabled(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `rewardClaimsEnabledEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent rewardClaimsEnabledEvent = AbiEvent(
+    name: 'RewardClaimsEnabled',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// `RewardClaimsExpired(uint256)`
+  ///
+  /// Decode a matching log with
+  /// `rewardClaimsExpiredEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent rewardClaimsExpiredEvent = AbiEvent(
+    name: 'RewardClaimsExpired',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    rewardClaimedEvent,
+    rewardClaimsEnabledEvent,
+    rewardClaimsExpiredEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

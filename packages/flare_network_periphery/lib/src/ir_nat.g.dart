@@ -531,4 +531,389 @@ class IRNatContract {
     final out = await client.callFunction(contract: address, function: wNatFn);
     return out[0]! as EthAddress;
   }
+
+  /// `Approval(address,address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `approvalEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent approvalEvent = AbiEvent(
+    name: 'Approval',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'owner',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'spender',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'value',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ClaimingPermissionUpdated(uint256[],bool)`
+  ///
+  /// Decode a matching log with
+  /// `claimingPermissionUpdatedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent claimingPermissionUpdatedEvent = AbiEvent(
+    name: 'ClaimingPermissionUpdated',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'projectIds',
+        type: AbiType.parse('uint256[]'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'disabled',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `DistributionPermissionUpdated(uint256[],bool)`
+  ///
+  /// Decode a matching log with
+  /// `distributionPermissionUpdatedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent distributionPermissionUpdatedEvent = AbiEvent(
+    name: 'DistributionPermissionUpdated',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'projectIds',
+        type: AbiType.parse('uint256[]'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'disabled',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ProjectAdded(uint256,string,address,bool)`
+  ///
+  /// Decode a matching log with
+  /// `projectAddedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent projectAddedEvent = AbiEvent(
+    name: 'ProjectAdded',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'id',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'name',
+        type: AbiType.parse('string'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'distributor',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'currentMonthDistributionEnabled',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `ProjectUpdated(uint256,string,address,bool)`
+  ///
+  /// Decode a matching log with
+  /// `projectUpdatedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent projectUpdatedEvent = AbiEvent(
+    name: 'ProjectUpdated',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'id',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'name',
+        type: AbiType.parse('string'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'distributor',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'currentMonthDistributionEnabled',
+        type: AbiType.parse('bool'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RNatAccountCreated(address,address)`
+  ///
+  /// Decode a matching log with
+  /// `rNatAccountCreatedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent rNatAccountCreatedEvent = AbiEvent(
+    name: 'RNatAccountCreated',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'owner',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'rNatAccount',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RewardsAssigned(uint256,uint256,uint128)`
+  ///
+  /// Decode a matching log with
+  /// `rewardsAssignedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent rewardsAssignedEvent = AbiEvent(
+    name: 'RewardsAssigned',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'projectId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'month',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint128'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RewardsClaimed(uint256,uint256,address,uint128)`
+  ///
+  /// Decode a matching log with
+  /// `rewardsClaimedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent rewardsClaimedEvent = AbiEvent(
+    name: 'RewardsClaimed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'projectId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'month',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'owner',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint128'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RewardsDistributed(uint256,uint256,address[],uint128[])`
+  ///
+  /// Decode a matching log with
+  /// `rewardsDistributedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent rewardsDistributedEvent = AbiEvent(
+    name: 'RewardsDistributed',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'projectId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'month',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'recipients',
+        type: AbiType.parse('address[]'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amounts',
+        type: AbiType.parse('uint128[]'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `RewardsUnassigned(uint256,uint256,uint128)`
+  ///
+  /// Decode a matching log with
+  /// `rewardsUnassignedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent rewardsUnassignedEvent = AbiEvent(
+    name: 'RewardsUnassigned',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'projectId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'month',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint128'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `Transfer(address,address,uint256)`
+  ///
+  /// Decode a matching log with
+  /// `transferEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent transferEvent = AbiEvent(
+    name: 'Transfer',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'from',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'to',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'value',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `UnassignedRewardsWithdrawn(address,uint128)`
+  ///
+  /// Decode a matching log with
+  /// `unassignedRewardsWithdrawnEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent unassignedRewardsWithdrawnEvent = AbiEvent(
+    name: 'UnassignedRewardsWithdrawn',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'recipient',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint128'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `UnclaimedRewardsUnassigned(uint256,uint256,uint128)`
+  ///
+  /// Decode a matching log with
+  /// `unclaimedRewardsUnassignedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent unclaimedRewardsUnassignedEvent = AbiEvent(
+    name: 'UnclaimedRewardsUnassigned',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'projectId',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'month',
+        type: AbiType.parse('uint256'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'amount',
+        type: AbiType.parse('uint128'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    approvalEvent,
+    claimingPermissionUpdatedEvent,
+    distributionPermissionUpdatedEvent,
+    projectAddedEvent,
+    projectUpdatedEvent,
+    rNatAccountCreatedEvent,
+    rewardsAssignedEvent,
+    rewardsClaimedEvent,
+    rewardsDistributedEvent,
+    rewardsUnassignedEvent,
+    transferEvent,
+    unassignedRewardsWithdrawnEvent,
+    unclaimedRewardsUnassignedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }

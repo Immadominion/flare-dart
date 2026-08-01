@@ -193,4 +193,124 @@ class IVoterRegistryContract {
     );
     return out[0]! as bool;
   }
+
+  /// `BeneficiaryChilled(bytes20,uint32)`
+  ///
+  /// Decode a matching log with
+  /// `beneficiaryChilledEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent beneficiaryChilledEvent = AbiEvent(
+    name: 'BeneficiaryChilled',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'beneficiary',
+        type: AbiType.parse('bytes20'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'untilRewardEpochId',
+        type: AbiType.parse('uint32'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `VoterRegistered(address,uint32,address,address,address,(bytes32,bytes32),uint256,(uint8,bytes32,bytes32))`
+  ///
+  /// Decode a matching log with
+  /// `voterRegisteredEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent voterRegisteredEvent = AbiEvent(
+    name: 'VoterRegistered',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint32'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'signingPolicyAddress',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'submitAddress',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'submitSignaturesAddress',
+        type: AbiType.parse('address'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'publicKey',
+        type: AbiType.parse('(bytes32,bytes32)'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'registrationWeight',
+        type: AbiType.parse('uint256'),
+        indexed: false,
+      ),
+      AbiEventParameter(
+        name: 'signature',
+        type: AbiType.parse('(uint8,bytes32,bytes32)'),
+        indexed: false,
+      ),
+    ],
+  );
+
+  /// `VoterRemoved(address,uint32)`
+  ///
+  /// Decode a matching log with
+  /// `voterRemovedEvent.decode(topics: …, data: …)`, or use
+  /// [decodeLog] to dispatch automatically.
+  static final AbiEvent voterRemovedEvent = AbiEvent(
+    name: 'VoterRemoved',
+    anonymous: false,
+    parameters: [
+      AbiEventParameter(
+        name: 'voter',
+        type: AbiType.parse('address'),
+        indexed: true,
+      ),
+      AbiEventParameter(
+        name: 'rewardEpochId',
+        type: AbiType.parse('uint32'),
+        indexed: true,
+      ),
+    ],
+  );
+
+  /// Every event this contract declares.
+  static final List<AbiEvent> allEvents = [
+    beneficiaryChilledEvent,
+    voterRegisteredEvent,
+    voterRemovedEvent,
+  ];
+
+  /// Decodes [log] into whichever of [allEvents] it matches.
+  ///
+  /// Returns null when the log belongs to a different event,
+  /// which is normal: one address emits many event types and
+  /// an address-only filter returns all of them.
+  static DecodedLog? decodeLog(FlareLog log) {
+    for (final event in allEvents) {
+      if (!event.matches(log.topics)) continue;
+      return DecodedLog(
+        log: log,
+        event: event,
+        values: event.decode(topics: log.topics, data: log.data),
+      );
+    }
+    return null;
+  }
 }
