@@ -1,0 +1,17 @@
+name: developer_hub_dart
+description: >-
+  Runnable Dart examples for the Flare Developer Hub, mirroring the existing
+  Go, Python and Rust example sets.
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  flare_network:
+    path: ../../packages/flare_network
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.31.2
