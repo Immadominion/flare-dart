@@ -17,3 +17,6 @@ reference/
 
 # Scratch probes written by tooling; never part of the package.
 packages/*/bin/_tmp_*.dart
+
+# Local strategy/research scratch — never publish.
+.superstack/
