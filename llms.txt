@@ -1,0 +1,96 @@
+# flare_network
+
+> A pure-Dart SDK for Flare Network. Read FTSOv2 price feeds, resolve contracts
+> through the Flare Contract Registry, fetch Scaling anchor feeds with Merkle
+> proofs, and call any Flare contract over JSON-RPC. No Flutter dependency, no
+> FFI, no native build step — it runs in Flutter apps on every platform, in
+> server code, and in CLI tools.
+
+Read-only by design. Transaction signing is a documented non-goal, so P-chain
+staking, delegation and C↔P transfers are out of scope. For writes, connect an
+existing wallet over WalletConnect/Reown and let it sign.
+
+## Getting started
+
+```dart
+import 'package:flare_network/flare_network.dart';
+
+final client = FlareClient(FlareChain.coston2);
+final ftso = await FtsoV2.resolve(client);
+final feeds = await ftso.getFeedsById([Feeds.flrUsd, Feeds.btcUsd]);
+for (final f in feeds) print('${f.feedId.name}: ${f.toDecimalString()}');
+client.close();
+```
+
+Networks: `FlareChain.flare` (14), `FlareChain.coston2` (114, develop here),
+`FlareChain.songbird` (19), `FlareChain.coston` (16).
+
+## The two rules that cause most bugs
+
+- **Never hardcode a contract address.** Only the Flare Contract Registry
+  (`0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019`, identical on all networks) is
+  stable. Resolve everything else with `ContractRegistry.addressOf`. Flare's own
+  published Python example hardcodes an FtsoV2 address that is already stale.
+- **Never assume a feed's decimal scale.** `decimals` is a signed `int8` and
+  varies per feed: one live call returned 8 dp for FLR/USD, 2 for BTC/USD, 3 for
+  ETH/USD, 6 for XRP/USD. The DA Layer reports 6 dp for the same FLR/USD feed
+  that FTSOv2 reports at 8 dp — different products, both correct. Always carry
+  `value` and `decimals` together; use `toDecimalString()` for exact output.
+
+## Core API
+
+- `FlareClient(chain, {rpcUrl, retryPolicy, timeout})` — `getChainId`,
+  `verifyChainId`, `getBlockNumber`, `getBalance`, `getCode`, `isContract`,
+  `getGasPrice`, `getMaxPriorityFeePerGas`, `ethCall`, `callFunction`,
+  `callFunctionSingle`, `close`.
+- `ContractRegistry(client)` — `addressOf(name)`, `addressesOf(names)` (batched,
+  one round trip), `listAll()`, `clearCache()`. Names in `FlareContract`.
+- `FtsoV2.resolve(client)` — `getFeedById`, `getFeedsById`, `getFeedIndex`,
+  `getFeedId`, `calculateFeeByIds`, `watchFeeds` (deduplicated live stream).
+  Reads are free: the getters are `payable` in Solidity but resolve via
+  `eth_call` at no cost.
+- `FeedId.crypto(name)` — the 21-byte feed ID: one category byte, UTF-8 name,
+  zero-padded. `Feeds.flrUsd` and friends are shorthands.
+- `DaLayerClient(chain, {apiKey})` — `getStatus()`,
+  `getAnchorFeedsWithProof(feedIds, {votingRoundId})`. Results are re-ordered to
+  match the request, because the API does not preserve request order.
+- `AbiType`, `AbiFunction`, `ContractAbi`, `AbiCodec` — full ABI codec.
+  `AbiType.encode` emits the **tail only**; use `AbiCodec.encodeParameters` at
+  the top level.
+- `EthAddress.parse(hex)` — EIP-55 checksum enforced by default.
+
+## Type mapping
+
+`uintN`/`intN` → `BigInt` (always, including `int8`) · `address` → `EthAddress` ·
+`bool` → `bool` · `bytes`/`bytesN` → `Uint8List` · `string` → `String` ·
+`T[]`/`T[k]` → `List<T>` · tuple → `List<Object?>` positional.
+
+## Errors
+
+Sealed hierarchy under `FlareException`: `FlareTransportException` (has
+`isRetryable`), `FlareRpcException`, `FlareContractException`,
+`FlareAbiException`, `FlareRegistryException`.
+
+## Rate limits
+
+The public DA Layer allows roughly 20 requests per window and sends **no**
+`Retry-After` header — measured: 18 succeeded, the 19th returned 429. Retries
+with full jitter are on by default. For real traffic, request an API key from
+the Flare developer-hub issue tracker and pass it as `apiKey`.
+
+## Companion packages
+
+- `flare_network_periphery` — 142 generated contract bindings, 1,049 read
+  methods, from Flare's published ABI artifacts. Multi-output functions return
+  named records (`result.values`, `result.decimals`, `result.timestamp`).
+- `flare_network_codegen` — the dev-only CLI that generates them.
+
+## Docs
+
+- [README](packages/flare_network/README.md): full usage guide with examples
+- [AGENTS.md](AGENTS.md): conventions and rules for coding agents
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): design decisions and rationale
+- [docs/GROUND-TRUTH.md](docs/GROUND-TRUTH.md): measured facts, each with the
+  command that produced it, plus what remains unverified
+- [examples/developer-hub-dart](examples/developer-hub-dart): 14 runnable
+  examples mirroring Flare's Go, Python and Rust example sets

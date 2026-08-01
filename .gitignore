@@ -1,0 +1,16 @@
+# Dart / Flutter
+.dart_tool/
+.packages
+build/
+pubspec.lock
+!packages/*/pubspec.lock
+doc/api/
+
+# Upstream sources, fetched not authored
+reference/
+
+# Editors / OS
+.idea/
+*.iml
+.vscode/
+.DS_Store
