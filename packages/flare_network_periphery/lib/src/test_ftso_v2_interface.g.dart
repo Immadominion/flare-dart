@@ -28,10 +28,14 @@ class TestFtsoV2InterfaceContract {
   });
 
   /// Resolves `TestFtsoV2Interface` through the [ContractRegistry].
+  ///
+  /// Registered as `FtsoV2`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<TestFtsoV2InterfaceContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'TestFtsoV2Interface',
+    String registryName = 'FtsoV2',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

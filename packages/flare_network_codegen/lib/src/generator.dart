@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'dart_names.dart';
+import 'registry_names.dart';
 import 'type_mapper.dart';
 
 /// A function parsed from an ABI array.
@@ -69,7 +70,17 @@ class BindingGenerator {
   /// generated header so a stale checkout is obvious.
   final String artifactVersion;
 
-  const BindingGenerator({required this.artifactVersion});
+  /// Maps each Solidity interface name to the name it is registered under.
+  ///
+  /// Without this, a generated `resolve()` would default to the interface name
+  /// and throw for every caller: measured against a live `getAllContracts()`,
+  /// **zero** of 142 interface names appear in the registry.
+  final RegistryNames registryNames;
+
+  const BindingGenerator({
+    required this.artifactVersion,
+    this.registryNames = RegistryNames.empty,
+  });
 
   /// Generates a binding for [contractName] from its raw ABI [abi].
   ///
@@ -105,7 +116,12 @@ class BindingGenerator {
       readable.length,
       needsTypedData: needsTypedData,
     );
-    _writeClassOpen(buffer, className, contractName);
+    _writeClassOpen(
+      buffer,
+      className,
+      contractName,
+      registryName: registryNames[contractName],
+    );
 
     // Overloads share a Solidity name; give each a unique Dart name.
     final methodNames = deduplicate(
@@ -167,7 +183,12 @@ class BindingGenerator {
       ..writeln();
   }
 
-  void _writeClassOpen(StringBuffer b, String className, String contractName) {
+  void _writeClassOpen(
+    StringBuffer b,
+    String className,
+    String contractName, {
+    required String? registryName,
+  }) {
     b
       ..writeln(
         '/// Typed read bindings for Flare\'s `$contractName` contract.',
@@ -186,16 +207,56 @@ class BindingGenerator {
         '  const $className({required this.client, '
         'required this.address});',
       )
-      ..writeln()
-      ..writeln(
-        '  /// Resolves `$contractName` through the '
-        '[ContractRegistry].',
-      )
-      ..writeln('  static Future<$className> resolve(')
-      ..writeln('    FlareClient client, {')
-      ..writeln('    ContractRegistry? registry,')
-      ..writeln('    String registryName = \'$contractName\',')
-      ..writeln('  }) async {')
+      ..writeln();
+
+    if (registryName != null) {
+      // The registry name and the interface name are different — `IFtsoV2` is
+      // registered as `FtsoV2` — so this default comes from the artifacts'
+      // own products map, never from the interface name.
+      b
+        ..writeln(
+          '  /// Resolves `$contractName` through the [ContractRegistry].',
+        )
+        ..writeln('  ///')
+        ..writeln(
+          '  /// Registered as `$registryName`, which is what the registry',
+        )
+        ..writeln(
+          '  /// answers to — the Solidity interface name is not a registry',
+        )
+        ..writeln('  /// key.')
+        ..writeln('  static Future<$className> resolve(')
+        ..writeln('    FlareClient client, {')
+        ..writeln('    ContractRegistry? registry,')
+        ..writeln('    String registryName = \'$registryName\',')
+        ..writeln('  }) async {');
+    } else {
+      // Not in the products map, so there is no correct default. Requiring the
+      // name is the honest signature: a guessed default would compile and then
+      // throw at runtime for every caller.
+      b
+        ..writeln(
+          '  /// Resolves `$contractName` through the [ContractRegistry].',
+        )
+        ..writeln('  ///')
+        ..writeln(
+          '  /// This contract has no entry in Flare\'s published products',
+        )
+        ..writeln(
+          '  /// map, so [registryName] is required — there is no name that',
+        )
+        ..writeln(
+          '  /// could be defaulted correctly. Call `ContractRegistry.listAll`',
+        )
+        ..writeln('  /// to see what this network registers.')
+        ..writeln('  static Future<$className> resolve(')
+        ..writeln('    FlareClient client, {')
+        ..writeln('    required String registryName,')
+        ..writeln('    ContractRegistry? registry,')
+        ..writeln('  }) async {');
+    }
+
+    b
       ..writeln(
         '    final resolved = await (registry ?? '
         'ContractRegistry(client))',

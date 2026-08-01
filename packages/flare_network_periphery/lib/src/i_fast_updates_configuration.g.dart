@@ -28,10 +28,14 @@ class IFastUpdatesConfigurationContract {
   });
 
   /// Resolves `IFastUpdatesConfiguration` through the [ContractRegistry].
+  ///
+  /// Registered as `FastUpdatesConfiguration`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IFastUpdatesConfigurationContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IFastUpdatesConfiguration',
+    String registryName = 'FastUpdatesConfiguration',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

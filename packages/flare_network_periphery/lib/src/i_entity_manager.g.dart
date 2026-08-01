@@ -25,10 +25,14 @@ class IEntityManagerContract {
   const IEntityManagerContract({required this.client, required this.address});
 
   /// Resolves `IEntityManager` through the [ContractRegistry].
+  ///
+  /// Registered as `EntityManager`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IEntityManagerContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IEntityManager',
+    String registryName = 'EntityManager',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

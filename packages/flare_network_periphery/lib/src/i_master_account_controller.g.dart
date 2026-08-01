@@ -28,10 +28,14 @@ class IMasterAccountControllerContract {
   });
 
   /// Resolves `IMasterAccountController` through the [ContractRegistry].
+  ///
+  /// Registered as `MasterAccountController`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IMasterAccountControllerContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IMasterAccountController',
+    String registryName = 'MasterAccountController',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

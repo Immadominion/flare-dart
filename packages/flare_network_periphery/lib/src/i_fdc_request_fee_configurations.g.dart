@@ -28,10 +28,14 @@ class IFdcRequestFeeConfigurationsContract {
   });
 
   /// Resolves `IFdcRequestFeeConfigurations` through the [ContractRegistry].
+  ///
+  /// Registered as `FdcRequestFeeConfigurations`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IFdcRequestFeeConfigurationsContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IFdcRequestFeeConfigurations',
+    String registryName = 'FdcRequestFeeConfigurations',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

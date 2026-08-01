@@ -26,10 +26,14 @@ class IFlareSystemsCalculatorContract {
   });
 
   /// Resolves `IFlareSystemsCalculator` through the [ContractRegistry].
+  ///
+  /// Registered as `FlareSystemsCalculator`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IFlareSystemsCalculatorContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IFlareSystemsCalculator',
+    String registryName = 'FlareSystemsCalculator',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

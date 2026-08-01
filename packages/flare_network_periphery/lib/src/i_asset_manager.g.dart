@@ -25,10 +25,14 @@ class IAssetManagerContract {
   const IAssetManagerContract({required this.client, required this.address});
 
   /// Resolves `IAssetManager` through the [ContractRegistry].
+  ///
+  /// Registered as `AssetManagerFXRP`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IAssetManagerContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IAssetManager',
+    String registryName = 'AssetManagerFXRP',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

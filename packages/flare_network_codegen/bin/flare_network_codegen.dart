@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:flare_network_codegen/src/generator.dart';
+import 'package:flare_network_codegen/src/registry_names.dart';
 import 'package:path/path.dart' as p;
 
 /// Generates typed Dart bindings from Flare's published periphery ABI
@@ -89,7 +90,14 @@ Future<int> main(List<String> args) async {
   final only = (opts['only'] as List<String>).toSet();
   final dryRun = opts['dry-run'] as bool;
 
-  final generator = BindingGenerator(artifactVersion: version);
+  // Interface names are NOT registry names, so the mapping is read from the
+  // artifacts' own products map. Without it every generated resolve() would
+  // default to the interface name and throw.
+  final registryNames = RegistryNames.load(artifactsRoot);
+  final generator = BindingGenerator(
+    artifactVersion: version,
+    registryNames: registryNames,
+  );
   final bindings = <GeneratedBinding>[];
   final skipped = <String, String>{};
 

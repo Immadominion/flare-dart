@@ -26,10 +26,14 @@ class IFtsoRewardManagerContract {
   });
 
   /// Resolves `IFtsoRewardManager` through the [ContractRegistry].
+  ///
+  /// Registered as `FtsoRewardManager`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IFtsoRewardManagerContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IFtsoRewardManager',
+    String registryName = 'FtsoRewardManager',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

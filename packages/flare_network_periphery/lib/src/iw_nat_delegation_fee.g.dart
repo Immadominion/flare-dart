@@ -26,10 +26,14 @@ class IWNatDelegationFeeContract {
   });
 
   /// Resolves `IWNatDelegationFee` through the [ContractRegistry].
+  ///
+  /// Registered as `WNatDelegationFee`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IWNatDelegationFeeContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IWNatDelegationFee',
+    String registryName = 'WNatDelegationFee',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

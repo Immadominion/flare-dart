@@ -26,10 +26,14 @@ class IFtsoInflationConfigurationsContract {
   });
 
   /// Resolves `IFtsoInflationConfigurations` through the [ContractRegistry].
+  ///
+  /// Registered as `FtsoInflationConfigurations`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IFtsoInflationConfigurationsContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IFtsoInflationConfigurations',
+    String registryName = 'FtsoInflationConfigurations',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

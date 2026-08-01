@@ -23,10 +23,15 @@ class IIFtsoContract {
   const IIFtsoContract({required this.client, required this.address});
 
   /// Resolves `IIFtso` through the [ContractRegistry].
+  ///
+  /// This contract has no entry in Flare's published products
+  /// map, so [registryName] is required — there is no name that
+  /// could be defaulted correctly. Call `ContractRegistry.listAll`
+  /// to see what this network registers.
   static Future<IIFtsoContract> resolve(
     FlareClient client, {
+    required String registryName,
     ContractRegistry? registry,
-    String registryName = 'IIFtso',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

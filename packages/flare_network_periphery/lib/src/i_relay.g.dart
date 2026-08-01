@@ -25,10 +25,14 @@ class IRelayContract {
   const IRelayContract({required this.client, required this.address});
 
   /// Resolves `IRelay` through the [ContractRegistry].
+  ///
+  /// Registered as `Relay`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IRelayContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IRelay',
+    String registryName = 'Relay',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

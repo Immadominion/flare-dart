@@ -23,10 +23,14 @@ class IFdcVerificationContract {
   const IFdcVerificationContract({required this.client, required this.address});
 
   /// Resolves `IFdcVerification` through the [ContractRegistry].
+  ///
+  /// Registered as `FdcVerification`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IFdcVerificationContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IFdcVerification',
+    String registryName = 'FdcVerification',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

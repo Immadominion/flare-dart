@@ -26,10 +26,14 @@ class IClaimSetupManagerContract {
   });
 
   /// Resolves `IClaimSetupManager` through the [ContractRegistry].
+  ///
+  /// Registered as `ClaimSetupManager`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IClaimSetupManagerContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IClaimSetupManager',
+    String registryName = 'ClaimSetupManager',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

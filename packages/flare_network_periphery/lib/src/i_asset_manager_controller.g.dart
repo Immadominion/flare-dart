@@ -26,10 +26,14 @@ class IAssetManagerControllerContract {
   });
 
   /// Resolves `IAssetManagerController` through the [ContractRegistry].
+  ///
+  /// Registered as `AssetManagerController`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IAssetManagerControllerContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IAssetManagerController',
+    String registryName = 'AssetManagerController',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

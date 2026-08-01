@@ -4,7 +4,7 @@ name: flare_network
 description: >-
   Dart client for Flare Network. Read FTSOv2 price feeds, resolve contracts via
   the Contract Registry, and call any Flare contract over JSON-RPC. Pure Dart.
-version: 0.1.0-dev.1
+version: 0.1.0-dev.2
 repository: https://github.com/Immadominion/flare-dart
 issue_tracker: https://github.com/Immadominion/flare-dart/issues
 topics:

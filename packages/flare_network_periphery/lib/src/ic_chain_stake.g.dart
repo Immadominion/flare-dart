@@ -23,10 +23,15 @@ class ICChainStakeContract {
   const ICChainStakeContract({required this.client, required this.address});
 
   /// Resolves `ICChainStake` through the [ContractRegistry].
+  ///
+  /// This contract has no entry in Flare's published products
+  /// map, so [registryName] is required — there is no name that
+  /// could be defaulted correctly. Call `ContractRegistry.listAll`
+  /// to see what this network registers.
   static Future<ICChainStakeContract> resolve(
     FlareClient client, {
+    required String registryName,
     ContractRegistry? registry,
-    String registryName = 'ICChainStake',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

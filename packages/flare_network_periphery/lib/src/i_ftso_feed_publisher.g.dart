@@ -28,10 +28,14 @@ class IFtsoFeedPublisherContract {
   });
 
   /// Resolves `IFtsoFeedPublisher` through the [ContractRegistry].
+  ///
+  /// Registered as `FtsoFeedPublisher`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IFtsoFeedPublisherContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IFtsoFeedPublisher',
+    String registryName = 'FtsoFeedPublisher',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

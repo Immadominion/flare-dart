@@ -23,10 +23,14 @@ class IFtsoRegistryContract {
   const IFtsoRegistryContract({required this.client, required this.address});
 
   /// Resolves `IFtsoRegistry` through the [ContractRegistry].
+  ///
+  /// Registered as `FtsoRegistry`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IFtsoRegistryContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IFtsoRegistry',
+    String registryName = 'FtsoRegistry',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

@@ -217,10 +217,38 @@ final class AbiIntType extends AbiType {
     _requireWord(data, offset, name);
     final word = Uint8List.sublistView(data, offset, offset + 32);
     var v = BigInt.parse(bytesToHex(word, include0x: false), radix: 16);
+
+    // Reject anything that does not fit the declared width, rather than
+    // truncating it. Masking would turn a malformed `int8` word of 0x…00ff
+    // into -1 and a malformed `uint8` of 0x…0100 into 0 — plausible values
+    // that are silently wrong. On the FTSO path a dirty `decimals` word read
+    // as -1 instead of 8 moves the reported price by nine orders of magnitude.
+    // Solidity itself reverts on both, so this matches the chain's own rule.
+    if (bits < 256) {
+      final high = v >> bits;
+      if (signed) {
+        final negative = ((v >> (bits - 1)) & BigInt.one) == BigInt.one;
+        // Sign extension: the bits above the width must be all ones for a
+        // negative value and all zeroes for a positive one.
+        final expected =
+            negative ? (BigInt.one << (256 - bits)) - BigInt.one : BigInt.zero;
+        if (high != expected) {
+          throw FlareAbiException(
+            'Word is not a valid $name: bits above the declared width are not '
+            'a correct sign extension',
+            solidityType: name,
+          );
+        }
+      } else if (high != BigInt.zero) {
+        throw FlareAbiException(
+          'Word is not a valid $name: it carries bits above the declared width',
+          solidityType: name,
+        );
+      }
+    }
+
     if (signed) {
       final signBit = BigInt.one << (bits - 1);
-      // The word is sign-extended to 256 bits, so mask to the declared width
-      // before interpreting the sign.
       v = v & (_modulus - BigInt.one);
       if ((v & signBit) != BigInt.zero) v -= _modulus;
     }
@@ -369,21 +397,14 @@ final class AbiBytesType extends AbiType {
 
   @override
   Object? decode(Uint8List data, int offset, int base) {
-    _requireWord(data, offset, name);
-    final pointer =
-        base +
-        (const AbiIntType(256, signed: false).decode(data, offset, base)
-                as BigInt)
-            .toInt();
-    _requireWord(data, pointer, name);
-    final length =
-        (const AbiIntType(256, signed: false).decode(data, pointer, base)
-                as BigInt)
-            .toInt();
+    final pointer = base + _readBounded(data, offset, name, 'offset');
+    final length = _readBounded(data, pointer, name, 'length');
     final start = pointer + 32;
-    if (start + length > data.length) {
+    // Subtraction, not addition: `start + length` can overflow on hostile input.
+    if (start > data.length || length > data.length - start) {
       throw FlareAbiException(
-        'Declared length $length runs past the end of the data',
+        'Declared length $length runs past the end of the ${data.length} bytes '
+        'received',
         solidityType: name,
       );
     }
@@ -453,19 +474,14 @@ final class AbiArrayType extends AbiType {
 
   @override
   Object? decode(Uint8List data, int offset, int base) {
-    _requireWord(data, offset, name);
-    final pointer =
-        base +
-        (const AbiIntType(256, signed: false).decode(data, offset, base)
-                as BigInt)
-            .toInt();
-    _requireWord(data, pointer, name);
-    final length =
-        (const AbiIntType(256, signed: false).decode(data, pointer, base)
-                as BigInt)
-            .toInt();
+    final pointer = base + _readBounded(data, offset, name, 'offset');
+    final length = _readBounded(data, pointer, name, 'element count');
     // Offsets inside the array body are relative to the body, not the message.
     final body = pointer + 32;
+    // Bound the count against the bytes that actually remain before it reaches
+    // List.filled — otherwise a 64-byte response declaring a billion elements
+    // allocates gigabytes.
+    _requireElementCount(data, body, length, name);
     return _decodeSequence(data, List.filled(length, element), body);
   }
 }
@@ -507,11 +523,7 @@ final class AbiFixedArrayType extends AbiType {
   @override
   Object? decode(Uint8List data, int offset, int base) {
     if (isDynamic) {
-      final pointer =
-          base +
-          (const AbiIntType(256, signed: false).decode(data, offset, base)
-                  as BigInt)
-              .toInt();
+      final pointer = base + _readBounded(data, offset, name, 'offset');
       return _decodeSequence(data, List.filled(length, element), pointer);
     }
     return _decodeSequence(data, List.filled(length, element), offset);
@@ -554,11 +566,7 @@ final class AbiTupleType extends AbiType {
   @override
   Object? decode(Uint8List data, int offset, int base) {
     if (isDynamic) {
-      final pointer =
-          base +
-          (const AbiIntType(256, signed: false).decode(data, offset, base)
-                  as BigInt)
-              .toInt();
+      final pointer = base + _readBounded(data, offset, name, 'offset');
       return _decodeSequence(data, components, pointer);
     }
     return _decodeSequence(data, components, offset);
@@ -585,8 +593,24 @@ abstract final class AbiCodec {
   }
 
   /// Decodes [data] into one value per entry in [types].
-  static List<Object?> decodeParameters(List<AbiType> types, Uint8List data) =>
-      _decodeSequence(data, types, 0);
+  ///
+  /// Any lower-level failure is rewritten as a [FlareAbiException]. The
+  /// documented contract is that a `switch` over [FlareException] is
+  /// exhaustive, and a raw `RangeError` or `FormatException` escaping from a
+  /// malformed response would quietly break that promise for every caller.
+  static List<Object?> decodeParameters(List<AbiType> types, Uint8List data) {
+    try {
+      return _decodeSequence(data, types, 0);
+    } on FlareException {
+      rethrow;
+    } on Object catch (e) {
+      throw FlareAbiException(
+        'Could not decode ${data.length} bytes as '
+        '(${types.map((t) => t.name).join(',')}): $e. The response does not '
+        'match the ABI.',
+      );
+    }
+  }
 
   /// Convenience wrapper taking Solidity type names, e.g. `['uint256','int8[]']`.
   static Uint8List encodeTypes(List<String> types, List<Object?> values) =>
@@ -599,8 +623,14 @@ abstract final class AbiCodec {
 
 // ---------------------------------------------------------------- shared
 
+/// Every value the decoder reads comes from the network, so each one is
+/// treated as hostile until bounded against the payload actually received.
 void _requireWord(Uint8List data, int offset, String type) {
-  if (offset < 0 || offset + 32 > data.length) {
+  // Compared by subtraction, never by addition. `offset + 32` overflows to a
+  // negative int64 when a crafted word decodes near 2^63, which would make
+  // both halves of an `offset < 0 || offset + 32 > length` test false and let
+  // the read through to a RangeError one layer down.
+  if (offset < 0 || offset > data.length - 32) {
     throw FlareAbiException(
       'Truncated data: needed a 32-byte word at offset $offset but only '
       '${data.length} bytes are available. The ABI probably does not match '
@@ -608,6 +638,53 @@ void _requireWord(Uint8List data, int offset, String type) {
       solidityType: type,
     );
   }
+}
+
+/// Reads a `uint256` at [offset] and returns it as an offset or length that is
+/// guaranteed to sit inside [data].
+///
+/// `BigInt.toInt()` saturates rather than throwing, so a word holding 2^256-1
+/// silently becomes `9223372036854775807`. Bounding the [BigInt] *before*
+/// narrowing is the only way to reject that.
+int _readBounded(Uint8List data, int offset, String type, String what) {
+  _requireWord(data, offset, type);
+  final raw =
+      const AbiIntType(256, signed: false).decode(data, offset, 0)! as BigInt;
+
+  if (raw > BigInt.from(data.length)) {
+    throw FlareAbiException(
+      'Declared $what of $raw exceeds the ${data.length} bytes received. '
+      'The response does not match the ABI, or is hostile.',
+      solidityType: type,
+    );
+  }
+  return raw.toInt();
+}
+
+/// Bounds an element count against the bytes that remain.
+///
+/// Every element of a sequence occupies at least one 32-byte word in the head,
+/// so a declared count larger than `remaining / 32` cannot be satisfied. Without
+/// this check the count is passed straight to `List.filled`, and a 64-byte
+/// response declaring a billion elements allocates gigabytes before failing —
+/// a denial of service reachable through any public read.
+int _requireElementCount(Uint8List data, int body, int count, String type) {
+  if (count < 0) {
+    throw FlareAbiException(
+      'Negative element count $count',
+      solidityType: type,
+    );
+  }
+  final capacity = (data.length - body) ~/ 32;
+  if (count > capacity) {
+    throw FlareAbiException(
+      'Declared $count element(s) but only $capacity can fit in the '
+      '${data.length - body} bytes remaining. The response does not match the '
+      'ABI, or is hostile.',
+      solidityType: type,
+    );
+  }
+  return count;
 }
 
 /// Encodes [values] against [types] using the head/tail layout.

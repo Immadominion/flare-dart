@@ -28,10 +28,14 @@ class IFtsoFeedDecimalsContract {
   });
 
   /// Resolves `IFtsoFeedDecimals` through the [ContractRegistry].
+  ///
+  /// Registered as `FtsoFeedDecimals`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IFtsoFeedDecimalsContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IFtsoFeedDecimals',
+    String registryName = 'FtsoFeedDecimals',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

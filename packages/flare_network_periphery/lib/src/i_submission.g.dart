@@ -23,10 +23,14 @@ class ISubmissionContract {
   const ISubmissionContract({required this.client, required this.address});
 
   /// Resolves `ISubmission` through the [ContractRegistry].
+  ///
+  /// Registered as `Submission`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<ISubmissionContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'ISubmission',
+    String registryName = 'Submission',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

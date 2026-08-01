@@ -25,10 +25,14 @@ class IVoterRegistryContract {
   const IVoterRegistryContract({required this.client, required this.address});
 
   /// Resolves `IVoterRegistry` through the [ContractRegistry].
+  ///
+  /// Registered as `VoterRegistry`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IVoterRegistryContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IVoterRegistry',
+    String registryName = 'VoterRegistry',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

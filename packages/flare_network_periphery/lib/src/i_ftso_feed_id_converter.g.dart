@@ -28,10 +28,14 @@ class IFtsoFeedIdConverterContract {
   });
 
   /// Resolves `IFtsoFeedIdConverter` through the [ContractRegistry].
+  ///
+  /// Registered as `FtsoFeedIdConverter`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IFtsoFeedIdConverterContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IFtsoFeedIdConverter',
+    String registryName = 'FtsoFeedIdConverter',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

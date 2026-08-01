@@ -32,7 +32,9 @@ BTC/USD: 62887.17
 
 ```yaml
 dependencies:
-  flare_network: ^0.1.0
+  # Pre-release, so the constraint must admit it: `^0.1.0` alone does not
+  # match `0.1.0-dev.N`.
+  flare_network: ^0.1.0-dev.2
 ```
 
 ## Networks

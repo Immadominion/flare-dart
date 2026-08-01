@@ -23,10 +23,14 @@ class IFdcHubContract {
   const IFdcHubContract({required this.client, required this.address});
 
   /// Resolves `IFdcHub` through the [ContractRegistry].
+  ///
+  /// Registered as `FdcHub`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IFdcHubContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IFdcHub',
+    String registryName = 'FdcHub',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

@@ -25,10 +25,15 @@ class ITimelockFacetContract {
   const ITimelockFacetContract({required this.client, required this.address});
 
   /// Resolves `ITimelockFacet` through the [ContractRegistry].
+  ///
+  /// This contract has no entry in Flare's published products
+  /// map, so [registryName] is required — there is no name that
+  /// could be defaulted correctly. Call `ContractRegistry.listAll`
+  /// to see what this network registers.
   static Future<ITimelockFacetContract> resolve(
     FlareClient client, {
+    required String registryName,
     ContractRegistry? registry,
-    String registryName = 'ITimelockFacet',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

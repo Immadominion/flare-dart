@@ -26,10 +26,14 @@ class IGovernanceSettingsContract {
   });
 
   /// Resolves `IGovernanceSettings` through the [ContractRegistry].
+  ///
+  /// Registered as `GovernanceSettings`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<IGovernanceSettingsContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'IGovernanceSettings',
+    String registryName = 'GovernanceSettings',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

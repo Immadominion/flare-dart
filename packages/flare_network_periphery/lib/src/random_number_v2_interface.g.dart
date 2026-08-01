@@ -26,10 +26,14 @@ class RandomNumberV2InterfaceContract {
   });
 
   /// Resolves `RandomNumberV2Interface` through the [ContractRegistry].
+  ///
+  /// Registered as `RandomNumberV2`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<RandomNumberV2InterfaceContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'RandomNumberV2Interface',
+    String registryName = 'RandomNumberV2',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,

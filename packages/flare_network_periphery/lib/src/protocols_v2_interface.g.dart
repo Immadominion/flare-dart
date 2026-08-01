@@ -26,10 +26,14 @@ class ProtocolsV2InterfaceContract {
   });
 
   /// Resolves `ProtocolsV2Interface` through the [ContractRegistry].
+  ///
+  /// Registered as `ProtocolsV2`, which is what the registry
+  /// answers to — the Solidity interface name is not a registry
+  /// key.
   static Future<ProtocolsV2InterfaceContract> resolve(
     FlareClient client, {
     ContractRegistry? registry,
-    String registryName = 'ProtocolsV2Interface',
+    String registryName = 'ProtocolsV2',
   }) async {
     final resolved = await (registry ?? ContractRegistry(client)).addressOf(
       registryName,
