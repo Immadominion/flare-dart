@@ -1,0 +1,25 @@
+name: flare_network
+description: >-
+  Dart client for Flare Network. Resolve contracts through the Flare Contract
+  Registry, read FTSOv2 price feeds, and call any Flare contract over JSON-RPC.
+  Pure Dart, with no Flutter dependency.
+version: 0.1.0-dev.1
+repository: https://github.com/Immadominion/flare-dart
+issue_tracker: https://github.com/Immadominion/flare-dart/issues
+topics:
+  - flare
+  - blockchain
+  - ethereum
+  - oracle
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  http: ^1.6.0
+  meta: ^1.19.0
+  pointycastle: ^4.0.0
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.31.2
