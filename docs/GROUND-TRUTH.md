@@ -197,13 +197,86 @@ values for both parameters, so that specific discrepancy does not exist between
 those two networks. Coston (the Songbird testnet) was not checked. Read the
 values at runtime regardless — the cost is one `eth_call` at init.
 
-## 8. Carried forward from prior research — NOT re-verified here
+## 7b. The periphery barrel costs zero bytes
 
-Treat as `[Unverified]` until independently checked:
+Two `dart compile exe` binaries — one importing only `flare_network`, one also
+importing the full 142-binding barrel — came out **byte-identical**
+(`5,765,392` bytes each). Dart's tree shaker drops the 141 unused classes and
+their lazy `static final AbiFunction` fields entirely.
 
-- `web3dart` signing defects (`chainId` defaulting to 1, hardcoded 1 gwei tip, no EIP-712)
-- The 25–40× signer performance ratio between pointycastle and `secp256k1_ecdsa`
-- FDC attestation fees (20 FLR mainnet / 1,000 wei Coston2) and the 20-request DA Layer rate limit
-- `web3dart_builders` failing to resolve on Dart 3.12.2
+So do not split the barrel to save size; there is nothing to save. `[Measured
+on the Dart VM AOT path, not Flutter's build pipeline.]`
 
-Each is load-bearing for a design decision and should be re-measured before being cited externally.
+## 8. Previously-unverified claims — now measured
+
+All four were re-measured on Dart 3.12.2 / macos_arm64 on 2026-08-02. **Two were
+wrong.** They are recorded here rather than quietly deleted, because a document
+whose whole premise is "measured, not assumed" has to show its own corrections.
+
+### Confirmed — `web3dart` signing defects
+
+Stronger than originally stated. `grep -rn "chainId = 1"` in
+`~/.pub-cache/hosted/pub.dev/web3dart-3.0.3/lib/` returns four hits —
+`transaction_signer.dart:108`, `client.dart:321`, `client.dart:360`,
+`transaction.dart:109` — four places where a Flare caller who omits the
+parameter signs a payload replayable on Ethereum mainnet; the value reaches
+EIP-155 `v` at `credentials.dart:131`. The priority fee is literally
+`EtherAmount.inWei(BigInt.from(1000000000))` at `transaction_signer.dart:238`,
+and `eth_maxPriorityFeePerGas` has no match anywhere in `lib/`. Interestingly
+`getFeeHistory` **is** implemented (`client.dart:284`) but is never called from
+the signing path — a wiring omission, not a missing capability. EIP-712 is
+absent; EIP-191 `personal_sign` exists at `credentials.dart:46`.
+
+### Corrected — the signer performance ratio
+
+The previously-quoted "25–40×" was wrong in both directions. Measured with 200
+warm-up iterations discarded, 1,000 timed, 3 repeats:
+
+| Comparison | Ratio |
+|---|---|
+| pointycastle 4.0.0 vs `secp256k1_ecdsa` 0.6.3, raw primitive | **9.3–9.7× (AOT), 10.9–11.3× (JIT)** |
+| `web3dart`'s full `sign()` vs `secp256k1_ecdsa` | **72× (AOT), 93× (JIT)** |
+
+The end-to-end gap is dominated by `EC.secp256k1.calculateRecoveryId`
+(`secp256k1.dart:53`), which alone costs 75% of the total and recomputes
+`privateKeyBytesToPublic` on every call. AOT does **not** help — it makes
+`secp256k1_ecdsa` ~27% slower and leaves pointycastle flat.
+
+This is **contingency data, not a live constraint**: `pointycastle` is used in
+exactly one place in this repo, `abi/keccak.dart`, and never for signing.
+
+### Retracted — the `blockchain_utils` browser-`self` claim
+
+**This claim was false and has been withdrawn.** A program exercising
+`QuickCrypto.generateRandom`, BIP39 mnemonic and seed generation, and
+`Bip32Slip10Secp256k1.fromSeed()` ran clean under both `dart run` and
+`dart compile exe`. Grepping `dart:js`, `dart:html` and `package:web/` across
+versions 5.1.0, 5.2.0, 5.4.0 and 7.1.0 returns **zero files** in every one; the
+package has zero runtime dependencies at all four. All 27 occurrences of `self`
+are Rust-port doc comments or the BIP39 wordlist entry.
+
+Carrying an unattributed defect claim against a zero-dependency library was a
+mistake, and it undermines every other measured claim in this file.
+(Behaviour under `dart2js` was not tested and is not claimed either way.)
+
+### Corrected — `web3dart_builders` on Dart 3.12.2
+
+False as literally stated: `dart pub add --dev web3dart_builders` **succeeds**.
+But it silently selects `web3dart_builders` 0.1.2 over 3.0.1, `web3dart` 2.7.3
+over 3.0.3, and `analyzer` 6.4.1 over 14.1.0, reporting "12 packages have newer
+versions incompatible with dependency constraints."
+
+Pin `web3dart: ^3.0.3` and it hard-fails:
+
+> because macros >=0.1.3-main.0 depends on `_macros` from sdk which doesn't
+> exist … version solving failed
+
+That is the stronger argument, and the right one: `_macros` was removed from the
+SDK, so the chain is **permanently** unresolvable against a modern analyzer.
+This is why `flare_network_codegen` is a standalone CLI rather than a
+`build_runner` builder.
+
+### Still standing
+
+FDC fees (20 FLR mainnet / 1,000 wei Coston2) and the DA Layer rate limit were
+measured directly in §7 and by integration test, and remain confirmed.
