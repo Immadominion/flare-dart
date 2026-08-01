@@ -160,8 +160,9 @@ class FtsoV2 {
     FlareClient client, {
     ContractRegistry? registry,
   }) async {
-    final resolved = await (registry ?? ContractRegistry(client))
-        .addressOf(FlareContract.ftsoV2);
+    final resolved = await (registry ?? ContractRegistry(client)).addressOf(
+      FlareContract.ftsoV2,
+    );
     return FtsoV2(client: client, address: resolved);
   }
 
@@ -223,10 +224,11 @@ class FtsoV2 {
   /// The on-chain index of [feedId], used by the block-latency read path.
   Future<BigInt> getFeedIndex(FeedId feedId) async =>
       (await client.callFunctionSingle(
-        contract: address,
-        function: getFeedIndexFn,
-        args: [feedId.bytes],
-      ))! as BigInt;
+            contract: address,
+            function: getFeedIndexFn,
+            args: [feedId.bytes],
+          ))!
+          as BigInt;
 
   /// The feed ID registered at [index].
   Future<FeedId> getFeedId(BigInt index) async {
@@ -245,10 +247,11 @@ class FtsoV2 {
   /// it is the supported way to discover that a feed is not free.
   Future<BigInt> calculateFeeByIds(List<FeedId> feedIds) async =>
       (await client.callFunctionSingle(
-        contract: address,
-        function: calculateFeeByIdsFn,
-        args: [feedIds.map((f) => f.bytes).toList()],
-      ))! as BigInt;
+            contract: address,
+            function: calculateFeeByIdsFn,
+            args: [feedIds.map((f) => f.bytes).toList()],
+          ))!
+          as BigInt;
 
   /// Polls [feedIds] every [interval] and emits each reading.
   ///

@@ -81,7 +81,9 @@ sealed class AbiType {
 
     if (t.startsWith('(') && t.endsWith(')')) {
       return AbiTupleType(
-        _splitTopLevel(t.substring(1, t.length - 1)).map(AbiType.parse).toList(),
+        _splitTopLevel(
+          t.substring(1, t.length - 1),
+        ).map(AbiType.parse).toList(),
       );
     }
 
@@ -183,7 +185,8 @@ final class AbiIntType extends AbiType {
     final v = switch (value) {
       BigInt b => b,
       int i => BigInt.from(i),
-      _ => throw FlareAbiException(
+      _ =>
+        throw FlareAbiException(
           'Expected BigInt or int, got ${value.runtimeType}',
           solidityType: name,
         ),
@@ -237,13 +240,14 @@ final class AbiAddressType extends AbiType {
 
   @override
   Uint8List encode(Object? value) => switch (value) {
-        EthAddress a => a.toAbiWord(),
-        String s => EthAddress.parse(s).toAbiWord(),
-        _ => throw FlareAbiException(
-            'Expected EthAddress or String, got ${value.runtimeType}',
-            solidityType: name,
-          ),
-      };
+    EthAddress a => a.toAbiWord(),
+    String s => EthAddress.parse(s).toAbiWord(),
+    _ =>
+      throw FlareAbiException(
+        'Expected EthAddress or String, got ${value.runtimeType}',
+        solidityType: name,
+      ),
+  };
 
   @override
   Object? decode(Uint8List data, int offset, int base) {
@@ -305,7 +309,8 @@ final class AbiFixedBytesType extends AbiType {
       Uint8List b => b,
       List<int> l => Uint8List.fromList(l),
       String s => hexToBytes(s),
-      _ => throw FlareAbiException(
+      _ =>
+        throw FlareAbiException(
           'Expected Uint8List or hex String, got ${value.runtimeType}',
           solidityType: name,
         ),
@@ -344,21 +349,29 @@ final class AbiBytesType extends AbiType {
       Uint8List b => b,
       List<int> l => Uint8List.fromList(l),
       String s => hexToBytes(s),
-      _ => throw FlareAbiException(
+      _ =>
+        throw FlareAbiException(
           'Expected Uint8List or hex String, got ${value.runtimeType}',
           solidityType: name,
         ),
     };
-    final out = BytesBuilder()
-      ..add(const AbiIntType(256, signed: false).encode(BigInt.from(bytes.length)))
-      ..add(padRight32(bytes));
+    final out =
+        BytesBuilder()
+          ..add(
+            const AbiIntType(
+              256,
+              signed: false,
+            ).encode(BigInt.from(bytes.length)),
+          )
+          ..add(padRight32(bytes));
     return out.toBytes();
   }
 
   @override
   Object? decode(Uint8List data, int offset, int base) {
     _requireWord(data, offset, name);
-    final pointer = base +
+    final pointer =
+        base +
         (const AbiIntType(256, signed: false).decode(data, offset, base)
                 as BigInt)
             .toInt();
@@ -426,16 +439,23 @@ final class AbiArrayType extends AbiType {
         solidityType: name,
       );
     }
-    final out = BytesBuilder()
-      ..add(const AbiIntType(256, signed: false).encode(BigInt.from(value.length)))
-      ..add(_encodeSequence(List.filled(value.length, element), value));
+    final out =
+        BytesBuilder()
+          ..add(
+            const AbiIntType(
+              256,
+              signed: false,
+            ).encode(BigInt.from(value.length)),
+          )
+          ..add(_encodeSequence(List.filled(value.length, element), value));
     return out.toBytes();
   }
 
   @override
   Object? decode(Uint8List data, int offset, int base) {
     _requireWord(data, offset, name);
-    final pointer = base +
+    final pointer =
+        base +
         (const AbiIntType(256, signed: false).decode(data, offset, base)
                 as BigInt)
             .toInt();
@@ -487,7 +507,8 @@ final class AbiFixedArrayType extends AbiType {
   @override
   Object? decode(Uint8List data, int offset, int base) {
     if (isDynamic) {
-      final pointer = base +
+      final pointer =
+          base +
           (const AbiIntType(256, signed: false).decode(data, offset, base)
                   as BigInt)
               .toInt();
@@ -533,7 +554,8 @@ final class AbiTupleType extends AbiType {
   @override
   Object? decode(Uint8List data, int offset, int base) {
     if (isDynamic) {
-      final pointer = base +
+      final pointer =
+          base +
           (const AbiIntType(256, signed: false).decode(data, offset, base)
                   as BigInt)
               .toInt();
@@ -553,10 +575,7 @@ final class AbiTupleType extends AbiType {
 /// `abi.encode(string)` begins with an offset word of `0x20`.
 abstract final class AbiCodec {
   /// Encodes [values] positionally against [types].
-  static Uint8List encodeParameters(
-    List<AbiType> types,
-    List<Object?> values,
-  ) {
+  static Uint8List encodeParameters(List<AbiType> types, List<Object?> values) {
     if (types.length != values.length) {
       throw FlareAbiException(
         'Expected ${types.length} value(s), got ${values.length}',
@@ -601,15 +620,20 @@ Uint8List _encodeSequence(List<AbiType> types, List<Object?> values) {
     final type = types[i];
     if (type.isDynamic) {
       head.add(
-        const AbiIntType(256, signed: false)
-            .encode(BigInt.from(headSize + tail.length)),
+        const AbiIntType(
+          256,
+          signed: false,
+        ).encode(BigInt.from(headSize + tail.length)),
       );
       tail.add(type.encode(values[i]));
     } else {
       head.add(type.encode(values[i]));
     }
   }
-  return (BytesBuilder()..add(head.toBytes())..add(tail.toBytes())).toBytes();
+  return (BytesBuilder()
+        ..add(head.toBytes())
+        ..add(tail.toBytes()))
+      .toBytes();
 }
 
 /// Decodes [types] from [data] starting at [base].

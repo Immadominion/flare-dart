@@ -46,17 +46,16 @@ void main() {
   DaLayerClient clientFor(
     Future<http.Response> Function(http.Request) handler, {
     String? apiKey,
-  }) =>
-      DaLayerClient(
-        FlareChain.coston2,
-        apiKey: apiKey,
-        retryPolicy: const RetryPolicy(
-          maxRetries: 2,
-          initialDelay: Duration.zero,
-          maxDelay: Duration.zero,
-        ),
-        httpClient: MockClient(handler),
-      );
+  }) => DaLayerClient(
+    FlareChain.coston2,
+    apiKey: apiKey,
+    retryPolicy: const RetryPolicy(
+      maxRetries: 2,
+      initialDelay: Duration.zero,
+      maxDelay: Duration.zero,
+    ),
+    httpClient: MockClient(handler),
+  );
 
   group('anchor feeds', () {
     test('returns results in the requested order, not the API order', () async {
@@ -116,7 +115,9 @@ void main() {
       });
 
       await da.getAnchorFeedsWithProof([Feeds.flrUsd]);
-      expect(sent['feed_ids'], ['0x01464c522f55534400000000000000000000000000']);
+      expect(sent['feed_ids'], [
+        '0x01464c522f55534400000000000000000000000000',
+      ]);
     });
 
     test('passes a voting round as a query parameter when given', () async {
@@ -144,7 +145,8 @@ void main() {
 
   group('status', () {
     test('parses the round numbers and active round start', () async {
-      const body = '{"active":{"voting_round_id":1412347,'
+      const body =
+          '{"active":{"voting_round_id":1412347,'
           '"start_timestamp":1785541230},'
           '"latest_fdc":{"voting_round_id":1412345},'
           '"latest_ftso":{"voting_round_id":1412345}}';
@@ -189,13 +191,10 @@ void main() {
 
     test('sends X-API-KEY when configured', () async {
       late Map<String, String> headers;
-      final da = clientFor(
-        (req) async {
-          headers = req.headers;
-          return http.Response(liveBody, 200);
-        },
-        apiKey: 'secret-key',
-      );
+      final da = clientFor((req) async {
+        headers = req.headers;
+        return http.Response(liveBody, 200);
+      }, apiKey: 'secret-key');
 
       await da.getAnchorFeedsWithProof([Feeds.flrUsd]);
       expect(headers['X-API-KEY'], 'secret-key');
@@ -209,8 +208,10 @@ void main() {
       });
 
       await da.getAnchorFeedsWithProof([Feeds.flrUsd]);
-      expect(headers.keys.map((k) => k.toLowerCase()),
-          isNot(contains('x-api-key')));
+      expect(
+        headers.keys.map((k) => k.toLowerCase()),
+        isNot(contains('x-api-key')),
+      );
     });
   });
 
@@ -218,14 +219,22 @@ void main() {
     test('selects the documented base URL per network', () {
       String baseFor(FlareChain c) => DaLayerClient(c).baseUrl;
 
-      expect(baseFor(FlareChain.flare),
-          'https://flr-data-availability.flare.network');
-      expect(baseFor(FlareChain.coston2),
-          'https://ctn2-data-availability.flare.network');
-      expect(baseFor(FlareChain.songbird),
-          'https://sgb-data-availability.flare.network');
-      expect(baseFor(FlareChain.coston),
-          'https://ctn-data-availability.flare.network');
+      expect(
+        baseFor(FlareChain.flare),
+        'https://flr-data-availability.flare.network',
+      );
+      expect(
+        baseFor(FlareChain.coston2),
+        'https://ctn2-data-availability.flare.network',
+      );
+      expect(
+        baseFor(FlareChain.songbird),
+        'https://sgb-data-availability.flare.network',
+      );
+      expect(
+        baseFor(FlareChain.coston),
+        'https://ctn-data-availability.flare.network',
+      );
     });
 
     test('rejects a network with no known endpoint unless overridden', () {

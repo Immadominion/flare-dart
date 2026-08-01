@@ -47,7 +47,10 @@ final class RetryPolicy {
   /// Computes the delay before retry [attempt] (1-based), with full jitter.
   Duration delayFor(int attempt, math.Random random) {
     final exponential = initialDelay.inMilliseconds * math.pow(2, attempt - 1);
-    final capped = math.min(exponential.toDouble(), maxDelay.inMilliseconds.toDouble());
+    final capped = math.min(
+      exponential.toDouble(),
+      maxDelay.inMilliseconds.toDouble(),
+    );
     return Duration(milliseconds: random.nextInt(capped.toInt() + 1));
   }
 }
@@ -82,9 +85,9 @@ class JsonRpcClient {
     this.timeout = const Duration(seconds: 30),
     http.Client? httpClient,
     math.Random? random,
-  })  : _http = httpClient ?? http.Client(),
-        _ownsHttpClient = httpClient == null,
-        _random = random ?? math.Random();
+  }) : _http = httpClient ?? http.Client(),
+       _ownsHttpClient = httpClient == null,
+       _random = random ?? math.Random();
 
   /// Sends one JSON-RPC call and returns its `result`.
   ///

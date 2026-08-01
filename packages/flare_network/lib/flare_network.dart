@@ -57,6 +57,9 @@ export 'src/abi/hex.dart' show bytesToHex, hexToBigInt, hexToBytes;
 export 'src/dalayer/da_layer_client.dart'
     show AnchorFeed, DaLayerClient, FspStatus;
 
+// FAssets (FXRP, FBTC, FDOGE)
+export 'src/fassets/fassets_client.dart' show FAssetInfo, FAssetsClient;
+
 // FDC (Flare Data Connector)
 export 'src/fdc/attestation.dart'
     show

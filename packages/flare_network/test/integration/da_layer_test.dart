@@ -32,35 +32,41 @@ void main() {
     expect(age.inMinutes.abs(), lessThan(30));
   });
 
-  test('returns anchor feeds with Merkle proofs, in the requested order',
-      () async {
-    // Deliberately requested BTC-last: the API returned BTC *first* when this
-    // was written, so a client trusting positional order would mislabel every
-    // price. This asserts the reordering works.
-    final requested = [Feeds.flrUsd, Feeds.xrpUsd, Feeds.btcUsd];
-    final feeds = await da.getAnchorFeedsWithProof(requested);
+  test(
+    'returns anchor feeds with Merkle proofs, in the requested order',
+    () async {
+      // Deliberately requested BTC-last: the API returned BTC *first* when this
+      // was written, so a client trusting positional order would mislabel every
+      // price. This asserts the reordering works.
+      final requested = [Feeds.flrUsd, Feeds.xrpUsd, Feeds.btcUsd];
+      final feeds = await da.getAnchorFeedsWithProof(requested);
 
-    expect(feeds, hasLength(3));
-    expect(
-      feeds.map((f) => f.feedId.name).toList(),
-      ['FLR/USD', 'XRP/USD', 'BTC/USD'],
-      reason: 'results must follow the requested order, not the API order',
-    );
+      expect(feeds, hasLength(3));
+      expect(
+        feeds.map((f) => f.feedId.name).toList(),
+        ['FLR/USD', 'XRP/USD', 'BTC/USD'],
+        reason: 'results must follow the requested order, not the API order',
+      );
 
-    for (final feed in feeds) {
-      expect(feed.proof, isNotEmpty, reason: '${feed.feedId.name} has no proof');
-      // Every proof element is a 32-byte hash.
-      for (final node in feed.proof) {
-        expect(node, hasLength(32));
+      for (final feed in feeds) {
+        expect(
+          feed.proof,
+          isNotEmpty,
+          reason: '${feed.feedId.name} has no proof',
+        );
+        // Every proof element is a 32-byte hash.
+        for (final node in feed.proof) {
+          expect(node, hasLength(32));
+        }
+        expect(feed.votingRoundId, greaterThan(0));
+        expect(feed.turnoutBips, greaterThan(0));
+        expect(feed.turnoutBips, lessThanOrEqualTo(10000));
       }
-      expect(feed.votingRoundId, greaterThan(0));
-      expect(feed.turnoutBips, greaterThan(0));
-      expect(feed.turnoutBips, lessThanOrEqualTo(10000));
-    }
 
-    // All feeds in one response share a voting round.
-    expect(feeds.map((f) => f.votingRoundId).toSet(), hasLength(1));
-  });
+      // All feeds in one response share a voting round.
+      expect(feeds.map((f) => f.votingRoundId).toSet(), hasLength(1));
+    },
+  );
 
   test('anchor decimals are independent of block-latency decimals', () async {
     // The same feed is published by two different products at two different
@@ -82,7 +88,8 @@ void main() {
     expect(
       (a - b).abs() / a,
       lessThan(0.2),
-      reason: 'anchor $b and block-latency $a disagree beyond 20%, which '
+      reason:
+          'anchor $b and block-latency $a disagree beyond 20%, which '
           'suggests a decimals bug rather than normal drift',
     );
   });

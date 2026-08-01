@@ -121,9 +121,7 @@ void main() {
 
   group('requestAttestation calldata', () {
     test('encodes with the payable requestAttestation selector', () {
-      final data = FdcClient.encodeRequestAttestation(
-        hexToBytes('0xdeadbeef'),
-      );
+      final data = FdcClient.encodeRequestAttestation(hexToBytes('0xdeadbeef'));
       // Selector, then an offset word, a length word, and the padded payload.
       expect(data.length, greaterThanOrEqualTo(4 + 32 * 3));
       expect(bytesToHex(data.sublist(0, 4)).length, 10);

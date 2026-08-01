@@ -100,20 +100,21 @@ final class FlareChain {
   /// are Songbird and Coston across their 105. Flare's 7 extra contracts are
   /// all P-chain surface, which this SDK does not cover. So bindings only need
   /// to be generated twice, not four times.
-  AbiProfile get abiProfile => (chainId == 14 || chainId == 114)
-      ? AbiProfile.flare
-      : AbiProfile.songbird;
+  AbiProfile get abiProfile =>
+      (chainId == 14 || chainId == 114)
+          ? AbiProfile.flare
+          : AbiProfile.songbird;
 
   /// Returns a copy pointing at [rpcUrl], for a private or paid endpoint.
   FlareChain withRpcUrl(String rpcUrl) => FlareChain(
-        name: name,
-        chainId: chainId,
-        rpcUrl: rpcUrl,
-        explorerUrl: explorerUrl,
-        nativeSymbol: nativeSymbol,
-        isTestnet: isTestnet,
-        faucetUrl: faucetUrl,
-      );
+    name: name,
+    chainId: chainId,
+    rpcUrl: rpcUrl,
+    explorerUrl: explorerUrl,
+    nativeSymbol: nativeSymbol,
+    isTestnet: isTestnet,
+    faucetUrl: faucetUrl,
+  );
 
   @override
   String toString() => '$name (chainId $chainId)';

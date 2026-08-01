@@ -1,8 +1,9 @@
 name: flare_network
+# pub.dev truncates descriptions in search results and penalises anything over
+# 180 characters, so keep this between 60 and 180.
 description: >-
-  Dart client for Flare Network. Resolve contracts through the Flare Contract
-  Registry, read FTSOv2 price feeds, and call any Flare contract over JSON-RPC.
-  Pure Dart, with no Flutter dependency.
+  Dart client for Flare Network. Read FTSOv2 price feeds, resolve contracts via
+  the Contract Registry, and call any Flare contract over JSON-RPC. Pure Dart.
 version: 0.1.0-dev.1
 repository: https://github.com/Immadominion/flare-dart
 issue_tracker: https://github.com/Immadominion/flare-dart/issues

@@ -35,11 +35,15 @@ void main() {
   group('functionSelector', () {
     // Both selectors were produced independently by `cast sig` (Foundry) on
     // 2026-07-31 and are pinned here as an external cross-check.
-    test('getFeedsById(bytes21[]) == 0x4c375745 (cross-checked with cast sig)',
-        () {
-      expect(bytesToHex(functionSelector('getFeedsById(bytes21[])')),
-          '0x4c375745');
-    });
+    test(
+      'getFeedsById(bytes21[]) == 0x4c375745 (cross-checked with cast sig)',
+      () {
+        expect(
+          bytesToHex(functionSelector('getFeedsById(bytes21[])')),
+          '0x4c375745',
+        );
+      },
+    );
 
     test('getContractAddressByName(string) == 0x82760fca', () {
       expect(

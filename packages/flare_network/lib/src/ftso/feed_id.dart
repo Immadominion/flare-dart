@@ -102,9 +102,10 @@ final class FeedId {
         solidityType: 'bytes21',
       );
     }
-    final out = Uint8List(length)
-      ..[0] = byte
-      ..setRange(1, 1 + nameBytes.length, nameBytes);
+    final out =
+        Uint8List(length)
+          ..[0] = byte
+          ..setRange(1, 1 + nameBytes.length, nameBytes);
     return FeedId._(out);
   }
 

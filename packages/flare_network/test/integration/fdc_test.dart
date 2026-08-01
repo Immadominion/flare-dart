@@ -30,7 +30,7 @@ void main() {
       (AttestationType.payment, AttestationSource.xrp.forChain(client.chain)),
       (
         AttestationType.evmTransaction,
-        AttestationSource.eth.forChain(client.chain)
+        AttestationSource.eth.forChain(client.chain),
       ),
       (AttestationType.web2Json, AttestationSource.publicWeb2),
     ];
@@ -41,37 +41,47 @@ void main() {
     }
   });
 
-  test('explains an unsupported type/source pair rather than reverting raw',
-      () async {
-    // Bare mainnet source names are not accepted on a testnet. Without a clear
-    // message this surfaces as "execution reverted", which says nothing about
-    // the actual naming rule.
-    await expectLater(
-      fdc.getRequestFee(AttestationType.payment, AttestationSource.xrp.mainnet),
-      throwsA(
-        isA<FlareContractException>()
-            .having((e) => e.message, 'message', contains('test-prefixed')),
-      ),
-    );
-  });
+  test(
+    'explains an unsupported type/source pair rather than reverting raw',
+    () async {
+      // Bare mainnet source names are not accepted on a testnet. Without a clear
+      // message this surfaces as "execution reverted", which says nothing about
+      // the actual naming rule.
+      await expectLater(
+        fdc.getRequestFee(
+          AttestationType.payment,
+          AttestationSource.xrp.mainnet,
+        ),
+        throwsA(
+          isA<FlareContractException>().having(
+            (e) => e.message,
+            'message',
+            contains('test-prefixed'),
+          ),
+        ),
+      );
+    },
+  );
 
-  test('isSupported distinguishes testnet from mainnet source naming',
-      () async {
-    expect(
-      await fdc.isSupported(
-        AttestationType.payment,
-        AttestationSource.xrp.forChain(client.chain),
-      ),
-      isTrue,
-    );
-    expect(
-      await fdc.isSupported(
-        AttestationType.payment,
-        AttestationSource.xrp.mainnet,
-      ),
-      isFalse,
-    );
-  });
+  test(
+    'isSupported distinguishes testnet from mainnet source naming',
+    () async {
+      expect(
+        await fdc.isSupported(
+          AttestationType.payment,
+          AttestationSource.xrp.forChain(client.chain),
+        ),
+        isTrue,
+      );
+      expect(
+        await fdc.isSupported(
+          AttestationType.payment,
+          AttestationSource.xrp.mainnet,
+        ),
+        isFalse,
+      );
+    },
+  );
 
   test('reads voting epoch timing from ProtocolsV2', () async {
     final timing = await fdc.timing();
@@ -111,7 +121,6 @@ void main() {
     final onchain = await fdc.currentVotingRoundId();
 
     // Two independent sources for the same protocol clock.
-    expect((status.activeVotingRoundId - onchain).abs(),
-        lessThanOrEqualTo(2));
+    expect((status.activeVotingRoundId - onchain).abs(), lessThanOrEqualTo(2));
   });
 }

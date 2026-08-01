@@ -36,7 +36,8 @@ Uint8List hexToBytes(String hex) {
 
 /// Parses a JSON-RPC quantity (`0x1a`) into a [BigInt].
 BigInt hexToBigInt(String hex) {
-  final s = hex.startsWith('0x') || hex.startsWith('0X') ? hex.substring(2) : hex;
+  final s =
+      hex.startsWith('0x') || hex.startsWith('0X') ? hex.substring(2) : hex;
   if (s.isEmpty) return BigInt.zero;
   return BigInt.parse(s, radix: 16);
 }

@@ -24,7 +24,11 @@ final class FlareTransportException extends FlareException {
   /// The endpoint that failed.
   final String? endpoint;
 
-  const FlareTransportException(super.message, {this.statusCode, this.endpoint});
+  const FlareTransportException(
+    super.message, {
+    this.statusCode,
+    this.endpoint,
+  });
 
   /// Whether retrying is likely to help: connection failures, 408, 429, and 5xx.
   bool get isRetryable {
@@ -52,7 +56,12 @@ final class FlareRpcException extends FlareException {
   /// The method that failed.
   final String? method;
 
-  const FlareRpcException(super.message, {required this.code, this.data, this.method});
+  const FlareRpcException(
+    super.message, {
+    required this.code,
+    this.data,
+    this.method,
+  });
 
   @override
   String toString() =>

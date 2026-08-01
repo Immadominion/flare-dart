@@ -106,8 +106,7 @@ class FdcClient {
 
     return FdcClient(
       client: client,
-      feeConfigurations:
-          resolved[FlareContract.fdcRequestFeeConfigurations]!,
+      feeConfigurations: resolved[FlareContract.fdcRequestFeeConfigurations]!,
       protocolsV2: resolved[FlareContract.protocolsV2]!,
       verification: resolved[FlareContract.fdcVerification]!,
     );
@@ -129,10 +128,11 @@ class FdcClient {
   ) async {
     try {
       return (await client.callFunctionSingle(
-        contract: feeConfigurations,
-        function: getRequestFeeFn,
-        args: [encodeTypeAndSource(type, source)],
-      ))! as BigInt;
+            contract: feeConfigurations,
+            function: getRequestFeeFn,
+            args: [encodeTypeAndSource(type, source)],
+          ))!
+          as BigInt;
     } on FlareRpcException catch (e) {
       if (e.message.contains('not supported')) {
         throw FlareContractException(
@@ -188,9 +188,10 @@ class FdcClient {
   /// The voting round currently being voted on, straight from the contract.
   Future<int> currentVotingRoundId() async =>
       ((await client.callFunctionSingle(
-        contract: protocolsV2,
-        function: getCurrentVotingEpochIdFn,
-      ))! as BigInt)
+                contract: protocolsV2,
+                function: getCurrentVotingEpochIdFn,
+              ))!
+              as BigInt)
           .toInt();
 
   /// The voting round that covers [when], derived from [timing].
@@ -203,9 +204,10 @@ class FdcClient {
   /// The FDC's protocol ID within the Flare Systems Protocol.
   Future<int> protocolId() async =>
       ((await client.callFunctionSingle(
-        contract: verification,
-        function: fdcProtocolIdFn,
-      ))! as BigInt)
+                contract: verification,
+                function: fdcProtocolIdFn,
+              ))!
+              as BigInt)
           .toInt();
 
   /// Verifies an attestation proof on chain.
@@ -230,27 +232,28 @@ class FdcClient {
     );
 
     return (await client.callFunctionSingle(
-      contract: verification,
-      function: fn,
-      args: [proof],
-    ))! as bool;
+          contract: verification,
+          function: fn,
+          args: [proof],
+        ))!
+        as bool;
   }
 
   /// The `FdcVerification` method name for [type].
   static String _verifyMethodFor(AttestationType type) => switch (type) {
-        AttestationType.payment => 'verifyPayment',
-        AttestationType.evmTransaction => 'verifyEVMTransaction',
-        AttestationType.addressValidity => 'verifyAddressValidity',
-        AttestationType.confirmedBlockHeightExists =>
-          'verifyConfirmedBlockHeightExists',
-        AttestationType.referencedPaymentNonexistence =>
-          'verifyReferencedPaymentNonexistence',
-        AttestationType.balanceDecreasingTransaction =>
-          'verifyBalanceDecreasingTransaction',
-        AttestationType.web2Json => 'verifyWeb2Json',
-        AttestationType.xrpPayment => 'verifyXRPPayment',
-        AttestationType.xrpPaymentNonexistence => 'verifyXRPPaymentNonexistence',
-      };
+    AttestationType.payment => 'verifyPayment',
+    AttestationType.evmTransaction => 'verifyEVMTransaction',
+    AttestationType.addressValidity => 'verifyAddressValidity',
+    AttestationType.confirmedBlockHeightExists =>
+      'verifyConfirmedBlockHeightExists',
+    AttestationType.referencedPaymentNonexistence =>
+      'verifyReferencedPaymentNonexistence',
+    AttestationType.balanceDecreasingTransaction =>
+      'verifyBalanceDecreasingTransaction',
+    AttestationType.web2Json => 'verifyWeb2Json',
+    AttestationType.xrpPayment => 'verifyXRPPayment',
+    AttestationType.xrpPaymentNonexistence => 'verifyXRPPaymentNonexistence',
+  };
 
   /// The calldata a `requestAttestation` transaction would carry.
   ///

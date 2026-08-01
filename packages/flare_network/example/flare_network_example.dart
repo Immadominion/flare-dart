@@ -14,7 +14,9 @@ Future<void> main() async {
     // doing once at startup — otherwise a wrong RPC URL surfaces much later as
     // confusing "contract not found" errors.
     await client.verifyChainId();
-    print('Connected to ${client.chain} @ block ${await client.getBlockNumber()}');
+    print(
+      'Connected to ${client.chain} @ block ${await client.getBlockNumber()}',
+    );
 
     // Resolve FTSOv2 through the registry rather than hardcoding it. Flare
     // redeploys contracts; the registry is the only stable address.
@@ -32,8 +34,10 @@ Future<void> main() async {
     final readings = await ftso.getFeedsById(feeds);
     for (final r in readings) {
       // Always print value with its own decimals: the scale differs per feed.
-      print('${r.feedId.name.padRight(9)} ${r.toDecimalString().padLeft(16)}'
-          '   (${r.decimals} dp)');
+      print(
+        '${r.feedId.name.padRight(9)} ${r.toDecimalString().padLeft(16)}'
+        '   (${r.decimals} dp)',
+      );
     }
     print('\nPublished at ${readings.first.publishedAt.toIso8601String()}');
 
@@ -42,8 +46,10 @@ Future<void> main() async {
     print('\nWatching FLR/USD for 3 updates...');
     var seen = 0;
     await for (final tick in ftso.watchFeeds([Feeds.flrUsd])) {
-      print('  ${tick.first.publishedAt.toIso8601String()}  '
-          '${tick.first.toDecimalString()}');
+      print(
+        '  ${tick.first.publishedAt.toIso8601String()}  '
+        '${tick.first.toDecimalString()}',
+      );
       if (++seen == 3) break;
     }
   } finally {

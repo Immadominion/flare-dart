@@ -115,9 +115,8 @@ final class _SourceFamily {
 
   /// The identifier for [chain]: `test`-prefixed on Coston2 and Coston, bare
   /// on Flare and Songbird.
-  AttestationSource forChain(FlareChain chain) => AttestationSource(
-        chain.isTestnet ? 'test$base' : base,
-      );
+  AttestationSource forChain(FlareChain chain) =>
+      AttestationSource(chain.isTestnet ? 'test$base' : base);
 
   /// The mainnet identifier, e.g. `XRP`.
   AttestationSource get mainnet => AttestationSource(base);
@@ -133,10 +132,7 @@ final class _SourceFamily {
 ///
 /// The pair is the concatenation of the two right-padded 32-byte values, which
 /// is what `getRequestFee(bytes)` expects.
-Uint8List encodeTypeAndSource(
-  AttestationType type,
-  AttestationSource source,
-) =>
+Uint8List encodeTypeAndSource(AttestationType type, AttestationSource source) =>
     Uint8List.fromList([...type.encoded, ...source.encoded]);
 
 Uint8List _padded32(String value) {
@@ -209,14 +205,14 @@ final class VotingEpochTiming {
 
   /// When [votingRoundId] began.
   DateTime startOf(int votingRoundId) => DateTime.fromMillisecondsSinceEpoch(
-        (firstVotingRoundStartTs +
-                votingRoundId * votingEpochDurationSeconds) *
-            1000,
-        isUtc: true,
-      );
+    (firstVotingRoundStartTs + votingRoundId * votingEpochDurationSeconds) *
+        1000,
+    isUtc: true,
+  );
 
   @override
-  String toString() => 'VotingEpochTiming(start $firstVotingRoundStartTs, '
+  String toString() =>
+      'VotingEpochTiming(start $firstVotingRoundStartTs, '
       '${votingEpochDurationSeconds}s)';
 }
 

@@ -28,13 +28,12 @@ void main() {
   JsonRpcClient clientFor(
     Future<http.Response> Function(http.Request) handler, {
     RetryPolicy policy = instantRetry,
-  }) =>
-      JsonRpcClient(
-        'https://node.example/rpc',
-        retryPolicy: policy,
-        httpClient: MockClient(handler),
-        random: maxJitter,
-      );
+  }) => JsonRpcClient(
+    'https://node.example/rpc',
+    retryPolicy: policy,
+    httpClient: MockClient(handler),
+    random: maxJitter,
+  );
 
   String rpcOk(Object? result, {int id = 1}) =>
       jsonEncode({'jsonrpc': '2.0', 'id': id, 'result': result});
@@ -110,8 +109,9 @@ void main() {
 
       await expectLater(
         client.call('eth_call'),
-        throwsA(isA<FlareRpcException>()
-            .having((e) => e.data, 'data', '0xdeadbeef')),
+        throwsA(
+          isA<FlareRpcException>().having((e) => e.data, 'data', '0xdeadbeef'),
+        ),
       );
     });
 
@@ -167,8 +167,13 @@ void main() {
 
       await expectLater(
         client.call('eth_chainId'),
-        throwsA(isA<FlareTransportException>()
-            .having((e) => e.statusCode, 'statusCode', 503)),
+        throwsA(
+          isA<FlareTransportException>().having(
+            (e) => e.statusCode,
+            'statusCode',
+            503,
+          ),
+        ),
       );
       // One initial attempt plus three retries.
       expect(attempts, 4);
@@ -190,13 +195,10 @@ void main() {
 
     test('RetryPolicy.none makes a single attempt', () async {
       var attempts = 0;
-      final client = clientFor(
-        (_) async {
-          attempts++;
-          return http.Response('down', 503);
-        },
-        policy: RetryPolicy.none,
-      );
+      final client = clientFor((_) async {
+        attempts++;
+        return http.Response('down', 503);
+      }, policy: RetryPolicy.none);
 
       await expectLater(
         client.call('eth_chainId'),
@@ -311,8 +313,13 @@ void main() {
 
       await expectLater(
         client.batch(const [RpcRequest('a')]),
-        throwsA(isA<FlareTransportException>()
-            .having((e) => e.message, 'message', contains('batching'))),
+        throwsA(
+          isA<FlareTransportException>().having(
+            (e) => e.message,
+            'message',
+            contains('batching'),
+          ),
+        ),
       );
     });
   });

@@ -28,9 +28,10 @@ final class EthAddress {
   /// mixed-case and fails EIP-55. Pass `validateChecksum: false` only for input
   /// from a trusted machine source that you know is unchecksummed.
   factory EthAddress.parse(String value, {bool validateChecksum = true}) {
-    final body = value.startsWith('0x') || value.startsWith('0X')
-        ? value.substring(2)
-        : value;
+    final body =
+        value.startsWith('0x') || value.startsWith('0X')
+            ? value.substring(2)
+            : value;
     if (body.length != 40) {
       throw FormatException(
         'An address must be 20 bytes (40 hex characters); got ${body.length}',

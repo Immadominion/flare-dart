@@ -69,8 +69,9 @@ abstract final class FlareContract {
 /// [clearCache] after a known upgrade.
 class ContractRegistry {
   /// The registry address, identical on Flare, Coston2, Songbird and Coston.
-  static final EthAddress address =
-      EthAddress.parse('0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019');
+  static final EthAddress address = EthAddress.parse(
+    '0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019',
+  );
 
   /// Only two registry methods are needed, so they are declared inline rather
   /// than shipping the full artifact.
@@ -117,8 +118,7 @@ class ContractRegistry {
   /// Prefer this at startup over repeated [addressOf] calls — one network wait
   /// instead of N.
   Future<Map<String, EthAddress>> addressesOf(List<String> names) async {
-    final missing =
-        names.where((n) => !_cache.containsKey(n)).toSet().toList();
+    final missing = names.where((n) => !_cache.containsKey(n)).toSet().toList();
 
     if (missing.isNotEmpty) {
       final responses = await _client.rpc.batch([
@@ -142,8 +142,7 @@ class ContractRegistry {
         }
         final decoded =
             getContractAddressByName.decodeReturn(hexToBytes(raw)).single;
-        _cache[missing[i]] =
-            _requireKnown(decoded! as EthAddress, missing[i]);
+        _cache[missing[i]] = _requireKnown(decoded! as EthAddress, missing[i]);
       }
     }
     return {for (final n in names) n: _cache[n]!};

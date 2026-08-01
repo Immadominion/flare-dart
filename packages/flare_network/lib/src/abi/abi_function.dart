@@ -22,11 +22,11 @@ enum StateMutability {
   bool get isReadOnly => this == pure || this == view;
 
   static StateMutability parse(String? value) => switch (value) {
-        'pure' => StateMutability.pure,
-        'view' => StateMutability.view,
-        'payable' => StateMutability.payable,
-        _ => StateMutability.nonpayable,
-      };
+    'pure' => StateMutability.pure,
+    'view' => StateMutability.view,
+    'payable' => StateMutability.payable,
+    _ => StateMutability.nonpayable,
+  };
 }
 
 /// A named ABI parameter.
@@ -89,18 +89,19 @@ final class AbiFunction {
 
   /// Builds a function from an ABI JSON entry with `"type": "function"`.
   factory AbiFunction.fromJson(Map<String, Object?> json) => AbiFunction(
-        name: (json['name'] as String?) ?? '',
-        inputs: ((json['inputs'] as List<Object?>?) ?? const [])
+    name: (json['name'] as String?) ?? '',
+    inputs:
+        ((json['inputs'] as List<Object?>?) ?? const [])
             .cast<Map<String, Object?>>()
             .map(AbiParameter.fromJson)
             .toList(),
-        outputs: ((json['outputs'] as List<Object?>?) ?? const [])
+    outputs:
+        ((json['outputs'] as List<Object?>?) ?? const [])
             .cast<Map<String, Object?>>()
             .map(AbiParameter.fromJson)
             .toList(),
-        stateMutability:
-            StateMutability.parse(json['stateMutability'] as String?),
-      );
+    stateMutability: StateMutability.parse(json['stateMutability'] as String?),
+  );
 
   /// The canonical signature the selector is hashed from, e.g.
   /// `getFeedsById(bytes21[])`.
@@ -123,10 +124,9 @@ final class AbiFunction {
     }
     return (BytesBuilder()
           ..add(selector)
-          ..add(AbiCodec.encodeParameters(
-            inputs.map((i) => i.type).toList(),
-            args,
-          )))
+          ..add(
+            AbiCodec.encodeParameters(inputs.map((i) => i.type).toList(), args),
+          ))
         .toBytes();
   }
 
@@ -144,10 +144,7 @@ final class AbiFunction {
         function: canonicalSignature,
       );
     }
-    return AbiCodec.decodeParameters(
-      outputs.map((o) => o.type).toList(),
-      data,
-    );
+    return AbiCodec.decodeParameters(outputs.map((o) => o.type).toList(), data);
   }
 
   @override

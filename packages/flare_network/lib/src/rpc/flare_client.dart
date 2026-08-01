@@ -51,11 +51,11 @@ class FlareClient {
     Duration timeout = const Duration(seconds: 30),
     http.Client? httpClient,
   }) : _rpc = JsonRpcClient(
-          rpcUrl ?? chain.rpcUrl,
-          retryPolicy: retryPolicy,
-          timeout: timeout,
-          httpClient: httpClient,
-        );
+         rpcUrl ?? chain.rpcUrl,
+         retryPolicy: retryPolicy,
+         timeout: timeout,
+         httpClient: httpClient,
+       );
 
   /// The underlying JSON-RPC transport, for methods this class does not wrap.
   JsonRpcClient get rpc => _rpc;
@@ -90,20 +90,17 @@ class FlareClient {
   Future<BigInt> getBalance(
     EthAddress address, {
     BlockTag block = BlockTag.latest,
-  }) async =>
-      hexToBigInt(
-        (await _rpc.call('eth_getBalance', [address.hex, block.value]))!
-            as String,
-      );
+  }) async => hexToBigInt(
+    (await _rpc.call('eth_getBalance', [address.hex, block.value]))! as String,
+  );
 
   /// `eth_getCode`. Empty means the address holds no contract.
   Future<Uint8List> getCode(
     EthAddress address, {
     BlockTag block = BlockTag.latest,
-  }) async =>
-      hexToBytes(
-        (await _rpc.call('eth_getCode', [address.hex, block.value]))! as String,
-      );
+  }) async => hexToBytes(
+    (await _rpc.call('eth_getCode', [address.hex, block.value]))! as String,
+  );
 
   /// Whether [address] currently has contract code deployed.
   Future<bool> isContract(EthAddress address) async =>

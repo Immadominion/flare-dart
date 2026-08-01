@@ -56,7 +56,10 @@ void main() {
       expect(() => AbiType.parse('uint512'), throwsA(isA<FlareAbiException>()));
       expect(() => AbiType.parse('bytes33'), throwsA(isA<FlareAbiException>()));
       expect(() => AbiType.parse('bytes0'), throwsA(isA<FlareAbiException>()));
-      expect(() => AbiType.parse('nonsense'), throwsA(isA<FlareAbiException>()));
+      expect(
+        () => AbiType.parse('nonsense'),
+        throwsA(isA<FlareAbiException>()),
+      );
     });
   });
 
@@ -78,12 +81,24 @@ void main() {
 
     test('enforces the declared range', () {
       const i8 = AbiIntType(8, signed: true);
-      expect(() => i8.encode(BigInt.from(128)), throwsA(isA<FlareAbiException>()));
-      expect(() => i8.encode(BigInt.from(-129)), throwsA(isA<FlareAbiException>()));
+      expect(
+        () => i8.encode(BigInt.from(128)),
+        throwsA(isA<FlareAbiException>()),
+      );
+      expect(
+        () => i8.encode(BigInt.from(-129)),
+        throwsA(isA<FlareAbiException>()),
+      );
 
       const u8 = AbiIntType(8, signed: false);
-      expect(() => u8.encode(BigInt.from(-1)), throwsA(isA<FlareAbiException>()));
-      expect(() => u8.encode(BigInt.from(256)), throwsA(isA<FlareAbiException>()));
+      expect(
+        () => u8.encode(BigInt.from(-1)),
+        throwsA(isA<FlareAbiException>()),
+      );
+      expect(
+        () => u8.encode(BigInt.from(256)),
+        throwsA(isA<FlareAbiException>()),
+      );
     });
 
     test('handles a full-width uint256', () {
@@ -229,11 +244,14 @@ void main() {
 
     test('string[] matches cast abi-encode "f(string[])" "[alpha,beta]"', () {
       expect(
-        bytesToHex(AbiCodec.encodeTypes([
-          'string[]'
-        ], [
-          ['alpha', 'beta']
-        ])),
+        bytesToHex(
+          AbiCodec.encodeTypes(
+            ['string[]'],
+            [
+              ['alpha', 'beta'],
+            ],
+          ),
+        ),
         '0x0000000000000000000000000000000000000000000000000000000000000020'
         '0000000000000000000000000000000000000000000000000000000000000002'
         '0000000000000000000000000000000000000000000000000000000000000040'
@@ -286,8 +304,9 @@ void main() {
         BigInt.from(42),
       ];
       final encoded = AbiCodec.encodeTypes(['(address,bytes,uint64)'], [v]);
-      final out = AbiCodec.decodeTypes(['(address,bytes,uint64)'], encoded)
-          .single as List;
+      final out =
+          AbiCodec.decodeTypes(['(address,bytes,uint64)'], encoded).single
+              as List;
       expect(out[0], v[0]);
       expect(out[1], v[1]);
       expect(out[2], v[2]);
@@ -308,8 +327,10 @@ void main() {
         true,
         [BigInt.from(8), BigInt.from(-2), BigInt.from(6)],
       ];
-      final decoded =
-          AbiCodec.decodeTypes(types, AbiCodec.encodeTypes(types, values));
+      final decoded = AbiCodec.decodeTypes(
+        types,
+        AbiCodec.encodeTypes(types, values),
+      );
       expect(decoded[0], values[0]);
       expect(decoded[1], values[1]);
       expect(decoded[2], values[2]);
@@ -325,7 +346,7 @@ void main() {
         'name': 'getFeedsById',
         'stateMutability': 'payable',
         'inputs': [
-          {'name': '_feedIds', 'type': 'bytes21[]'}
+          {'name': '_feedIds', 'type': 'bytes21[]'},
         ],
         'outputs': [
           {'name': '', 'type': 'uint256[]'},
@@ -338,7 +359,7 @@ void main() {
         'name': 'overloaded',
         'stateMutability': 'view',
         'inputs': [
-          {'name': 'a', 'type': 'uint256'}
+          {'name': 'a', 'type': 'uint256'},
         ],
         'outputs': const [],
       },
@@ -370,7 +391,10 @@ void main() {
     });
 
     test('refuses to guess between overloads', () {
-      expect(() => abi.function('overloaded'), throwsA(isA<FlareAbiException>()));
+      expect(
+        () => abi.function('overloaded'),
+        throwsA(isA<FlareAbiException>()),
+      );
       expect(abi.function('overloaded', argumentCount: 2).inputs.length, 2);
     });
 
@@ -398,12 +422,12 @@ void main() {
                   ],
                 },
               ],
-            }
+            },
           ],
           'outputs': [
-            {'name': '', 'type': 'bool'}
+            {'name': '', 'type': 'bool'},
           ],
-        }
+        },
       ]);
       expect(
         withTuple.function('verifyFeedData').canonicalSignature,
@@ -415,8 +439,9 @@ void main() {
   group('EthAddress', () {
     test('computes the EIP-55 checksum', () {
       expect(
-        EthAddress.parse('0xc67dce33d7a8efa5ffeb961899c73fe01bce9273')
-            .checksummed,
+        EthAddress.parse(
+          '0xc67dce33d7a8efa5ffeb961899c73fe01bce9273',
+        ).checksummed,
         '0xC67DCE33D7A8efA5FfEB961899C73fe01bCe9273',
       );
     });

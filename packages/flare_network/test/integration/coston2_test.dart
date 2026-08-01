@@ -47,13 +47,15 @@ void main() {
       expect(first, greaterThan(BigInt.zero));
     });
 
-    test('suggests a priority fee well above the 1 gwei some libraries assume',
-        () async {
-      final tip = await client.getMaxPriorityFeePerGas();
-      // Recorded at 150 gwei on 2026-07-31. Asserting only that it is
-      // non-trivially above 1 gwei keeps this stable as the network moves.
-      expect(tip, greaterThan(BigInt.from(1000000000)));
-    });
+    test(
+      'suggests a priority fee well above the 1 gwei some libraries assume',
+      () async {
+        final tip = await client.getMaxPriorityFeePerGas();
+        // Recorded at 150 gwei on 2026-07-31. Asserting only that it is
+        // non-trivially above 1 gwei keeps this stable as the network moves.
+        expect(tip, greaterThan(BigInt.from(1000000000)));
+      },
+    );
   });
 
   group('ContractRegistry', () {
@@ -64,16 +66,18 @@ void main() {
       expect(await client.isContract(ContractRegistry.address), isTrue);
     });
 
-    test('resolves WNat to the address in Flare\'s own reference example',
-        () async {
-      // developer-hub examples/developer-hub-python/make_query_coston2.py
-      // documents this exact address in a trailing comment.
-      final wnat = await registry.addressOf(FlareContract.wNat);
-      expect(
-        wnat,
-        EthAddress.parse('0xC67DCE33D7A8efA5FfEB961899C73fe01bCe9273'),
-      );
-    });
+    test(
+      'resolves WNat to the address in Flare\'s own reference example',
+      () async {
+        // developer-hub examples/developer-hub-python/make_query_coston2.py
+        // documents this exact address in a trailing comment.
+        final wnat = await registry.addressOf(FlareContract.wNat);
+        expect(
+          wnat,
+          EthAddress.parse('0xC67DCE33D7A8efA5FfEB961899C73fe01bCe9273'),
+        );
+      },
+    );
 
     test('resolves FtsoV2 to a live contract', () async {
       final ftso = await registry.addressOf(FlareContract.ftsoV2);
@@ -81,17 +85,19 @@ void main() {
       expect(await client.isContract(ftso), isTrue);
     });
 
-    test('the resolved FtsoV2 differs from the stale hardcoded example address',
-        () async {
-      // ftsov2_consumer_coston2.py hardcodes 0x3d893C53..., which no longer
-      // matches the registry. This test is the standing evidence for the
-      // never-hardcode rule; if it ever fails, re-check the rule's rationale.
-      final resolved = await registry.addressOf(FlareContract.ftsoV2);
-      expect(
-        resolved,
-        isNot(EthAddress.parse('0x3d893C53D9e8056135C26C8c638B76C8b60Df726')),
-      );
-    });
+    test(
+      'the resolved FtsoV2 differs from the stale hardcoded example address',
+      () async {
+        // ftsov2_consumer_coston2.py hardcodes 0x3d893C53..., which no longer
+        // matches the registry. This test is the standing evidence for the
+        // never-hardcode rule; if it ever fails, re-check the rule's rationale.
+        final resolved = await registry.addressOf(FlareContract.ftsoV2);
+        expect(
+          resolved,
+          isNot(EthAddress.parse('0x3d893C53D9e8056135C26C8c638B76C8b60Df726')),
+        );
+      },
+    );
 
     test('batches several lookups into one round trip', () async {
       final fresh = ContractRegistry(client);
@@ -112,13 +118,15 @@ void main() {
       expect(a, b);
     });
 
-    test('reports an unknown name rather than returning the zero address',
-        () async {
-      await expectLater(
-        registry.addressOf('NoSuchContractExists'),
-        throwsA(isA<FlareRegistryException>()),
-      );
-    });
+    test(
+      'reports an unknown name rather than returning the zero address',
+      () async {
+        await expectLater(
+          registry.addressOf('NoSuchContractExists'),
+          throwsA(isA<FlareRegistryException>()),
+        );
+      },
+    );
 
     test('listAll returns a substantial directory', () async {
       final all = await registry.listAll();
@@ -151,8 +159,11 @@ void main() {
       ]);
 
       expect(feeds, hasLength(3));
-      expect(feeds.map((f) => f.feedId.name),
-          ['FLR/USD', 'BTC/USD', 'XRP/USD']);
+      expect(feeds.map((f) => f.feedId.name), [
+        'FLR/USD',
+        'BTC/USD',
+        'XRP/USD',
+      ]);
       // A single call returns one publication, so all timestamps agree.
       expect(feeds.map((f) => f.timestamp).toSet(), hasLength(1));
       for (final f in feeds) {
@@ -207,22 +218,27 @@ void main() {
       expect(await ftso.getFeedsById([]), isEmpty);
     });
 
-    test('watchFeeds emits a fresh reading within a reasonable window',
-        () async {
-      // Flare publishes roughly every ~2s. Allow generous headroom so this
-      // does not flake on a slow link.
-      final readings = await ftso
-          .watchFeeds([Feeds.flrUsd], interval: const Duration(seconds: 2))
-          .take(2)
-          .timeout(const Duration(seconds: 60))
-          .toList();
+    test(
+      'watchFeeds emits a fresh reading within a reasonable window',
+      () async {
+        // Flare publishes roughly every ~2s. Allow generous headroom so this
+        // does not flake on a slow link.
+        final readings =
+            await ftso
+                .watchFeeds([
+                  Feeds.flrUsd,
+                ], interval: const Duration(seconds: 2))
+                .take(2)
+                .timeout(const Duration(seconds: 60))
+                .toList();
 
-      expect(readings, hasLength(2));
-      // The stream suppresses duplicate timestamps, so two emissions mean two
-      // genuinely distinct publications.
-      expect(readings[0].first.timestamp,
-          isNot(readings[1].first.timestamp));
-    }, timeout: const Timeout(Duration(seconds: 90)));
+        expect(readings, hasLength(2));
+        // The stream suppresses duplicate timestamps, so two emissions mean two
+        // genuinely distinct publications.
+        expect(readings[0].first.timestamp, isNot(readings[1].first.timestamp));
+      },
+      timeout: const Timeout(Duration(seconds: 90)),
+    );
   });
 
   group('error handling', () {
@@ -231,8 +247,7 @@ void main() {
       final wrongTarget = FtsoV2(
         client: client,
         // A funded EOA-shaped address with no code.
-        address: EthAddress.parse(
-            '0x0000000000000000000000000000000000000001'),
+        address: EthAddress.parse('0x0000000000000000000000000000000000000001'),
       );
       expect(ftso.address.isZero, isFalse);
       await expectLater(
@@ -249,10 +264,7 @@ void main() {
         timeout: const Duration(seconds: 10),
       );
       addTearDown(broken.close);
-      await expectLater(
-        broken.getChainId(),
-        throwsA(isA<FlareException>()),
-      );
+      await expectLater(broken.getChainId(), throwsA(isA<FlareException>()));
     });
   });
 }

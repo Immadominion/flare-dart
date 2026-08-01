@@ -65,9 +65,10 @@ final class AnchorFeed {
   }
 
   /// The value as a [double], for display. Lossy; prefer [toDecimalString].
-  double get asDouble => decimals >= 0
-      ? value / math.pow(10, decimals).toDouble()
-      : value * math.pow(10, -decimals).toDouble();
+  double get asDouble =>
+      decimals >= 0
+          ? value / math.pow(10, decimals).toDouble()
+          : value * math.pow(10, -decimals).toDouble();
 
   /// Turnout as a percentage.
   double get turnoutPercent => turnoutBips / 100.0;
@@ -79,10 +80,11 @@ final class AnchorFeed {
         'DA Layer response entry is missing its "body" object',
       );
     }
-    final proof = (json['proof'] as List<Object?>? ?? const [])
-        .cast<String>()
-        .map(hexToBytes)
-        .toList();
+    final proof =
+        (json['proof'] as List<Object?>? ?? const [])
+            .cast<String>()
+            .map(hexToBytes)
+            .toList();
 
     return AnchorFeed(
       feedId: FeedId.parse(body['id']! as String),
@@ -123,7 +125,8 @@ final class FspStatus {
   });
 
   @override
-  String toString() => 'FspStatus(active $activeVotingRoundId, '
+  String toString() =>
+      'FspStatus(active $activeVotingRoundId, '
       'ftso $latestFtsoVotingRoundId, fdc $latestFdcVotingRoundId)';
 }
 
@@ -195,16 +198,17 @@ class DaLayerClient {
     this.timeout = const Duration(seconds: 30),
     http.Client? httpClient,
     math.Random? random,
-  })  : baseUrl = baseUrl ??
-            _baseUrls[chain.chainId] ??
-            (throw ArgumentError.value(
-              chain.chainId,
-              'chain',
-              'No DA Layer endpoint is known for this network; pass baseUrl',
-            )),
-        _http = httpClient ?? http.Client(),
-        _ownsHttpClient = httpClient == null,
-        _random = random ?? math.Random();
+  }) : baseUrl =
+           baseUrl ??
+           _baseUrls[chain.chainId] ??
+           (throw ArgumentError.value(
+             chain.chainId,
+             'chain',
+             'No DA Layer endpoint is known for this network; pass baseUrl',
+           )),
+       _http = httpClient ?? http.Client(),
+       _ownsHttpClient = httpClient == null,
+       _random = random ?? math.Random();
 
   /// Current protocol status: active and latest finalised voting rounds.
   Future<FspStatus> getStatus() async {
@@ -251,7 +255,8 @@ class DaLayerClient {
   }) async {
     if (feedIds.isEmpty) return const [];
 
-    final path = '/api/v0/ftso/anchor-feeds-with-proof'
+    final path =
+        '/api/v0/ftso/anchor-feeds-with-proof'
         '${votingRoundId == null ? '' : '?voting_round_id=$votingRoundId'}';
 
     final json = await _post(path, {
@@ -324,9 +329,10 @@ class DaLayerClient {
         }
 
         if (response.statusCode != 200) {
-          final snippet = response.body.length > 200
-              ? '${response.body.substring(0, 200)}…'
-              : response.body;
+          final snippet =
+              response.body.length > 200
+                  ? '${response.body.substring(0, 200)}…'
+                  : response.body;
           last = FlareTransportException(
             'DA Layer returned HTTP ${response.statusCode}: $snippet',
             statusCode: response.statusCode,

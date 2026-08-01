@@ -13,12 +13,14 @@ void main() {
         '0x${(category + utf8.encode(name).map((b) => b.toRadixString(16).padLeft(2, '0')).join()).padRight(42, '0')}';
 
     test('matches Flare\'s Python reference byte for byte', () {
-      for (final name in ['FLR/USD', 'BTC/USD', 'ETH/USD', 'XRP/USD', 'SGB/USD']) {
-        expect(
-          FeedId.crypto(name).hex,
-          reference('01', name),
-          reason: name,
-        );
+      for (final name in [
+        'FLR/USD',
+        'BTC/USD',
+        'ETH/USD',
+        'XRP/USD',
+        'SGB/USD',
+      ]) {
+        expect(FeedId.crypto(name).hex, reference('01', name), reason: name);
       }
     });
 
@@ -58,10 +60,7 @@ void main() {
     test('rejects a name too long to fit after the category byte', () {
       // 20 bytes fit; 21 do not.
       expect(() => FeedId.crypto('A' * 20), returnsNormally);
-      expect(
-        () => FeedId.crypto('A' * 21),
-        throwsA(isA<FlareAbiException>()),
-      );
+      expect(() => FeedId.crypto('A' * 21), throwsA(isA<FlareAbiException>()));
     });
 
     test('rejects a category byte outside a single byte', () {
@@ -78,8 +77,7 @@ void main() {
 
   group('FeedId parsing', () {
     test('parses a hex identifier back into a feed', () {
-      final feed =
-          FeedId.parse('0x01464c522f55534400000000000000000000000000');
+      final feed = FeedId.parse('0x01464c522f55534400000000000000000000000000');
       expect(feed.name, 'FLR/USD');
       expect(feed, Feeds.flrUsd);
     });
@@ -92,7 +90,10 @@ void main() {
     });
 
     test('rejects the wrong length', () {
-      expect(() => FeedId.parse('0xdeadbeef'), throwsA(isA<FlareAbiException>()));
+      expect(
+        () => FeedId.parse('0xdeadbeef'),
+        throwsA(isA<FlareAbiException>()),
+      );
       expect(
         () => FeedId.fromBytes(Uint8List(20)),
         throwsA(isA<FlareAbiException>()),
@@ -110,11 +111,11 @@ void main() {
 
   group('FtsoFeedValue formatting', () {
     FtsoFeedValue value(int raw, int decimals) => FtsoFeedValue(
-          feedId: Feeds.flrUsd,
-          value: BigInt.from(raw),
-          decimals: decimals,
-          timestamp: 1785528109,
-        );
+      feedId: Feeds.flrUsd,
+      value: BigInt.from(raw),
+      decimals: decimals,
+      timestamp: 1785528109,
+    );
 
     test('formats the four scales observed in one live call', () {
       // FLR/USD 8dp, BTC/USD 2dp, ETH/USD 3dp, XRP/USD 6dp — all from a single
