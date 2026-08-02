@@ -26,6 +26,7 @@ cd packages/flare_network
 dart test                  # 240 tests, hermetic, ~1s
 dart test -P integration   # 110 tests against live Coston2 + mainnet reads
 dart test -P broadcast     # SPENDS TESTNET FUNDS; skips without COSTON2_TEST_KEY
+                           #   source ~/.flare-dart/coston2-test.env first
 dart analyze               # must be clean before any commit
 
 # Regenerate bindings after an artifacts bump:

@@ -18,5 +18,17 @@ reference/
 # Scratch probes written by tooling; never part of the package.
 packages/*/bin/_tmp_*.dart
 
+# Secrets. This repository is public, and the broadcast test reads a private
+# key from the environment — keys live in ~/.flare-dart/, never in the tree.
+# These patterns are belt-and-braces against a stray `git add -A`.
+*.env
+!.env.example
+.env*
+*.key
+*.pem
+secrets/
+**/private_key*
+**/*keystore*
+
 # Local strategy/research scratch — never publish.
 .superstack/

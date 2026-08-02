@@ -29,11 +29,21 @@ import 'package:test/test.dart';
 /// ## Running it
 ///
 /// ```bash
-/// cast wallet new                       # generate a throwaway key
-/// # fund its address at https://faucet.flare.network/coston2 (100 C2FLR)
-/// export COSTON2_TEST_KEY=0x…           # NEVER a key used on chain 14 or 19
+/// source ~/.flare-dart/coston2-test.env   # sets COSTON2_TEST_KEY
 /// dart test -P broadcast
 /// ```
+///
+/// The key lives outside the repository on purpose — this repository is public,
+/// and `.gitignore` additionally blocks `*.env`, `*.key` and friends so a stray
+/// `git add -A` cannot pick one up. To generate a fresh one:
+///
+/// ```bash
+/// cast wallet new                         # then fund the address at
+/// #   https://faucet.flare.network/coston2  — 100 C2FLR per address per 24h
+/// ```
+///
+/// The key must be **testnet-only**. Never reuse one that has touched Flare
+/// (14), Songbird (19) or any mainnet.
 ///
 /// Signing is shelled out to Foundry's `cast`, because this package holds no
 /// keys and never will. That split is the point: the SDK prepares the
