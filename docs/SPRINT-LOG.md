@@ -67,6 +67,13 @@ platforms, WASM-ready.
   `PulseTheme.pending`; the palette itself was private while widgets needed it,
   so it was promoted and documented too.
 - A test asserted `gasUsed == 156522` against hex `0x263aa`, which is 156,586.
+- **`AbiEvent.matches` keyed on `topic0` alone**, which does not identify an
+  event: ERC-20 and ERC-721 both declare `Transfer(address,address,uint256)`,
+  so they share a signature hash, but ERC-721 indexes `tokenId` too and emits
+  four topics against three. A live query that had been green for weeks failed
+  the day an ERC-721 transfer landed in the scanned range. `matches` now checks
+  the topic count as well, and non-matching logs are skipped rather than
+  throwing. Hermetic 234 -> 240.
 
 ### Verified rather than assumed
 

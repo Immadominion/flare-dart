@@ -197,10 +197,27 @@ final class AbiEvent {
     return t == null ? null : bytesToHex(t);
   }
 
+  /// How many topics a log of this event carries: `topic0` plus one per
+  /// indexed parameter.
+  int get topicCount => (anonymous ? 0 : 1) + indexedParameters.length;
+
   /// Whether [topics] belong to this event.
+  ///
+  /// Checks the topic **count** as well as `topic0`, because a signature hash
+  /// alone does not identify an event. Indexing is not part of the canonical
+  /// signature, so two events that differ only in which parameters are indexed
+  /// share a `topic0`.
+  ///
+  /// That is not hypothetical. ERC-20 and ERC-721 both declare
+  /// `Transfer(address,address,uint256)` — identical signature, identical
+  /// `topic0` — but ERC-721 also indexes `tokenId`, so its logs carry four
+  /// topics against ERC-20's three. Matching on `topic0` alone accepts an NFT
+  /// transfer as a token transfer and then fails to decode it, which is how
+  /// this was found: a live query that had worked for weeks broke the day an
+  /// ERC-721 transfer appeared in the scanned range.
   bool matches(List<Uint8List> topics) {
     if (anonymous) return false;
-    if (topics.isEmpty) return false;
+    if (topics.length != topicCount) return false;
     final expected = topic0!;
     for (var i = 0; i < 32; i++) {
       if (topics[0][i] != expected[i]) return false;

@@ -318,8 +318,21 @@ void main() {
     });
 
     test('dispatches a log to the right event by topic0', () {
-      final topics = [hexToBytes(abi.event('Approval').topic0Hex!)];
+      // A real Approval log carries topic0 plus its two indexed parameters.
+      // Passing topic0 alone builds a log that could not exist on chain.
+      final topics = [
+        hexToBytes(abi.event('Approval').topic0Hex!),
+        Uint8List(32),
+        Uint8List(32),
+      ];
       expect(abi.eventForTopics(topics)?.name, 'Approval');
+    });
+
+    test('a matching topic0 with the wrong topic count does not dispatch', () {
+      // Indexing is not part of the canonical signature, so topic0 alone does
+      // not identify an event.
+      final topics = [hexToBytes(abi.event('Approval').topic0Hex!)];
+      expect(abi.eventForTopics(topics), isNull);
     });
 
     test('returns null for a topic it does not know', () {
@@ -345,6 +358,115 @@ void main() {
       expect(
         ev.topic0Hex,
         bytesToHex(keccak256(Uint8List.fromList(utf8.encode('A(uint256)')))),
+      );
+    });
+  });
+
+  group('ERC-20 and ERC-721 share a topic0', () {
+    // The collision that motivated checking topic counts. Both standards
+    // declare `Transfer(address,address,uint256)` — identical signature, so an
+    // identical topic0 — but ERC-721 also indexes `tokenId`. Matching on
+    // topic0 alone accepts an NFT transfer as a token transfer.
+    final erc20 = AbiEvent(
+      name: 'Transfer',
+      parameters: [
+        AbiEventParameter(
+          name: 'from',
+          type: AbiType.parse('address'),
+          indexed: true,
+        ),
+        AbiEventParameter(
+          name: 'to',
+          type: AbiType.parse('address'),
+          indexed: true,
+        ),
+        AbiEventParameter(
+          name: 'value',
+          type: AbiType.parse('uint256'),
+          indexed: false,
+        ),
+      ],
+    );
+
+    final erc721 = AbiEvent(
+      name: 'Transfer',
+      parameters: [
+        AbiEventParameter(
+          name: 'from',
+          type: AbiType.parse('address'),
+          indexed: true,
+        ),
+        AbiEventParameter(
+          name: 'to',
+          type: AbiType.parse('address'),
+          indexed: true,
+        ),
+        AbiEventParameter(
+          name: 'tokenId',
+          type: AbiType.parse('uint256'),
+          indexed: true,
+        ),
+      ],
+    );
+
+    test('their topic0 really is identical', () {
+      expect(erc20.canonicalSignature, erc721.canonicalSignature);
+      expect(erc20.topic0Hex, erc721.topic0Hex);
+      // cast keccak "Transfer(address,address,uint256)"
+      expect(
+        erc20.topic0Hex,
+        '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+      );
+    });
+
+    test('but their topic counts do not', () {
+      expect(erc20.topicCount, 3);
+      expect(erc721.topicCount, 4);
+    });
+
+    test('an ERC-721 log does not match an ERC-20 ABI', () {
+      final nftLog = [
+        hexToBytes(erc721.topic0Hex!),
+        Uint8List(32), // from
+        Uint8List(32), // to
+        Uint8List(32), // tokenId, indexed
+      ];
+
+      expect(erc721.matches(nftLog), isTrue);
+      // Would have been true before topic counts were checked, and decoding it
+      // then threw instead of the log simply being skipped.
+      expect(erc20.matches(nftLog), isFalse);
+    });
+
+    test('an ERC-20 log does not match an ERC-721 ABI', () {
+      final tokenLog = [
+        hexToBytes(erc20.topic0Hex!),
+        Uint8List(32),
+        Uint8List(32),
+      ];
+
+      expect(erc20.matches(tokenLog), isTrue);
+      expect(erc721.matches(tokenLog), isFalse);
+    });
+
+    test('each still decodes its own log', () {
+      final tokenLog = [
+        hexToBytes(erc20.topic0Hex!),
+        Uint8List(32),
+        Uint8List(32),
+      ];
+      final amount = Uint8List(32)..[31] = 42;
+      expect(erc20.decode(topics: tokenLog, data: amount)[2], BigInt.from(42));
+
+      final nftLog = [
+        hexToBytes(erc721.topic0Hex!),
+        Uint8List(32),
+        Uint8List(32),
+        Uint8List(32)..[31] = 7,
+      ];
+      expect(
+        erc721.decode(topics: nftLog, data: Uint8List(0))[2],
+        BigInt.from(7),
       );
     });
   });

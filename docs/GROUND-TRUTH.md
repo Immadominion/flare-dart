@@ -538,3 +538,30 @@ key. Two questions stay **[Unverified]** until it runs:
   utilisation, so "delayed" is the [Inference] — from a single observation.
 - Does a **mined-and-reverted receipt** carry any reason, or is re-simulating at
   the failing block the only recourse?
+
+
+---
+
+## 16. ERC-20 and ERC-721 share a `topic0` — found 2026-08-02
+
+Both standards declare `Transfer(address,address,uint256)`. Indexing is **not**
+part of the canonical signature, so the signature hash is identical:
+
+```
+$ cast keccak "Transfer(address,address,uint256)"
+0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef
+```
+
+ERC-721 additionally indexes `tokenId`, so its logs carry **four** topics
+against ERC-20's three. An event matcher keyed on `topic0` alone therefore
+accepts an NFT transfer as a token transfer, and then fails to decode it.
+
+Found the way these things are found: a live `getEventLogs` query that had been
+green for weeks broke the day an ERC-721 transfer appeared in the scanned block
+range. `AbiEvent.matches` now checks the topic **count** as well as `topic0`,
+and `AbiEvent.topicCount` is exposed. Non-matching logs are skipped, which is
+what an address-only filter needs anyway — one address emits many event types.
+
+The general rule, worth carrying into any language: **`topic0` identifies a
+signature, not an event.** Two events differing only in which parameters are
+indexed are indistinguishable by `topic0`.
