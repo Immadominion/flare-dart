@@ -116,14 +116,14 @@ package WASM-ready.
 
 ```bash
 cd packages/flare_network
-dart test                  # 234 tests — hermetic, offline
+dart test                  # 240 tests — hermetic, offline
 dart test -P integration   # 91 tests against live Coston2
 dart run example/flare_network_example.dart
 ```
 
 | Suite | Count |
 |---|---:|
-| Core hermetic | 234 |
+| Core hermetic | 240 |
 | Core live | 110 |
 | Generated bindings, live | 27 |
 | Codegen unit | 33 |

@@ -23,7 +23,7 @@ docs/                              architecture, ground truth, sprint log
 
 ```bash
 cd packages/flare_network
-dart test                  # 234 tests, hermetic, ~1s
+dart test                  # 240 tests, hermetic, ~1s
 dart test -P integration   # 110 tests against live Coston2 + mainnet reads
 dart test -P broadcast     # SPENDS TESTNET FUNDS; skips without COSTON2_TEST_KEY
 dart analyze               # must be clean before any commit
