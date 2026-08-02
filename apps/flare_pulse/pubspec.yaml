@@ -32,6 +32,10 @@ dependencies:
     sdk: flutter
   flare_network:
     path: ../../packages/flare_network
+  # The generated bindings, used for the wrap flow. Depending on them here also
+  # proves they resolve and run inside a real Flutter app, not just in tests.
+  flare_network_periphery:
+    path: ../../packages/flare_network_periphery
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

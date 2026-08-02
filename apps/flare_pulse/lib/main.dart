@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'src/feed_controller.dart';
 import 'src/theme.dart';
 import 'src/widgets/feed_tile.dart';
+import 'src/widgets/wrap_sheet.dart';
+import 'src/wrap_controller.dart';
 
 void main() => runApp(const FlarePulseApp());
 
@@ -15,7 +17,9 @@ void main() => runApp(const FlarePulseApp());
 /// resolved at runtime rather than hardcoded, and that feed decimals genuinely
 /// differ per feed.
 ///
-/// No wallet, no account, no funds, no signing — FTSO reads are free.
+/// Reads need no wallet, no account and no funds. The wrap sheet shows the
+/// other half — building, pricing and following a transaction — up to the
+/// signature, which belongs to a wallet and never to this app.
 class FlarePulseApp extends StatelessWidget {
   const FlarePulseApp({super.key});
 
@@ -37,11 +41,25 @@ class PulseScreen extends StatefulWidget {
 
 class _PulseScreenState extends State<PulseScreen> {
   late final FeedController _controller = FeedController(FlareChain.coston2);
+  late final WrapController _wrap = WrapController(FlareChain.coston2);
 
   @override
   void dispose() {
     _controller.dispose();
+    _wrap.dispose();
     super.dispose();
+  }
+
+  void _openWrapSheet() {
+    // A sheet rather than a route: the app has no Navigator stack, and the
+    // prices behind it stay live while a transaction is being reviewed.
+    _wrap.switchChain(_controller.chain);
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) => WrapSheet(controller: _wrap),
+    );
   }
 
   @override
@@ -51,7 +69,7 @@ class _PulseScreenState extends State<PulseScreen> {
         listenable: _controller,
         builder: (context, _) => Column(
           children: [
-            _Header(controller: _controller),
+            _Header(controller: _controller, onWrap: _openWrapSheet),
             const Divider(height: 1),
             Expanded(child: _Body(controller: _controller)),
             _Footer(controller: _controller),
@@ -64,8 +82,9 @@ class _PulseScreenState extends State<PulseScreen> {
 
 class _Header extends StatelessWidget {
   final FeedController controller;
+  final VoidCallback onWrap;
 
-  const _Header({required this.controller});
+  const _Header({required this.controller, required this.onWrap});
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -98,6 +117,12 @@ class _Header extends StatelessWidget {
             ],
           ),
         ),
+        IconButton(
+          onPressed: onWrap,
+          tooltip: 'Wrap FLR',
+          icon: const Icon(Icons.account_balance_wallet_outlined),
+          color: PulseTheme.muted,
+        ),
         PopupMenuButton<FlareChain>(
           tooltip: 'Switch network',
           icon: const Icon(Icons.swap_horiz, color: PulseTheme.muted),
@@ -125,7 +150,7 @@ class _StatusDot extends StatelessWidget {
     final (color, label) = switch (status) {
       PulseStatus.live => (PulseTheme.up, 'LIVE'),
       PulseStatus.connecting => (PulseTheme.muted, 'CONNECTING'),
-      PulseStatus.retrying => (const Color(0xFFFFC24B), 'RETRYING'),
+      PulseStatus.retrying => (PulseTheme.pending, 'RETRYING'),
       PulseStatus.failed => (PulseTheme.down, 'OFFLINE'),
     };
 
@@ -220,7 +245,7 @@ class _Footer extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
       decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: Color(0x14FFFFFF))),
+        border: Border(top: BorderSide(color: PulseTheme.hairline)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,7 +276,7 @@ class _Footer extends StatelessWidget {
               'Reconnecting — showing last known prices.',
               style: TextStyle(
                 fontSize: 11,
-                color: const Color(0xFFFFC24B).withValues(alpha: 0.9),
+                color: PulseTheme.pending.withValues(alpha: 0.9),
               ),
             ),
           ],
