@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math' as math;
 
 import '../abi/hex.dart';
@@ -9,6 +8,8 @@ import 'flare_exception.dart';
 import 'json_rpc_client.dart';
 import 'logs.dart';
 import 'transaction.dart';
+import 'ws/ws_connect.dart';
+import 'ws/ws_transport.dart';
 
 /// Push subscriptions over WebSocket, as an alternative to polling.
 ///
@@ -24,6 +25,13 @@ import 'transaction.dart';
 /// }
 /// ```
 ///
+/// ## Delivery is at-most-once
+///
+/// A dropped socket loses whatever the node produced while it was down.
+/// Reconnecting resubscribes from the present, not from the gap. Anything that
+/// must not be missed needs a [FlareClient.getLogs] sweep over the missing
+/// range once the socket is back.
+///
 /// ## When to prefer polling
 ///
 /// A socket is not automatically the better choice on mobile. It holds an open
@@ -33,10 +41,11 @@ import 'transaction.dart';
 /// backgrounding without special handling. Reach for this when you need low
 /// latency or must not miss an event.
 ///
-/// **`dart:io` only.** WebSockets here use `dart:io`, so this class is
-/// unavailable on Flutter Web. The rest of the package is platform-neutral;
-/// only this file is not, which is why it is not exported from the main
-/// barrel by default consumers on web.
+/// ## Platforms
+///
+/// Native targets use `dart:io`; web targets use the browser's own `WebSocket`
+/// through `dart:js_interop`. The choice is made at compile time, so this class
+/// works everywhere the rest of the package does.
 class FlareSubscriptions {
   /// The network being subscribed to.
   final FlareChain chain;
@@ -49,6 +58,13 @@ class FlareSubscriptions {
 
   /// Whether to reconnect automatically when the socket closes.
   final bool autoReconnect;
+
+  /// How long to wait for the socket handshake.
+  final Duration connectTimeout;
+
+  /// Opens the socket. Injectable so reconnect and backoff can be tested
+  /// without a network.
+  final WsConnector _connect;
 
   final math.Random _random;
 
@@ -64,8 +80,11 @@ class FlareSubscriptions {
     String? wsUrl,
     this.retryPolicy = const RetryPolicy(maxRetries: 5),
     this.autoReconnect = true,
+    this.connectTimeout = const Duration(seconds: 20),
+    WsConnector? connector,
     math.Random? random,
   }) : wsUrl = wsUrl ?? webSocketUrlFor(chain),
+       _connect = connector ?? connectWebSocket,
        _random = random ?? math.Random();
 
   /// Emits each new block header as the node produces it.
@@ -104,22 +123,18 @@ class FlareSubscriptions {
 
   /// Opens a subscription and yields each notification payload.
   ///
-  /// Reconnects with jittered backoff when [autoReconnect] is set. A dropped
-  /// socket loses any events produced while it was down: this is at-most-once
-  /// delivery, so anything that must not be missed should be reconciled with a
-  /// `getLogs` sweep over the gap.
+  /// Reconnects with jittered backoff when [autoReconnect] is set, resetting
+  /// the backoff after any successful connection.
   Stream<Map<String, Object?>> _subscribe(List<Object?> params) async* {
     var attempt = 0;
 
     while (true) {
-      WebSocket? socket;
+      WsTransport? socket;
       try {
-        socket = await WebSocket.connect(
-          wsUrl,
-        ).timeout(const Duration(seconds: 20));
+        socket = await _connect(wsUrl, timeout: connectTimeout);
         attempt = 0; // A successful connect resets the backoff.
 
-        socket.add(
+        socket.send(
           jsonEncode({
             'jsonrpc': '2.0',
             'id': 1,
@@ -128,13 +143,14 @@ class FlareSubscriptions {
           }),
         );
 
-        await for (final raw in socket) {
-          if (raw is! String) continue;
+        await for (final raw in socket.messages) {
           final decoded = jsonDecode(raw);
           if (decoded is! Map) continue;
 
           final error = decoded['error'];
           if (error is Map) {
+            // A rejected subscription is a caller mistake — a bad filter or an
+            // unsupported kind — so reconnecting would just repeat it.
             throw FlareRpcException(
               (error['message'] ?? 'subscription error').toString(),
               code: (error['code'] as num?)?.toInt() ?? -1,

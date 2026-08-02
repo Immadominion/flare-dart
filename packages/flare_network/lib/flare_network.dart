@@ -91,9 +91,10 @@ export 'src/registry/contract_registry.dart'
 // RPC
 export 'src/rpc/flare_client.dart' show BlockTag, FlareClient;
 export 'src/rpc/logs.dart' show BlockRef, DecodedLog, FlareLog, LogFilter;
-// Uses dart:io, so it is unavailable on Flutter Web; everything else in this
-// package is platform-neutral.
 export 'src/rpc/subscriptions.dart' show BlockHeaderHex, FlareSubscriptions;
+// The socket itself is exported so callers can supply their own transport —
+// a proxy, a mock, or a platform this package does not know about.
+export 'src/rpc/ws/ws_transport.dart' show WsConnector, WsTransport;
 export 'src/rpc/transaction.dart'
     show BlockInfo, CallRequest, TransactionInfo, TransactionReceipt;
 export 'src/rpc/flare_exception.dart'
