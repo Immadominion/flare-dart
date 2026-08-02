@@ -50,6 +50,11 @@ abstract final class FlareContract {
 
   /// FAssets asset manager controller.
   static const assetManagerController = 'AssetManagerController';
+
+  /// Smart Accounts controller, which lets XRPL holders act on Flare.
+  ///
+  /// Registered on Flare mainnet and Coston2, and at the same address on both.
+  static const masterAccountController = 'MasterAccountController';
 }
 
 /// Resolves contract addresses by name through the Flare Contract Registry.

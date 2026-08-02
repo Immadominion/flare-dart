@@ -94,6 +94,11 @@ export 'src/ftso/ftso_v2.dart' show FtsoFeedValue, FtsoV2;
 // Network
 export 'src/network/flare_chain.dart' show AbiProfile, FlareChain;
 
+// Smart Accounts (XRPL holders acting on Flare)
+export 'src/smartaccounts/smart_account.dart'
+    show SmartAccount, SmartAccountBalances, TokenBalance, VaultPosition;
+export 'src/smartaccounts/smart_accounts_client.dart' show SmartAccountsClient;
+
 // Registry
 export 'src/registry/contract_registry.dart'
     show ContractRegistry, FlareContract;
