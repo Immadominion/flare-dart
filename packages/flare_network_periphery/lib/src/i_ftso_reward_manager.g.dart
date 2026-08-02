@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IFtsoRewardManager
-// Functions: 16 readable of 22 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 22 — 16 readable via eth_call, 6 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IFtsoRewardManager` contract.
+/// Typed bindings for Flare's `IFtsoRewardManager` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -47,6 +55,75 @@ class IFtsoRewardManagerContract {
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `autoClaim(address[],uint256)`.
+  static final AbiFunction autoClaimFn = AbiFunction(
+    name: 'autoClaim',
+    inputs: [
+      AbiParameter(name: '_rewardOwners', type: AbiType.parse('address[]')),
+      AbiParameter(name: '_rewardEpoch', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `claim(address,address,uint256,bool)`.
+  static final AbiFunction claimFn = AbiFunction(
+    name: 'claim',
+    inputs: [
+      AbiParameter(name: '_rewardOwner', type: AbiType.parse('address')),
+      AbiParameter(name: '_recipient', type: AbiType.parse('address')),
+      AbiParameter(name: '_rewardEpoch', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_wrap', type: AbiType.parse('bool')),
+    ],
+    outputs: [
+      AbiParameter(name: '_rewardAmount', type: AbiType.parse('uint256')),
+    ],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `claimFromDataProviders(address,address,uint256[],address[],bool)`.
+  static final AbiFunction claimFromDataProvidersFn = AbiFunction(
+    name: 'claimFromDataProviders',
+    inputs: [
+      AbiParameter(name: '_rewardOwner', type: AbiType.parse('address')),
+      AbiParameter(name: '_recipient', type: AbiType.parse('address')),
+      AbiParameter(name: '_rewardEpochs', type: AbiType.parse('uint256[]')),
+      AbiParameter(name: '_dataProviders', type: AbiType.parse('address[]')),
+      AbiParameter(name: '_wrap', type: AbiType.parse('bool')),
+    ],
+    outputs: [
+      AbiParameter(name: '_rewardAmount', type: AbiType.parse('uint256')),
+    ],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `claimReward(address,uint256[])`.
+  static final AbiFunction claimRewardFn = AbiFunction(
+    name: 'claimReward',
+    inputs: [
+      AbiParameter(name: '_recipient', type: AbiType.parse('address')),
+      AbiParameter(name: '_rewardEpochs', type: AbiType.parse('uint256[]')),
+    ],
+    outputs: [
+      AbiParameter(name: '_rewardAmount', type: AbiType.parse('uint256')),
+    ],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `claimRewardFromDataProviders(address,uint256[],address[])`.
+  static final AbiFunction claimRewardFromDataProvidersFn = AbiFunction(
+    name: 'claimRewardFromDataProviders',
+    inputs: [
+      AbiParameter(name: '_recipient', type: AbiType.parse('address')),
+      AbiParameter(name: '_rewardEpochs', type: AbiType.parse('uint256[]')),
+      AbiParameter(name: '_dataProviders', type: AbiType.parse('address[]')),
+    ],
+    outputs: [
+      AbiParameter(name: '_rewardAmount', type: AbiType.parse('uint256')),
+    ],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `getClaimedReward(uint256,address,address)`.
@@ -237,6 +314,18 @@ class IFtsoRewardManagerContract {
     ],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `setDataProviderFeePercentage(uint256)`.
+  static final AbiFunction setDataProviderFeePercentageFn = AbiFunction(
+    name: 'setDataProviderFeePercentage',
+    inputs: [
+      AbiParameter(name: '_feePercentageBIPS', type: AbiType.parse('uint256')),
+    ],
+    outputs: [
+      AbiParameter(name: '_validFromEpoch', type: AbiType.parse('uint256')),
+    ],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `active()`.
@@ -479,6 +568,125 @@ class IFtsoRewardManagerContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `autoClaim(address[],uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest autoClaimTx(
+    List<EthAddress> rewardOwners,
+    BigInt rewardEpoch, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: autoClaimFn,
+    args: [rewardOwners, rewardEpoch],
+    from: from,
+  );
+
+  /// Builds an unsigned `claim(address,address,uint256,bool)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest claimTx(
+    EthAddress rewardOwner,
+    EthAddress recipient,
+    BigInt rewardEpoch,
+    bool wrap, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: claimFn,
+    args: [rewardOwner, recipient, rewardEpoch, wrap],
+    from: from,
+  );
+
+  /// Builds an unsigned `claimFromDataProviders(address,address,uint256[],address[],bool)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest claimFromDataProvidersTx(
+    EthAddress rewardOwner,
+    EthAddress recipient,
+    List<BigInt> rewardEpochs,
+    List<EthAddress> dataProviders,
+    bool wrap, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: claimFromDataProvidersFn,
+    args: [rewardOwner, recipient, rewardEpochs, dataProviders, wrap],
+    from: from,
+  );
+
+  /// Builds an unsigned `claimReward(address,uint256[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest claimRewardTx(
+    EthAddress recipient,
+    List<BigInt> rewardEpochs, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: claimRewardFn,
+    args: [recipient, rewardEpochs],
+    from: from,
+  );
+
+  /// Builds an unsigned `claimRewardFromDataProviders(address,uint256[],address[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest claimRewardFromDataProvidersTx(
+    EthAddress recipient,
+    List<BigInt> rewardEpochs,
+    List<EthAddress> dataProviders, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: claimRewardFromDataProvidersFn,
+    args: [recipient, rewardEpochs, dataProviders],
+    from: from,
+  );
+
+  /// Builds an unsigned `setDataProviderFeePercentage(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setDataProviderFeePercentageTx(
+    BigInt feePercentageBIPS, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setDataProviderFeePercentageFn,
+    args: [feePercentageBIPS],
+    from: from,
+  );
 
   /// `FeePercentageChanged(address,uint256,uint256)`
   ///

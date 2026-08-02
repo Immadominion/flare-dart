@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IIVoterWhitelister
-// Functions: 5 readable of 13 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 13 — 5 readable via eth_call, 8 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IIVoterWhitelister` contract.
+/// Typed bindings for Flare's `IIVoterWhitelister` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -41,6 +49,29 @@ class IIVoterWhitelisterContract {
     );
     return IIVoterWhitelisterContract(client: client, address: resolved);
   }
+
+  /// ABI descriptor for `addFtso(uint256)`.
+  static final AbiFunction addFtsoFn = AbiFunction(
+    name: 'addFtso',
+    inputs: [AbiParameter(name: '_ftsoIndex', type: AbiType.parse('uint256'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `chillVoter(address,uint256,uint256[])`.
+  static final AbiFunction chillVoterFn = AbiFunction(
+    name: 'chillVoter',
+    inputs: [
+      AbiParameter(name: '_voter', type: AbiType.parse('address')),
+      AbiParameter(name: '_noOfRewardEpochs', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_ftsoIndices', type: AbiType.parse('uint256[]')),
+    ],
+    outputs: [
+      AbiParameter(name: '_removed', type: AbiType.parse('bool[]')),
+      AbiParameter(name: '_untilRewardEpoch', type: AbiType.parse('uint256')),
+    ],
+    stateMutability: StateMutability.nonpayable,
+  );
 
   /// ABI descriptor for `chilledUntilRewardEpoch(address)`.
   static final AbiFunction chilledUntilRewardEpochFn = AbiFunction(
@@ -81,6 +112,71 @@ class IIVoterWhitelisterContract {
     inputs: [AbiParameter(name: '_ftsoIndex', type: AbiType.parse('uint256'))],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `removeFtso(uint256)`.
+  static final AbiFunction removeFtsoFn = AbiFunction(
+    name: 'removeFtso',
+    inputs: [AbiParameter(name: '_ftsoIndex', type: AbiType.parse('uint256'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `removeTrustedAddressFromWhitelist(address,uint256)`.
+  static final AbiFunction removeTrustedAddressFromWhitelistFn = AbiFunction(
+    name: 'removeTrustedAddressFromWhitelist',
+    inputs: [
+      AbiParameter(name: '_trustedAddress', type: AbiType.parse('address')),
+      AbiParameter(name: '_ftsoIndex', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `requestFullVoterWhitelisting(address)`.
+  static final AbiFunction requestFullVoterWhitelistingFn = AbiFunction(
+    name: 'requestFullVoterWhitelisting',
+    inputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
+    outputs: [
+      AbiParameter(name: '_supportedIndices', type: AbiType.parse('uint256[]')),
+      AbiParameter(name: '_success', type: AbiType.parse('bool[]')),
+    ],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `requestWhitelistingVoter(address,uint256)`.
+  static final AbiFunction requestWhitelistingVoterFn = AbiFunction(
+    name: 'requestWhitelistingVoter',
+    inputs: [
+      AbiParameter(name: '_voter', type: AbiType.parse('address')),
+      AbiParameter(name: '_ftsoIndex', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setDefaultMaxVotersForFtso(uint256)`.
+  static final AbiFunction setDefaultMaxVotersForFtsoFn = AbiFunction(
+    name: 'setDefaultMaxVotersForFtso',
+    inputs: [
+      AbiParameter(
+        name: '_defaultMaxVotersForFtso',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setMaxVotersForFtso(uint256,uint256)`.
+  static final AbiFunction setMaxVotersForFtsoFn = AbiFunction(
+    name: 'setMaxVotersForFtso',
+    inputs: [
+      AbiParameter(name: '_ftsoIndex', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_newMaxVoters', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `chilledUntilRewardEpoch(address)`.
@@ -145,6 +241,151 @@ class IIVoterWhitelisterContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `addFtso(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest addFtsoTx(BigInt ftsoIndex, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: addFtsoFn,
+        args: [ftsoIndex],
+        from: from,
+      );
+
+  /// Builds an unsigned `chillVoter(address,uint256,uint256[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest chillVoterTx(
+    EthAddress voter,
+    BigInt noOfRewardEpochs,
+    List<BigInt> ftsoIndices, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: chillVoterFn,
+    args: [voter, noOfRewardEpochs, ftsoIndices],
+    from: from,
+  );
+
+  /// Builds an unsigned `removeFtso(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest removeFtsoTx(BigInt ftsoIndex, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: removeFtsoFn,
+        args: [ftsoIndex],
+        from: from,
+      );
+
+  /// Builds an unsigned `removeTrustedAddressFromWhitelist(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest removeTrustedAddressFromWhitelistTx(
+    EthAddress trustedAddress,
+    BigInt ftsoIndex, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: removeTrustedAddressFromWhitelistFn,
+    args: [trustedAddress, ftsoIndex],
+    from: from,
+  );
+
+  /// Builds an unsigned `requestFullVoterWhitelisting(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest requestFullVoterWhitelistingTx(
+    EthAddress voter, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: requestFullVoterWhitelistingFn,
+    args: [voter],
+    from: from,
+  );
+
+  /// Builds an unsigned `requestWhitelistingVoter(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest requestWhitelistingVoterTx(
+    EthAddress voter,
+    BigInt ftsoIndex, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: requestWhitelistingVoterFn,
+    args: [voter, ftsoIndex],
+    from: from,
+  );
+
+  /// Builds an unsigned `setDefaultMaxVotersForFtso(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setDefaultMaxVotersForFtsoTx(
+    BigInt defaultMaxVotersForFtso, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setDefaultMaxVotersForFtsoFn,
+    args: [defaultMaxVotersForFtso],
+    from: from,
+  );
+
+  /// Builds an unsigned `setMaxVotersForFtso(uint256,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setMaxVotersForFtsoTx(
+    BigInt ftsoIndex,
+    BigInt newMaxVoters, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setMaxVotersForFtsoFn,
+    args: [ftsoIndex, newMaxVoters],
+    from: from,
+  );
 
   /// `VoterChilled(address,uint256)`
   ///

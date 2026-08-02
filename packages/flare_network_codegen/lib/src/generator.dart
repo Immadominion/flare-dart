@@ -45,6 +45,36 @@ class AbiFn {
       (stateMutability == 'view' ||
           stateMutability == 'pure' ||
           stateMutability == 'payable');
+
+  /// Whether calling this needs a signed transaction.
+  ///
+  /// Anything not declared `view` or `pure` may write state. `payable` is both:
+  /// it can be simulated for free through `eth_call` *and* sent as a real
+  /// transaction, so those functions get a reader and a transaction builder.
+  bool get isWritable => stateMutability != 'view' && stateMutability != 'pure';
+
+  /// Whether the function accepts native value.
+  bool get isPayable => stateMutability == 'payable';
+}
+
+/// A custom error parsed from an ABI array.
+class AbiErr {
+  final String name;
+  final List<AbiParam> inputs;
+
+  AbiErr({required this.name, required this.inputs});
+
+  factory AbiErr.fromJson(Map<String, Object?> json) => AbiErr(
+    name: (json['name'] as String?) ?? '',
+    inputs:
+        ((json['inputs'] as List<Object?>?) ?? const [])
+            .cast<Map<String, Object?>>()
+            .map(AbiParam.fromJson)
+            .toList(),
+  );
+
+  String get canonicalSignature =>
+      '$name(${inputs.map((i) => i.canonicalType).join(',')})';
 }
 
 /// An event parsed from an ABI array.
@@ -132,23 +162,34 @@ class BindingGenerator {
           AbiEv.fromJson(entry.cast<String, Object?>()),
     ];
 
+    final errors = [
+      for (final entry in abi)
+        if (entry is Map && entry['type'] == 'error')
+          AbiErr.fromJson(entry.cast<String, Object?>()),
+    ];
+
     final readable = all.where((f) => f.isReadable).toList();
+    final writable = all.where((f) => f.isWritable).toList();
+    // A function is emitted if it can be read, sent, or both. `payable` is
+    // both, so it appears once here and gets two members.
+    final emitted = all.where((f) => f.isReadable || f.isWritable).toList();
+
     // An events-only interface is still worth emitting: IAssetManagerEvents
     // declares 55 events and no functions, and those logs are the whole point
     // of the contract.
-    if (readable.isEmpty && events.isEmpty) return null;
+    if (emitted.isEmpty && events.isEmpty && errors.isEmpty) return null;
 
     final className = '${toDartClassName(contractName)}Contract';
     final buffer = StringBuffer();
 
     // Only import dart:typed_data when a Uint8List actually appears, or every
     // binding without a bytes type emits an unused-import warning.
-    final needsTypedData = readable.any(
-      (f) => [
-        ...f.inputs,
-        ...f.outputs,
-      ].any((p) => TypeMapper.dartType(p).contains('Uint8List')),
-    );
+    // Error parameters are deliberately excluded: an error's declaration emits
+    // only `AbiType.parse('bytes')` strings, never a Dart `Uint8List`, so
+    // counting them would import dart:typed_data for nothing.
+    final needsTypedData = emitted
+        .expand((f) => [...f.inputs, ...f.outputs])
+        .any((p) => TypeMapper.dartType(p).contains('Uint8List'));
 
     _writeHeader(
       buffer,
@@ -156,6 +197,8 @@ class BindingGenerator {
       className,
       all.length,
       readable.length,
+      writable.length,
+      errors.length,
       needsTypedData: needsTypedData,
     );
     _writeClassOpen(
@@ -167,14 +210,31 @@ class BindingGenerator {
 
     // Overloads share a Solidity name; give each a unique Dart name.
     final methodNames = deduplicate(
-      readable.map((f) => toDartIdentifier(f.name, fallback: 'call')).toList(),
+      emitted.map((f) => toDartIdentifier(f.name, fallback: 'call')).toList(),
     );
 
-    for (var i = 0; i < readable.length; i++) {
-      _writeAbiFunctionField(buffer, readable[i], methodNames[i]);
+    for (var i = 0; i < emitted.length; i++) {
+      _writeAbiFunctionField(buffer, emitted[i], methodNames[i]);
     }
-    for (var i = 0; i < readable.length; i++) {
-      _writeMethod(buffer, readable[i], methodNames[i]);
+    for (var i = 0; i < emitted.length; i++) {
+      if (emitted[i].isReadable) {
+        _writeMethod(buffer, emitted[i], methodNames[i]);
+      }
+    }
+    for (var i = 0; i < emitted.length; i++) {
+      if (emitted[i].isWritable) {
+        _writeTxBuilder(buffer, emitted[i], methodNames[i]);
+      }
+    }
+
+    if (errors.isNotEmpty) {
+      final errorNames = deduplicate([
+        for (final e in errors) toDartIdentifier(e.name, fallback: 'error'),
+      ]);
+      for (var i = 0; i < errors.length; i++) {
+        _writeError(buffer, errors[i], errorNames[i]);
+      }
+      _writeErrorIndex(buffer, errorNames);
     }
 
     if (events.isNotEmpty) {
@@ -197,6 +257,110 @@ class BindingGenerator {
       skippedCount: all.length - readable.length,
       eventCount: events.length,
     );
+  }
+
+  void _writeTxBuilder(StringBuffer b, AbiFn fn, String methodName) {
+    final paramNames = deduplicate([
+      for (var i = 0; i < fn.inputs.length; i++)
+        _avoidShadowing(
+          toDartIdentifier(fn.inputs[i].name, fallback: 'arg${i + 1}'),
+          methodName,
+          alsoReserved: _txBuilderParams,
+        ),
+    ]);
+
+    final positional = [
+      for (var i = 0; i < fn.inputs.length; i++)
+        '${TypeMapper.dartType(fn.inputs[i])} ${paramNames[i]}',
+    ];
+
+    // Only a payable function gets a `value` parameter. Attaching value to a
+    // nonpayable function reverts, so the ABI's own declaration is used to make
+    // that mistake unrepresentable rather than merely documented.
+    final named = ['EthAddress? from', if (fn.isPayable) 'BigInt? value'];
+    final signature = [...positional, '{${named.join(', ')}}'].join(', ');
+
+    b
+      ..writeln('  /// Builds an unsigned `${fn.canonicalSignature}`')
+      ..writeln('  /// transaction.')
+      ..writeln('  ///')
+      ..writeln(
+        '  /// Declared `${fn.stateMutability}` in Solidity, so it changes '
+        'state and',
+      )
+      ..writeln('  /// must be signed. This package holds no keys: pass the')
+      ..writeln('  /// result to [FlareClient.prepareTransaction] to fill in')
+      ..writeln('  /// gas and fees, then hand')
+      ..writeln('  /// [TransactionRequest.toWalletJson] to a wallet.');
+    if (fn.isPayable) {
+      b
+        ..writeln('  ///')
+        ..writeln('  /// Payable: [value] is attached in wei.');
+    }
+    b
+      ..writeln('  TransactionRequest ${methodName}Tx($signature) =>')
+      ..writeln('      TransactionRequest.callFunction(')
+      ..writeln('        to: address,')
+      ..writeln('        function: ${methodName}Fn,');
+    if (fn.inputs.isNotEmpty) {
+      b.writeln('        args: [${paramNames.join(', ')}],');
+    }
+    b.writeln('        from: from,');
+    if (fn.isPayable) {
+      b.writeln('        value: value,');
+    }
+    b
+      ..writeln('      );')
+      ..writeln();
+  }
+
+  void _writeError(StringBuffer b, AbiErr err, String fieldName) {
+    b
+      ..writeln('  /// `${err.canonicalSignature}`')
+      ..writeln('  ///')
+      ..writeln('  /// A custom error carries no message, so a node reports it')
+      ..writeln('  /// as a bare `execution reverted`. Match it with')
+      ..writeln('  /// [decodeRevert] to recover the name and arguments.')
+      ..writeln('  static final AbiError ${fieldName}Error = AbiError(')
+      ..writeln("    name: '${err.name}',")
+      ..writeln('    inputs: [');
+    for (final input in err.inputs) {
+      b.writeln(
+        "      AbiParameter(name: '${input.name}', "
+        "type: AbiType.parse('${input.canonicalType}')),",
+      );
+    }
+    b
+      ..writeln('    ],')
+      ..writeln('  );')
+      ..writeln();
+  }
+
+  void _writeErrorIndex(StringBuffer b, List<String> fieldNames) {
+    b
+      ..writeln('  /// Every custom error this contract declares.')
+      ..writeln('  static final List<AbiError> allErrors = [');
+    for (final n in fieldNames) {
+      b.writeln('    ${n}Error,');
+    }
+    b
+      ..writeln('  ];')
+      ..writeln()
+      ..writeln('  /// Explains why a call to this contract reverted.')
+      ..writeln('  ///')
+      ..writeln('  /// ```dart')
+      ..writeln('  /// try {')
+      ..writeln('  ///   await client.estimateGas(request.toCallRequest());')
+      ..writeln('  /// } on FlareRpcException catch (e) {')
+      ..writeln('  ///   print(decodeRevert(e)?.description);')
+      ..writeln('  /// }')
+      ..writeln('  /// ```')
+      ..writeln('  ///')
+      ..writeln('  /// Returns null when the node attached no revert data,')
+      ..writeln('  /// which is how Flare reports a bare `revert()`.')
+      ..writeln('  static RevertReason? decodeRevert(FlareRpcException e) =>')
+      ..writeln('      e.revertReasonWith(allErrors);')
+      ..writeln();
   }
 
   void _writeEvent(StringBuffer b, AbiEv ev, String fieldName) {
@@ -265,7 +429,9 @@ class BindingGenerator {
     String contractName,
     String className,
     int total,
-    int readable, {
+    int readable,
+    int writable,
+    int errors, {
     required bool needsTypedData,
   }) {
     b
@@ -277,9 +443,19 @@ class BindingGenerator {
       )
       ..writeln('// Contract: $contractName')
       ..writeln(
-        '// Functions: $readable readable of $total total '
-        '(state-changing functions are omitted — this SDK does not sign).',
+        '// Functions: $total — $readable readable via eth_call, '
+        '$writable requiring a',
       )
+      ..writeln(
+        '// signed transaction. Payable functions are both, and get a reader '
+        'and a',
+      )
+      ..writeln(
+        '// `…Tx` builder. This package never signs: a builder returns an '
+        'unsigned',
+      )
+      ..writeln('// TransactionRequest for a wallet to sign.')
+      ..writeln('// Custom errors: $errors')
       ..writeln('//')
       ..writeln('// Regenerate with:')
       ..writeln(
@@ -304,9 +480,11 @@ class BindingGenerator {
     required String? registryName,
   }) {
     b
-      ..writeln(
-        '/// Typed read bindings for Flare\'s `$contractName` contract.',
-      )
+      ..writeln('/// Typed bindings for Flare\'s `$contractName` contract.')
+      ..writeln('///')
+      ..writeln('/// Read methods call through `eth_call`. Methods ending in')
+      ..writeln('/// `Tx` build an unsigned [TransactionRequest] for a wallet')
+      ..writeln('/// to sign — this package holds no keys.')
       ..writeln('///')
       ..writeln('/// Resolve it through the registry rather than hardcoding an')
       ..writeln('/// address — Flare redeploys contracts.')
@@ -418,10 +596,24 @@ class BindingGenerator {
   /// is a real instance.
   static const _classMembers = {'client', 'address'};
 
-  /// Renames [name] if it would shadow a class member or the method's own
-  /// static `AbiFunction` field.
-  String _avoidShadowing(String name, String methodName) =>
-      (_classMembers.contains(name) || name == '${methodName}Fn')
+  /// Named parameters a transaction builder adds of its own.
+  ///
+  /// `transferFrom(address from, …)` is the common collision: Solidity's `from`
+  /// would clash with the builder's own `from`, and Dart rejects the duplicate
+  /// outright — noisily, which is the good case, but it stops the whole package
+  /// compiling.
+  static const _txBuilderParams = {'from', 'value'};
+
+  /// Renames [name] if it would shadow a class member, the method's own static
+  /// `AbiFunction` field, or one of [alsoReserved].
+  String _avoidShadowing(
+    String name,
+    String methodName, {
+    Set<String> alsoReserved = const {},
+  }) =>
+      (_classMembers.contains(name) ||
+              alsoReserved.contains(name) ||
+              name == '${methodName}Fn')
           ? '${name}_'
           : name;
 

@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IGenericRewardManager
-// Functions: 4 readable of 7 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 7 — 4 readable via eth_call, 3 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IGenericRewardManager` contract.
+/// Typed bindings for Flare's `IGenericRewardManager` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -59,6 +67,19 @@ class IGenericRewardManagerContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `claim(address,address,uint256,bool)`.
+  static final AbiFunction claimFn = AbiFunction(
+    name: 'claim',
+    inputs: [
+      AbiParameter(name: '_rewardOwner', type: AbiType.parse('address')),
+      AbiParameter(name: '_recipient', type: AbiType.parse('address')),
+      AbiParameter(name: '_rewardAmount', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_wrap', type: AbiType.parse('bool')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `claimExecutors(address)`.
   static final AbiFunction claimExecutorsFn = AbiFunction(
     name: 'claimExecutors',
@@ -80,6 +101,26 @@ class IGenericRewardManagerContract {
       AbiParameter(name: '_claimedReward', type: AbiType.parse('uint256')),
     ],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `setAllowedClaimRecipients(address[])`.
+  static final AbiFunction setAllowedClaimRecipientsFn = AbiFunction(
+    name: 'setAllowedClaimRecipients',
+    inputs: [
+      AbiParameter(name: '_recipients', type: AbiType.parse('address[]')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setClaimExecutors(address[])`.
+  static final AbiFunction setClaimExecutorsFn = AbiFunction(
+    name: 'setClaimExecutors',
+    inputs: [
+      AbiParameter(name: '_executors', type: AbiType.parse('address[]')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `active()`.
@@ -132,6 +173,63 @@ class IGenericRewardManagerContract {
     );
     return (totalReward: out[0]! as BigInt, claimedReward: out[1]! as BigInt);
   }
+
+  /// Builds an unsigned `claim(address,address,uint256,bool)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest claimTx(
+    EthAddress rewardOwner,
+    EthAddress recipient,
+    BigInt rewardAmount,
+    bool wrap, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: claimFn,
+    args: [rewardOwner, recipient, rewardAmount, wrap],
+    from: from,
+  );
+
+  /// Builds an unsigned `setAllowedClaimRecipients(address[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setAllowedClaimRecipientsTx(
+    List<EthAddress> recipients, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setAllowedClaimRecipientsFn,
+    args: [recipients],
+    from: from,
+  );
+
+  /// Builds an unsigned `setClaimExecutors(address[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setClaimExecutorsTx(
+    List<EthAddress> executors, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setClaimExecutorsFn,
+    args: [executors],
+    from: from,
+  );
 
   /// `AllowedClaimRecipientsChanged(address,address[])`
   ///

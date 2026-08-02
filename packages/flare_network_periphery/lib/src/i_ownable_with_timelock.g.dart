@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IOwnableWithTimelock
-// Functions: 2 readable of 5 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 5 — 2 readable via eth_call, 3 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 3
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IOwnableWithTimelock` contract.
+/// Typed bindings for Flare's `IOwnableWithTimelock` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -44,6 +52,22 @@ class IOwnableWithTimelockContract {
     return IOwnableWithTimelockContract(client: client, address: resolved);
   }
 
+  /// ABI descriptor for `cancelTimelockedCall(bytes)`.
+  static final AbiFunction cancelTimelockedCallFn = AbiFunction(
+    name: 'cancelTimelockedCall',
+    inputs: [AbiParameter(name: '_encodedCall', type: AbiType.parse('bytes'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `executeTimelockedCall(bytes)`.
+  static final AbiFunction executeTimelockedCallFn = AbiFunction(
+    name: 'executeTimelockedCall',
+    inputs: [AbiParameter(name: '_encodedCall', type: AbiType.parse('bytes'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `getExecuteTimelockedCallTimestamp(bytes)`.
   static final AbiFunction getExecuteTimelockedCallTimestampFn = AbiFunction(
     name: 'getExecuteTimelockedCallTimestamp',
@@ -63,6 +87,19 @@ class IOwnableWithTimelockContract {
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `setTimelockDuration(uint256)`.
+  static final AbiFunction setTimelockDurationFn = AbiFunction(
+    name: 'setTimelockDuration',
+    inputs: [
+      AbiParameter(
+        name: '_timelockDurationSeconds',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `getExecuteTimelockedCallTimestamp(bytes)`.
@@ -89,6 +126,112 @@ class IOwnableWithTimelockContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `cancelTimelockedCall(bytes)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest cancelTimelockedCallTx(
+    Uint8List encodedCall, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: cancelTimelockedCallFn,
+    args: [encodedCall],
+    from: from,
+  );
+
+  /// Builds an unsigned `executeTimelockedCall(bytes)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest executeTimelockedCallTx(
+    Uint8List encodedCall, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: executeTimelockedCallFn,
+    args: [encodedCall],
+    from: from,
+  );
+
+  /// Builds an unsigned `setTimelockDuration(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setTimelockDurationTx(
+    BigInt timelockDurationSeconds, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setTimelockDurationFn,
+    args: [timelockDurationSeconds],
+    from: from,
+  );
+
+  /// `TimelockDurationTooLong()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError timelockDurationTooLongError = AbiError(
+    name: 'TimelockDurationTooLong',
+    inputs: [],
+  );
+
+  /// `TimelockInvalidSelector()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError timelockInvalidSelectorError = AbiError(
+    name: 'TimelockInvalidSelector',
+    inputs: [],
+  );
+
+  /// `TimelockNotAllowedYet()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError timelockNotAllowedYetError = AbiError(
+    name: 'TimelockNotAllowedYet',
+    inputs: [],
+  );
+
+  /// Every custom error this contract declares.
+  static final List<AbiError> allErrors = [
+    timelockDurationTooLongError,
+    timelockInvalidSelectorError,
+    timelockNotAllowedYetError,
+  ];
+
+  /// Explains why a call to this contract reverted.
+  ///
+  /// ```dart
+  /// try {
+  ///   await client.estimateGas(request.toCallRequest());
+  /// } on FlareRpcException catch (e) {
+  ///   print(decodeRevert(e)?.description);
+  /// }
+  /// ```
+  ///
+  /// Returns null when the node attached no revert data,
+  /// which is how Flare reports a bare `revert()`.
+  static RevertReason? decodeRevert(FlareRpcException e) =>
+      e.revertReasonWith(allErrors);
 
   /// `CallTimelocked(bytes,bytes32,uint256)`
   ///

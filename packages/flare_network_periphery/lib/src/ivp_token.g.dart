@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IVPToken
-// Functions: 23 readable of 32 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 32 — 23 readable via eth_call, 9 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IVPToken` contract.
+/// Typed bindings for Flare's `IVPToken` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -50,6 +58,17 @@ class IVPTokenContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `approve(address,uint256)`.
+  static final AbiFunction approveFn = AbiFunction(
+    name: 'approve',
+    inputs: [
+      AbiParameter(name: 'spender', type: AbiType.parse('address')),
+      AbiParameter(name: 'amount', type: AbiType.parse('uint256')),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `balanceOf(address)`.
   static final AbiFunction balanceOfFn = AbiFunction(
     name: 'balanceOf',
@@ -69,12 +88,45 @@ class IVPTokenContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `batchDelegate(address[],uint256[])`.
+  static final AbiFunction batchDelegateFn = AbiFunction(
+    name: 'batchDelegate',
+    inputs: [
+      AbiParameter(name: '_delegatees', type: AbiType.parse('address[]')),
+      AbiParameter(name: '_bips', type: AbiType.parse('uint256[]')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `decimals()`.
   static final AbiFunction decimalsFn = AbiFunction(
     name: 'decimals',
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint8'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `delegate(address,uint256)`.
+  static final AbiFunction delegateFn = AbiFunction(
+    name: 'delegate',
+    inputs: [
+      AbiParameter(name: '_to', type: AbiType.parse('address')),
+      AbiParameter(name: '_bips', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `delegateExplicit(address,uint256)`.
+  static final AbiFunction delegateExplicitFn = AbiFunction(
+    name: 'delegateExplicit',
+    inputs: [
+      AbiParameter(name: '_to', type: AbiType.parse('address')),
+      AbiParameter(name: '_amount', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `delegatesOf(address)`.
@@ -144,6 +196,17 @@ class IVPTokenContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `revokeDelegationAt(address,uint256)`.
+  static final AbiFunction revokeDelegationAtFn = AbiFunction(
+    name: 'revokeDelegationAt',
+    inputs: [
+      AbiParameter(name: '_who', type: AbiType.parse('address')),
+      AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `symbol()`.
   static final AbiFunction symbolFn = AbiFunction(
     name: 'symbol',
@@ -186,6 +249,50 @@ class IVPTokenContract {
     ],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `transfer(address,uint256)`.
+  static final AbiFunction transferFn = AbiFunction(
+    name: 'transfer',
+    inputs: [
+      AbiParameter(name: 'to', type: AbiType.parse('address')),
+      AbiParameter(name: 'amount', type: AbiType.parse('uint256')),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `transferFrom(address,address,uint256)`.
+  static final AbiFunction transferFromFn = AbiFunction(
+    name: 'transferFrom',
+    inputs: [
+      AbiParameter(name: 'from', type: AbiType.parse('address')),
+      AbiParameter(name: 'to', type: AbiType.parse('address')),
+      AbiParameter(name: 'amount', type: AbiType.parse('uint256')),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `undelegateAll()`.
+  static final AbiFunction undelegateAllFn = AbiFunction(
+    name: 'undelegateAll',
+    inputs: [],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `undelegateAllExplicit(address[])`.
+  static final AbiFunction undelegateAllExplicitFn = AbiFunction(
+    name: 'undelegateAllExplicit',
+    inputs: [
+      AbiParameter(
+        name: '_delegateAddresses',
+        type: AbiType.parse('address[]'),
+      ),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `undelegatedVotePowerOf(address)`.
@@ -568,6 +675,173 @@ class IVPTokenContract {
     );
     return out[0]! as EthAddress;
   }
+
+  /// Builds an unsigned `approve(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest approveTx(
+    EthAddress spender,
+    BigInt amount, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: approveFn,
+    args: [spender, amount],
+    from: from,
+  );
+
+  /// Builds an unsigned `batchDelegate(address[],uint256[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest batchDelegateTx(
+    List<EthAddress> delegatees,
+    List<BigInt> bips, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: batchDelegateFn,
+    args: [delegatees, bips],
+    from: from,
+  );
+
+  /// Builds an unsigned `delegate(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest delegateTx(
+    EthAddress to,
+    BigInt bips, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: delegateFn,
+    args: [to, bips],
+    from: from,
+  );
+
+  /// Builds an unsigned `delegateExplicit(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest delegateExplicitTx(
+    EthAddress to,
+    BigInt amount, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: delegateExplicitFn,
+    args: [to, amount],
+    from: from,
+  );
+
+  /// Builds an unsigned `revokeDelegationAt(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest revokeDelegationAtTx(
+    EthAddress who,
+    BigInt blockNumber, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: revokeDelegationAtFn,
+    args: [who, blockNumber],
+    from: from,
+  );
+
+  /// Builds an unsigned `transfer(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest transferTx(
+    EthAddress to,
+    BigInt amount, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: transferFn,
+    args: [to, amount],
+    from: from,
+  );
+
+  /// Builds an unsigned `transferFrom(address,address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest transferFromTx(
+    EthAddress from_,
+    EthAddress to,
+    BigInt amount, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: transferFromFn,
+    args: [from_, to, amount],
+    from: from,
+  );
+
+  /// Builds an unsigned `undelegateAll()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest undelegateAllTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: undelegateAllFn,
+        from: from,
+      );
+
+  /// Builds an unsigned `undelegateAllExplicit(address[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest undelegateAllExplicitTx(
+    List<EthAddress> delegateAddresses, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: undelegateAllExplicitFn,
+    args: [delegateAddresses],
+    from: from,
+  );
 
   /// `Approval(address,address,uint256)`
   ///

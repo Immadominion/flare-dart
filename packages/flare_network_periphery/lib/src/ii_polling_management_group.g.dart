@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IIPollingManagementGroup
-// Functions: 10 readable of 18 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 18 — 10 readable via eth_call, 9 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IIPollingManagementGroup` contract.
+/// Typed bindings for Flare's `IIPollingManagementGroup` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -42,6 +50,14 @@ class IIPollingManagementGroupContract {
     return IIPollingManagementGroupContract(client: client, address: resolved);
   }
 
+  /// ABI descriptor for `addMember()`.
+  static final AbiFunction addMemberFn = AbiFunction(
+    name: 'addMember',
+    inputs: [],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `canPropose(address)`.
   static final AbiFunction canProposeFn = AbiFunction(
     name: 'canPropose',
@@ -59,6 +75,36 @@ class IIPollingManagementGroupContract {
     ],
     outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `cancel(uint256)`.
+  static final AbiFunction cancelFn = AbiFunction(
+    name: 'cancel',
+    inputs: [AbiParameter(name: '_proposalId', type: AbiType.parse('uint256'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `castVote(uint256,uint8)`.
+  static final AbiFunction castVoteFn = AbiFunction(
+    name: 'castVote',
+    inputs: [
+      AbiParameter(name: '_proposalId', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_support', type: AbiType.parse('uint8')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `changeManagementGroupMembers(address[],address[])`.
+  static final AbiFunction changeManagementGroupMembersFn = AbiFunction(
+    name: 'changeManagementGroupMembers',
+    inputs: [
+      AbiParameter(name: '_votersToAdd', type: AbiType.parse('address[]')),
+      AbiParameter(name: '_votersToRemove', type: AbiType.parse('address[]')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `getLastProposal()`.
@@ -144,6 +190,85 @@ class IIPollingManagementGroupContract {
     inputs: [AbiParameter(name: '_description', type: AbiType.parse('string'))],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.payable,
+  );
+
+  /// ABI descriptor for `proposeWithSettings(string,(bool,uint256,uint256,uint256,uint256))`.
+  static final AbiFunction proposeWithSettingsFn = AbiFunction(
+    name: 'proposeWithSettings',
+    inputs: [
+      AbiParameter(name: '_description', type: AbiType.parse('string')),
+      AbiParameter(
+        name: '_settings',
+        type: AbiType.parse('(bool,uint256,uint256,uint256,uint256)'),
+      ),
+    ],
+    outputs: [
+      AbiParameter(name: '_proposalId', type: AbiType.parse('uint256')),
+    ],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `removeMember(address)`.
+  static final AbiFunction removeMemberFn = AbiFunction(
+    name: 'removeMember',
+    inputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setParameters(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)`.
+  static final AbiFunction setParametersFn = AbiFunction(
+    name: 'setParameters',
+    inputs: [
+      AbiParameter(name: '_votingDelaySeconds', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_votingPeriodSeconds',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_thresholdConditionBIPS',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_majorityConditionBIPS',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_proposalFeeValueWei',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_addAfterRewardedEpochs',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_addAfterNotChilledEpochs',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_removeAfterNotRewardedEpochs',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_removeAfterEligibleProposals',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_removeAfterNonParticipatingProposals',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(name: '_removeForDays', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setProxyVoter(address)`.
+  static final AbiFunction setProxyVoterFn = AbiFunction(
+    name: 'setProxyVoter',
+    inputs: [AbiParameter(name: '_proxyVoter', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `state(uint256)`.
@@ -295,6 +420,190 @@ class IIPollingManagementGroupContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `addMember()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest addMemberTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: addMemberFn,
+        from: from,
+      );
+
+  /// Builds an unsigned `cancel(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest cancelTx(BigInt proposalId, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: cancelFn,
+        args: [proposalId],
+        from: from,
+      );
+
+  /// Builds an unsigned `castVote(uint256,uint8)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest castVoteTx(
+    BigInt proposalId,
+    BigInt support, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: castVoteFn,
+    args: [proposalId, support],
+    from: from,
+  );
+
+  /// Builds an unsigned `changeManagementGroupMembers(address[],address[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest changeManagementGroupMembersTx(
+    List<EthAddress> votersToAdd,
+    List<EthAddress> votersToRemove, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: changeManagementGroupMembersFn,
+    args: [votersToAdd, votersToRemove],
+    from: from,
+  );
+
+  /// Builds an unsigned `propose(string)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest proposeTx(
+    String description, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: proposeFn,
+    args: [description],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `proposeWithSettings(string,(bool,uint256,uint256,uint256,uint256))`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest proposeWithSettingsTx(
+    String description,
+    List<Object?> settings, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: proposeWithSettingsFn,
+    args: [description, settings],
+    from: from,
+  );
+
+  /// Builds an unsigned `removeMember(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest removeMemberTx(EthAddress voter, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: removeMemberFn,
+        args: [voter],
+        from: from,
+      );
+
+  /// Builds an unsigned `setParameters(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setParametersTx(
+    BigInt votingDelaySeconds,
+    BigInt votingPeriodSeconds,
+    BigInt thresholdConditionBIPS,
+    BigInt majorityConditionBIPS,
+    BigInt proposalFeeValueWei,
+    BigInt addAfterRewardedEpochs,
+    BigInt addAfterNotChilledEpochs,
+    BigInt removeAfterNotRewardedEpochs,
+    BigInt removeAfterEligibleProposals,
+    BigInt removeAfterNonParticipatingProposals,
+    BigInt removeForDays, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setParametersFn,
+    args: [
+      votingDelaySeconds,
+      votingPeriodSeconds,
+      thresholdConditionBIPS,
+      majorityConditionBIPS,
+      proposalFeeValueWei,
+      addAfterRewardedEpochs,
+      addAfterNotChilledEpochs,
+      removeAfterNotRewardedEpochs,
+      removeAfterEligibleProposals,
+      removeAfterNonParticipatingProposals,
+      removeForDays,
+    ],
+    from: from,
+  );
+
+  /// Builds an unsigned `setProxyVoter(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setProxyVoterTx(
+    EthAddress proxyVoter, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setProxyVoterFn,
+    args: [proxyVoter],
+    from: from,
+  );
 
   /// `MaintainerSet(address)`
   ///

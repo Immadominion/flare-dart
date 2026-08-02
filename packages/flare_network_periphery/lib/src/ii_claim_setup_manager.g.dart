@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IIClaimSetupManager
-// Functions: 13 readable of 33 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 33 — 13 readable via eth_call, 20 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IIClaimSetupManager` contract.
+/// Typed bindings for Flare's `IIClaimSetupManager` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -60,12 +68,58 @@ class IIClaimSetupManagerContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `batchDelegate(address[],uint256[])`.
+  static final AbiFunction batchDelegateFn = AbiFunction(
+    name: 'batchDelegate',
+    inputs: [
+      AbiParameter(name: '_delegatees', type: AbiType.parse('address[]')),
+      AbiParameter(name: '_bips', type: AbiType.parse('uint256[]')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `claimExecutors(address)`.
   static final AbiFunction claimExecutorsFn = AbiFunction(
     name: 'claimExecutors',
     inputs: [AbiParameter(name: '_owner', type: AbiType.parse('address'))],
     outputs: [AbiParameter(name: '', type: AbiType.parse('address[]'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `delegate(address,uint256)`.
+  static final AbiFunction delegateFn = AbiFunction(
+    name: 'delegate',
+    inputs: [
+      AbiParameter(name: '_to', type: AbiType.parse('address')),
+      AbiParameter(name: '_bips', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `delegateGovernance(address)`.
+  static final AbiFunction delegateGovernanceFn = AbiFunction(
+    name: 'delegateGovernance',
+    inputs: [AbiParameter(name: '_to', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `disableDelegationAccount()`.
+  static final AbiFunction disableDelegationAccountFn = AbiFunction(
+    name: 'disableDelegationAccount',
+    inputs: [],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `enableDelegationAccount()`.
+  static final AbiFunction enableDelegationAccountFn = AbiFunction(
+    name: 'enableDelegationAccount',
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `getAutoClaimAddressesAndExecutorFee(address,address[])`.
@@ -171,12 +225,151 @@ class IIClaimSetupManagerContract {
     stateMutability: StateMutability.payable,
   );
 
+  /// ABI descriptor for `revokeDelegationAt(address,uint256)`.
+  static final AbiFunction revokeDelegationAtFn = AbiFunction(
+    name: 'revokeDelegationAt',
+    inputs: [
+      AbiParameter(name: '_who', type: AbiType.parse('address')),
+      AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setAllowedClaimRecipients(address[])`.
+  static final AbiFunction setAllowedClaimRecipientsFn = AbiFunction(
+    name: 'setAllowedClaimRecipients',
+    inputs: [
+      AbiParameter(name: '_recipients', type: AbiType.parse('address[]')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setAutoClaiming(address[],bool)`.
+  static final AbiFunction setAutoClaimingFn = AbiFunction(
+    name: 'setAutoClaiming',
+    inputs: [
+      AbiParameter(name: '_executors', type: AbiType.parse('address[]')),
+      AbiParameter(
+        name: '_enableDelegationAccount',
+        type: AbiType.parse('bool'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.payable,
+  );
+
+  /// ABI descriptor for `setClaimExecutors(address[])`.
+  static final AbiFunction setClaimExecutorsFn = AbiFunction(
+    name: 'setClaimExecutors',
+    inputs: [
+      AbiParameter(name: '_executors', type: AbiType.parse('address[]')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.payable,
+  );
+
+  /// ABI descriptor for `setLibraryAddress(address)`.
+  static final AbiFunction setLibraryAddressFn = AbiFunction(
+    name: 'setLibraryAddress',
+    inputs: [
+      AbiParameter(name: '_libraryAddress', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setMaxFeeValueWei(uint256)`.
+  static final AbiFunction setMaxFeeValueWeiFn = AbiFunction(
+    name: 'setMaxFeeValueWei',
+    inputs: [
+      AbiParameter(name: '_maxFeeValueWei', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setMinFeeValueWei(uint256)`.
+  static final AbiFunction setMinFeeValueWeiFn = AbiFunction(
+    name: 'setMinFeeValueWei',
+    inputs: [
+      AbiParameter(name: '_minFeeValueWei', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setRegisterExecutorFeeValueWei(uint256)`.
+  static final AbiFunction setRegisterExecutorFeeValueWeiFn = AbiFunction(
+    name: 'setRegisterExecutorFeeValueWei',
+    inputs: [
+      AbiParameter(
+        name: '_registerExecutorFeeValueWei',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `transferExternalToken(address,uint256)`.
+  static final AbiFunction transferExternalTokenFn = AbiFunction(
+    name: 'transferExternalToken',
+    inputs: [
+      AbiParameter(name: '_token', type: AbiType.parse('address')),
+      AbiParameter(name: '_amount', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `undelegateAll()`.
+  static final AbiFunction undelegateAllFn = AbiFunction(
+    name: 'undelegateAll',
+    inputs: [],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `undelegateGovernance()`.
+  static final AbiFunction undelegateGovernanceFn = AbiFunction(
+    name: 'undelegateGovernance',
+    inputs: [],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `unregisterExecutor()`.
+  static final AbiFunction unregisterExecutorFn = AbiFunction(
+    name: 'unregisterExecutor',
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `updateExecutorFeeValue(uint256)`.
+  static final AbiFunction updateExecutorFeeValueFn = AbiFunction(
+    name: 'updateExecutorFeeValue',
+    inputs: [AbiParameter(name: '_feeValue', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `wNat()`.
   static final AbiFunction wNatFn = AbiFunction(
     name: 'wNat',
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `withdraw(uint256)`.
+  static final AbiFunction withdrawFn = AbiFunction(
+    name: 'withdraw',
+    inputs: [AbiParameter(name: '_amount', type: AbiType.parse('uint256'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `accountToDelegationAccount(address)`.
@@ -356,6 +549,364 @@ class IIClaimSetupManagerContract {
     final out = await client.callFunction(contract: address, function: wNatFn);
     return out[0]! as EthAddress;
   }
+
+  /// Builds an unsigned `batchDelegate(address[],uint256[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest batchDelegateTx(
+    List<EthAddress> delegatees,
+    List<BigInt> bips, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: batchDelegateFn,
+    args: [delegatees, bips],
+    from: from,
+  );
+
+  /// Builds an unsigned `delegate(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest delegateTx(
+    EthAddress to,
+    BigInt bips, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: delegateFn,
+    args: [to, bips],
+    from: from,
+  );
+
+  /// Builds an unsigned `delegateGovernance(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest delegateGovernanceTx(EthAddress to, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: delegateGovernanceFn,
+        args: [to],
+        from: from,
+      );
+
+  /// Builds an unsigned `disableDelegationAccount()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest disableDelegationAccountTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: disableDelegationAccountFn,
+        from: from,
+      );
+
+  /// Builds an unsigned `enableDelegationAccount()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest enableDelegationAccountTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: enableDelegationAccountFn,
+        from: from,
+      );
+
+  /// Builds an unsigned `registerExecutor(uint256)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest registerExecutorTx(
+    BigInt feeValue, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: registerExecutorFn,
+    args: [feeValue],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `revokeDelegationAt(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest revokeDelegationAtTx(
+    EthAddress who,
+    BigInt blockNumber, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: revokeDelegationAtFn,
+    args: [who, blockNumber],
+    from: from,
+  );
+
+  /// Builds an unsigned `setAllowedClaimRecipients(address[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setAllowedClaimRecipientsTx(
+    List<EthAddress> recipients, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setAllowedClaimRecipientsFn,
+    args: [recipients],
+    from: from,
+  );
+
+  /// Builds an unsigned `setAutoClaiming(address[],bool)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest setAutoClaimingTx(
+    List<EthAddress> executors,
+    bool enableDelegationAccount, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setAutoClaimingFn,
+    args: [executors, enableDelegationAccount],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `setClaimExecutors(address[])`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest setClaimExecutorsTx(
+    List<EthAddress> executors, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setClaimExecutorsFn,
+    args: [executors],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `setLibraryAddress(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setLibraryAddressTx(
+    EthAddress libraryAddress, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setLibraryAddressFn,
+    args: [libraryAddress],
+    from: from,
+  );
+
+  /// Builds an unsigned `setMaxFeeValueWei(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setMaxFeeValueWeiTx(
+    BigInt maxFeeValueWei, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setMaxFeeValueWeiFn,
+    args: [maxFeeValueWei],
+    from: from,
+  );
+
+  /// Builds an unsigned `setMinFeeValueWei(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setMinFeeValueWeiTx(
+    BigInt minFeeValueWei, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setMinFeeValueWeiFn,
+    args: [minFeeValueWei],
+    from: from,
+  );
+
+  /// Builds an unsigned `setRegisterExecutorFeeValueWei(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setRegisterExecutorFeeValueWeiTx(
+    BigInt registerExecutorFeeValueWei, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setRegisterExecutorFeeValueWeiFn,
+    args: [registerExecutorFeeValueWei],
+    from: from,
+  );
+
+  /// Builds an unsigned `transferExternalToken(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest transferExternalTokenTx(
+    EthAddress token,
+    BigInt amount, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: transferExternalTokenFn,
+    args: [token, amount],
+    from: from,
+  );
+
+  /// Builds an unsigned `undelegateAll()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest undelegateAllTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: undelegateAllFn,
+        from: from,
+      );
+
+  /// Builds an unsigned `undelegateGovernance()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest undelegateGovernanceTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: undelegateGovernanceFn,
+        from: from,
+      );
+
+  /// Builds an unsigned `unregisterExecutor()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest unregisterExecutorTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: unregisterExecutorFn,
+        from: from,
+      );
+
+  /// Builds an unsigned `updateExecutorFeeValue(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest updateExecutorFeeValueTx(
+    BigInt feeValue, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: updateExecutorFeeValueFn,
+    args: [feeValue],
+    from: from,
+  );
+
+  /// Builds an unsigned `withdraw(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest withdrawTx(BigInt amount, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: withdrawFn,
+        args: [amount],
+        from: from,
+      );
 
   /// `AllowedClaimRecipientsChanged(address,address[])`
   ///

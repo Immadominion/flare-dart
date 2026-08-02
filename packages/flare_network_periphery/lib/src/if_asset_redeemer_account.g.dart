@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IFAssetRedeemerAccount
-// Functions: 2 readable of 4 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 4 — 2 readable via eth_call, 2 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 5
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IFAssetRedeemerAccount` contract.
+/// Typed bindings for Flare's `IFAssetRedeemerAccount` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -58,6 +66,44 @@ class IFAssetRedeemerAccountContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `redemptionPaymentDefault((bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bytes32,bool,bytes32),(uint64,uint64,uint64))),uint256)`.
+  static final AbiFunction redemptionPaymentDefaultFn = AbiFunction(
+    name: 'redemptionPaymentDefault',
+    inputs: [
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bytes32,bool,bytes32),(uint64,uint64,uint64)))',
+        ),
+      ),
+      AbiParameter(
+        name: '_redemptionRequestId',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `xrpRedemptionPaymentDefault((bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bool,bytes32,bool,uint256,address),(uint64,uint64,uint64))),uint256)`.
+  static final AbiFunction xrpRedemptionPaymentDefaultFn = AbiFunction(
+    name: 'xrpRedemptionPaymentDefault',
+    inputs: [
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bool,bytes32,bool,uint256,address),(uint64,uint64,uint64)))',
+        ),
+      ),
+      AbiParameter(
+        name: '_redemptionRequestId',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// Calls `composer()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
@@ -76,6 +122,118 @@ class IFAssetRedeemerAccountContract {
     final out = await client.callFunction(contract: address, function: ownerFn);
     return out[0]! as EthAddress;
   }
+
+  /// Builds an unsigned `redemptionPaymentDefault((bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bytes32,bool,bytes32),(uint64,uint64,uint64))),uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest redemptionPaymentDefaultTx(
+    List<Object?> proof,
+    BigInt redemptionRequestId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: redemptionPaymentDefaultFn,
+    args: [proof, redemptionRequestId],
+    from: from,
+  );
+
+  /// Builds an unsigned `xrpRedemptionPaymentDefault((bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bool,bytes32,bool,uint256,address),(uint64,uint64,uint64))),uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest xrpRedemptionPaymentDefaultTx(
+    List<Object?> proof,
+    BigInt redemptionRequestId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: xrpRedemptionPaymentDefaultFn,
+    args: [proof, redemptionRequestId],
+    from: from,
+  );
+
+  /// `AlreadyInitialized()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError alreadyInitializedError = AbiError(
+    name: 'AlreadyInitialized',
+    inputs: [],
+  );
+
+  /// `ComposerOnly()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError composerOnlyError = AbiError(
+    name: 'ComposerOnly',
+    inputs: [],
+  );
+
+  /// `InvalidAddress()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidAddressError = AbiError(
+    name: 'InvalidAddress',
+    inputs: [],
+  );
+
+  /// `OwnerOnly()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError ownerOnlyError = AbiError(
+    name: 'OwnerOnly',
+    inputs: [],
+  );
+
+  /// `RedeemWithTagNotSupported()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError redeemWithTagNotSupportedError = AbiError(
+    name: 'RedeemWithTagNotSupported',
+    inputs: [],
+  );
+
+  /// Every custom error this contract declares.
+  static final List<AbiError> allErrors = [
+    alreadyInitializedError,
+    composerOnlyError,
+    invalidAddressError,
+    ownerOnlyError,
+    redeemWithTagNotSupportedError,
+  ];
+
+  /// Explains why a call to this contract reverted.
+  ///
+  /// ```dart
+  /// try {
+  ///   await client.estimateGas(request.toCallRequest());
+  /// } on FlareRpcException catch (e) {
+  ///   print(decodeRevert(e)?.description);
+  /// }
+  /// ```
+  ///
+  /// Returns null when the node attached no revert data,
+  /// which is how Flare reports a bare `revert()`.
+  static RevertReason? decodeRevert(FlareRpcException e) =>
+      e.revertReasonWith(allErrors);
 
   /// `FAssetRedeemed(uint256,string,bool,uint256,address,uint256,uint256)`
   ///

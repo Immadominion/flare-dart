@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IFtsoRewardOffersManager
-// Functions: 1 readable of 2 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 2 — 1 readable via eth_call, 1 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IFtsoRewardOffersManager` contract.
+/// Typed bindings for Flare's `IFtsoRewardOffersManager` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -49,6 +57,20 @@ class IFtsoRewardOffersManagerContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `offerRewards(uint24,(uint120,bytes21,uint16,uint24,uint24,address)[])`.
+  static final AbiFunction offerRewardsFn = AbiFunction(
+    name: 'offerRewards',
+    inputs: [
+      AbiParameter(name: '_nextRewardEpochId', type: AbiType.parse('uint24')),
+      AbiParameter(
+        name: '_offers',
+        type: AbiType.parse('(uint120,bytes21,uint16,uint24,uint24,address)[]'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.payable,
+  );
+
   /// Calls `minimalRewardsOfferValueWei()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
@@ -59,6 +81,29 @@ class IFtsoRewardOffersManagerContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `offerRewards(uint24,(uint120,bytes21,uint16,uint24,uint24,address)[])`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest offerRewardsTx(
+    BigInt nextRewardEpochId,
+    List<List<Object?>> offers, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: offerRewardsFn,
+    args: [nextRewardEpochId, offers],
+    from: from,
+    value: value,
+  );
 
   /// `InflationRewardsOffered(uint24,bytes,bytes,uint256,uint16,uint24,bytes,uint16)`
   ///

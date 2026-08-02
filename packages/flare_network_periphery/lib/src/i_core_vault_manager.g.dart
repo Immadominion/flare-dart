@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: ICoreVaultManager
-// Functions: 25 readable of 28 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 28 — 25 readable via eth_call, 3 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 19
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `ICoreVaultManager` contract.
+/// Typed bindings for Flare's `ICoreVaultManager` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -257,6 +265,14 @@ class ICoreVaultManagerContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `pause()`.
+  static final AbiFunction pauseFn = AbiFunction(
+    name: 'pause',
+    inputs: [],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `paused()`.
   static final AbiFunction pausedFn = AbiFunction(
     name: 'paused',
@@ -265,12 +281,33 @@ class ICoreVaultManagerContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `processEscrows(uint256)`.
+  static final AbiFunction processEscrowsFn = AbiFunction(
+    name: 'processEscrows',
+    inputs: [AbiParameter(name: '_maxCount', type: AbiType.parse('uint256'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `totalRequestAmountWithFee()`.
   static final AbiFunction totalRequestAmountWithFeeFn = AbiFunction(
     name: 'totalRequestAmountWithFee',
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `triggerInstructions()`.
+  static final AbiFunction triggerInstructionsFn = AbiFunction(
+    name: 'triggerInstructions',
+    inputs: [],
+    outputs: [
+      AbiParameter(
+        name: '_numberOfInstructions',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `assetManager()`.
@@ -564,6 +601,274 @@ class ICoreVaultManagerContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `pause()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest pauseTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: pauseFn,
+        from: from,
+      );
+
+  /// Builds an unsigned `processEscrows(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest processEscrowsTx(BigInt maxCount, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: processEscrowsFn,
+        args: [maxCount],
+        from: from,
+      );
+
+  /// Builds an unsigned `triggerInstructions()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest triggerInstructionsTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: triggerInstructionsFn,
+        from: from,
+      );
+
+  /// `AlreadyConfirmed()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError alreadyConfirmedError = AbiError(
+    name: 'AlreadyConfirmed',
+    inputs: [],
+  );
+
+  /// `AmountZero()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError amountZeroError = AbiError(
+    name: 'AmountZero',
+    inputs: [],
+  );
+
+  /// `ContractPaused()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError contractPausedError = AbiError(
+    name: 'ContractPaused',
+    inputs: [],
+  );
+
+  /// `DestinationNotAllowed()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError destinationNotAllowedError = AbiError(
+    name: 'DestinationNotAllowed',
+    inputs: [],
+  );
+
+  /// `EscrowAlreadyFinished()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError escrowAlreadyFinishedError = AbiError(
+    name: 'EscrowAlreadyFinished',
+    inputs: [],
+  );
+
+  /// `FeeZero()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError feeZeroError = AbiError(name: 'FeeZero', inputs: []);
+
+  /// `InsufficientFunds()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError insufficientFundsError = AbiError(
+    name: 'InsufficientFunds',
+    inputs: [],
+  );
+
+  /// `InvalidAddress()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidAddressError = AbiError(
+    name: 'InvalidAddress',
+    inputs: [],
+  );
+
+  /// `InvalidAmount()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidAmountError = AbiError(
+    name: 'InvalidAmount',
+    inputs: [],
+  );
+
+  /// `InvalidChain()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidChainError = AbiError(
+    name: 'InvalidChain',
+    inputs: [],
+  );
+
+  /// `InvalidEndTime()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidEndTimeError = AbiError(
+    name: 'InvalidEndTime',
+    inputs: [],
+  );
+
+  /// `InvalidPreimageHash()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidPreimageHashError = AbiError(
+    name: 'InvalidPreimageHash',
+    inputs: [],
+  );
+
+  /// `NotAuthorized()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError notAuthorizedError = AbiError(
+    name: 'NotAuthorized',
+    inputs: [],
+  );
+
+  /// `NotCoreVault()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError notCoreVaultError = AbiError(
+    name: 'NotCoreVault',
+    inputs: [],
+  );
+
+  /// `NotFound()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError notFoundError = AbiError(name: 'NotFound', inputs: []);
+
+  /// `OnlyAssetManager()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError onlyAssetManagerError = AbiError(
+    name: 'OnlyAssetManager',
+    inputs: [],
+  );
+
+  /// `PaymentFailed()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError paymentFailedError = AbiError(
+    name: 'PaymentFailed',
+    inputs: [],
+  );
+
+  /// `PaymentNotProven()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError paymentNotProvenError = AbiError(
+    name: 'PaymentNotProven',
+    inputs: [],
+  );
+
+  /// `RequestExists()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError requestExistsError = AbiError(
+    name: 'RequestExists',
+    inputs: [],
+  );
+
+  /// Every custom error this contract declares.
+  static final List<AbiError> allErrors = [
+    alreadyConfirmedError,
+    amountZeroError,
+    contractPausedError,
+    destinationNotAllowedError,
+    escrowAlreadyFinishedError,
+    feeZeroError,
+    insufficientFundsError,
+    invalidAddressError,
+    invalidAmountError,
+    invalidChainError,
+    invalidEndTimeError,
+    invalidPreimageHashError,
+    notAuthorizedError,
+    notCoreVaultError,
+    notFoundError,
+    onlyAssetManagerError,
+    paymentFailedError,
+    paymentNotProvenError,
+    requestExistsError,
+  ];
+
+  /// Explains why a call to this contract reverted.
+  ///
+  /// ```dart
+  /// try {
+  ///   await client.estimateGas(request.toCallRequest());
+  /// } on FlareRpcException catch (e) {
+  ///   print(decodeRevert(e)?.description);
+  /// }
+  /// ```
+  ///
+  /// Returns null when the node attached no revert data,
+  /// which is how Flare reports a bare `revert()`.
+  static RevertReason? decodeRevert(FlareRpcException e) =>
+      e.revertReasonWith(allErrors);
 
   /// `AllowedDestinationAddressAdded(string)`
   ///

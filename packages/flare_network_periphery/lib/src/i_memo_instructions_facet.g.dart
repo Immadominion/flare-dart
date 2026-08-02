@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IMemoInstructionsFacet
-// Functions: 3 readable of 4 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 4 — 3 readable via eth_call, 1 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 12
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IMemoInstructionsFacet` contract.
+/// Typed bindings for Flare's `IMemoInstructionsFacet` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -74,6 +82,24 @@ class IMemoInstructionsFacetContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `mintedFAssets(bytes32,string,uint256,uint256,bytes,address)`.
+  static final AbiFunction mintedFAssetsFn = AbiFunction(
+    name: 'mintedFAssets',
+    inputs: [
+      AbiParameter(name: '_transactionId', type: AbiType.parse('bytes32')),
+      AbiParameter(name: '_sourceAddress', type: AbiType.parse('string')),
+      AbiParameter(name: '_amount', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_underlyingTimestamp',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(name: '_memoData', type: AbiType.parse('bytes')),
+      AbiParameter(name: '_executor', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.payable,
+  );
+
   /// Calls `getExecutor(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
@@ -109,6 +135,206 @@ class IMemoInstructionsFacetContract {
     );
     return out[0]! as bool;
   }
+
+  /// Builds an unsigned `mintedFAssets(bytes32,string,uint256,uint256,bytes,address)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest mintedFAssetsTx(
+    Uint8List transactionId,
+    String sourceAddress,
+    BigInt amount,
+    BigInt underlyingTimestamp,
+    Uint8List memoData,
+    EthAddress executor, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: mintedFAssetsFn,
+    args: [
+      transactionId,
+      sourceAddress,
+      amount,
+      underlyingTimestamp,
+      memoData,
+      executor,
+    ],
+    from: from,
+    value: value,
+  );
+
+  /// `AddressZero()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError addressZeroError = AbiError(
+    name: 'AddressZero',
+    inputs: [],
+  );
+
+  /// `CallFailed(bytes)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError callFailedError = AbiError(
+    name: 'CallFailed',
+    inputs: [AbiParameter(name: 'returnData', type: AbiType.parse('bytes'))],
+  );
+
+  /// `InsufficientAmountForFee(uint256,uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError insufficientAmountForFeeError = AbiError(
+    name: 'InsufficientAmountForFee',
+    inputs: [
+      AbiParameter(name: 'amount', type: AbiType.parse('uint256')),
+      AbiParameter(name: 'fee', type: AbiType.parse('uint256')),
+    ],
+  );
+
+  /// `InvalidInstructionId(uint8)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidInstructionIdError = AbiError(
+    name: 'InvalidInstructionId',
+    inputs: [AbiParameter(name: 'instructionId', type: AbiType.parse('uint8'))],
+  );
+
+  /// `InvalidMemoData()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidMemoDataError = AbiError(
+    name: 'InvalidMemoData',
+    inputs: [],
+  );
+
+  /// `InvalidNonce(uint256,uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidNonceError = AbiError(
+    name: 'InvalidNonce',
+    inputs: [
+      AbiParameter(name: 'expected', type: AbiType.parse('uint256')),
+      AbiParameter(name: 'actual', type: AbiType.parse('uint256')),
+    ],
+  );
+
+  /// `InvalidNonceIncrease(uint256,uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidNonceIncreaseError = AbiError(
+    name: 'InvalidNonceIncrease',
+    inputs: [
+      AbiParameter(name: 'currentNonce', type: AbiType.parse('uint256')),
+      AbiParameter(name: 'newNonce', type: AbiType.parse('uint256')),
+    ],
+  );
+
+  /// `InvalidSender(address,address)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidSenderError = AbiError(
+    name: 'InvalidSender',
+    inputs: [
+      AbiParameter(name: 'sender', type: AbiType.parse('address')),
+      AbiParameter(name: 'personalAccount', type: AbiType.parse('address')),
+    ],
+  );
+
+  /// `OnlyAssetManager()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError onlyAssetManagerError = AbiError(
+    name: 'OnlyAssetManager',
+    inputs: [],
+  );
+
+  /// `TransactionAlreadyExecuted()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError transactionAlreadyExecutedError = AbiError(
+    name: 'TransactionAlreadyExecuted',
+    inputs: [],
+  );
+
+  /// `ValueZero()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError valueZeroError = AbiError(
+    name: 'ValueZero',
+    inputs: [],
+  );
+
+  /// `WrongExecutor(address,address)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError wrongExecutorError = AbiError(
+    name: 'WrongExecutor',
+    inputs: [
+      AbiParameter(name: 'expected', type: AbiType.parse('address')),
+      AbiParameter(name: 'actual', type: AbiType.parse('address')),
+    ],
+  );
+
+  /// Every custom error this contract declares.
+  static final List<AbiError> allErrors = [
+    addressZeroError,
+    callFailedError,
+    insufficientAmountForFeeError,
+    invalidInstructionIdError,
+    invalidMemoDataError,
+    invalidNonceError,
+    invalidNonceIncreaseError,
+    invalidSenderError,
+    onlyAssetManagerError,
+    transactionAlreadyExecutedError,
+    valueZeroError,
+    wrongExecutorError,
+  ];
+
+  /// Explains why a call to this contract reverted.
+  ///
+  /// ```dart
+  /// try {
+  ///   await client.estimateGas(request.toCallRequest());
+  /// } on FlareRpcException catch (e) {
+  ///   print(decodeRevert(e)?.description);
+  /// }
+  /// ```
+  ///
+  /// Returns null when the node attached no revert data,
+  /// which is how Flare reports a bare `revert()`.
+  static RevertReason? decodeRevert(FlareRpcException e) =>
+      e.revertReasonWith(allErrors);
 
   /// `DirectMintingExecuted(address,bytes32,string,uint256,uint256,address)`
   ///

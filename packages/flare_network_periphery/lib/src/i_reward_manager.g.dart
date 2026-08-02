@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IRewardManager
-// Functions: 15 readable of 18 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 18 — 15 readable via eth_call, 3 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IRewardManager` contract.
+/// Typed bindings for Flare's `IRewardManager` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -44,6 +52,40 @@ class IRewardManagerContract {
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `autoClaim(address[],uint24,(bytes32[],(uint24,bytes20,uint120,uint8))[])`.
+  static final AbiFunction autoClaimFn = AbiFunction(
+    name: 'autoClaim',
+    inputs: [
+      AbiParameter(name: '_rewardOwners', type: AbiType.parse('address[]')),
+      AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint24')),
+      AbiParameter(
+        name: '_proofs',
+        type: AbiType.parse('(bytes32[],(uint24,bytes20,uint120,uint8))[]'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `claim(address,address,uint24,bool,(bytes32[],(uint24,bytes20,uint120,uint8))[])`.
+  static final AbiFunction claimFn = AbiFunction(
+    name: 'claim',
+    inputs: [
+      AbiParameter(name: '_rewardOwner', type: AbiType.parse('address')),
+      AbiParameter(name: '_recipient', type: AbiType.parse('address')),
+      AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint24')),
+      AbiParameter(name: '_wrap', type: AbiType.parse('bool')),
+      AbiParameter(
+        name: '_proofs',
+        type: AbiType.parse('(bytes32[],(uint24,bytes20,uint120,uint8))[]'),
+      ),
+    ],
+    outputs: [
+      AbiParameter(name: '_rewardAmountWei', type: AbiType.parse('uint256')),
+    ],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `cleanupBlockNumber()`.
@@ -192,6 +234,19 @@ class IRewardManagerContract {
       ),
     ],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `initialiseWeightBasedClaims((bytes32[],(uint24,bytes20,uint120,uint8))[])`.
+  static final AbiFunction initialiseWeightBasedClaimsFn = AbiFunction(
+    name: 'initialiseWeightBasedClaims',
+    inputs: [
+      AbiParameter(
+        name: '_proofs',
+        type: AbiType.parse('(bytes32[],(uint24,bytes20,uint120,uint8))[]'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `noOfInitialisedWeightBasedClaims(uint256)`.
@@ -420,6 +475,66 @@ class IRewardManagerContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `autoClaim(address[],uint24,(bytes32[],(uint24,bytes20,uint120,uint8))[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest autoClaimTx(
+    List<EthAddress> rewardOwners,
+    BigInt rewardEpochId,
+    List<List<Object?>> proofs, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: autoClaimFn,
+    args: [rewardOwners, rewardEpochId, proofs],
+    from: from,
+  );
+
+  /// Builds an unsigned `claim(address,address,uint24,bool,(bytes32[],(uint24,bytes20,uint120,uint8))[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest claimTx(
+    EthAddress rewardOwner,
+    EthAddress recipient,
+    BigInt rewardEpochId,
+    bool wrap,
+    List<List<Object?>> proofs, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: claimFn,
+    args: [rewardOwner, recipient, rewardEpochId, wrap, proofs],
+    from: from,
+  );
+
+  /// Builds an unsigned `initialiseWeightBasedClaims((bytes32[],(uint24,bytes20,uint120,uint8))[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest initialiseWeightBasedClaimsTx(
+    List<List<Object?>> proofs, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: initialiseWeightBasedClaimsFn,
+    args: [proofs],
+    from: from,
+  );
 
   /// `RewardClaimed(address,address,address,uint24,uint8,uint120)`
   ///

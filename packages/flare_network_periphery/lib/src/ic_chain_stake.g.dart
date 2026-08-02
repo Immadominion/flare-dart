@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: ICChainStake
-// Functions: 13 readable of 15 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 15 — 13 readable via eth_call, 2 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `ICChainStake` contract.
+/// Typed bindings for Flare's `ICChainStake` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -130,6 +138,16 @@ class ICChainStakeContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `totalVotePowerAtCached(uint256)`.
+  static final AbiFunction totalVotePowerAtCachedFn = AbiFunction(
+    name: 'totalVotePowerAtCached',
+    inputs: [
+      AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `votePowerFromTo(address,address)`.
   static final AbiFunction votePowerFromToFn = AbiFunction(
     name: 'votePowerFromTo',
@@ -170,6 +188,17 @@ class ICChainStakeContract {
     ],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `votePowerOfAtCached(address,uint256)`.
+  static final AbiFunction votePowerOfAtCachedFn = AbiFunction(
+    name: 'votePowerOfAtCached',
+    inputs: [
+      AbiParameter(name: '_owner', type: AbiType.parse('address')),
+      AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `balanceOf(address)`.
@@ -343,6 +372,43 @@ class ICChainStakeContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `totalVotePowerAtCached(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest totalVotePowerAtCachedTx(
+    BigInt blockNumber, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: totalVotePowerAtCachedFn,
+    args: [blockNumber],
+    from: from,
+  );
+
+  /// Builds an unsigned `votePowerOfAtCached(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest votePowerOfAtCachedTx(
+    EthAddress owner,
+    BigInt blockNumber, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: votePowerOfAtCachedFn,
+    args: [owner, blockNumber],
+    from: from,
+  );
 
   /// `VotePowerCacheCreated(address,uint256)`
   ///

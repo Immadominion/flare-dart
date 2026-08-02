@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IIRandomProvider
-// Functions: 2 readable of 3 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 3 — 2 readable via eth_call, 1 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IIRandomProvider` contract.
+/// Typed bindings for Flare's `IIRandomProvider` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -38,6 +46,23 @@ class IIRandomProviderContract {
     );
     return IIRandomProviderContract(client: client, address: resolved);
   }
+
+  /// ABI descriptor for `chillNonrevealingDataProviders(uint256,uint256)`.
+  static final AbiFunction chillNonrevealingDataProvidersFn = AbiFunction(
+    name: 'chillNonrevealingDataProviders',
+    inputs: [
+      AbiParameter(
+        name: '_finalizingPriceEpochId',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_currentPriceEpochId',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
 
   /// ABI descriptor for `getCurrentRandom()`.
   static final AbiFunction getCurrentRandomFn = AbiFunction(
@@ -82,4 +107,23 @@ class IIRandomProviderContract {
     );
     return (currentRandom: out[0]! as BigInt, goodRandom: out[1]! as bool);
   }
+
+  /// Builds an unsigned `chillNonrevealingDataProviders(uint256,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest chillNonrevealingDataProvidersTx(
+    BigInt finalizingPriceEpochId,
+    BigInt currentPriceEpochId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: chillNonrevealingDataProvidersFn,
+    args: [finalizingPriceEpochId, currentPriceEpochId],
+    from: from,
+  );
 }

@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IXrplProviderWalletsFacet
-// Functions: 1 readable of 1 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 1 — 1 readable via eth_call, 0 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 2
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IXrplProviderWalletsFacet` contract.
+/// Typed bindings for Flare's `IXrplProviderWalletsFacet` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -60,6 +68,51 @@ class IXrplProviderWalletsFacetContract {
     );
     return (out[0]! as List).cast<String>();
   }
+
+  /// `InvalidXrplProviderWallet(string)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidXrplProviderWalletError = AbiError(
+    name: 'InvalidXrplProviderWallet',
+    inputs: [
+      AbiParameter(name: 'xrplProviderWallet', type: AbiType.parse('string')),
+    ],
+  );
+
+  /// `XrplProviderWalletAlreadyExists(string)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError xrplProviderWalletAlreadyExistsError = AbiError(
+    name: 'XrplProviderWalletAlreadyExists',
+    inputs: [
+      AbiParameter(name: 'xrplProviderWallet', type: AbiType.parse('string')),
+    ],
+  );
+
+  /// Every custom error this contract declares.
+  static final List<AbiError> allErrors = [
+    invalidXrplProviderWalletError,
+    xrplProviderWalletAlreadyExistsError,
+  ];
+
+  /// Explains why a call to this contract reverted.
+  ///
+  /// ```dart
+  /// try {
+  ///   await client.estimateGas(request.toCallRequest());
+  /// } on FlareRpcException catch (e) {
+  ///   print(decodeRevert(e)?.description);
+  /// }
+  /// ```
+  ///
+  /// Returns null when the node attached no revert data,
+  /// which is how Flare reports a bare `revert()`.
+  static RevertReason? decodeRevert(FlareRpcException e) =>
+      e.revertReasonWith(allErrors);
 
   /// `XrplProviderWalletAdded(string)`
   ///

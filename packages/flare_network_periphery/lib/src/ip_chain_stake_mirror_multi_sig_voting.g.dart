@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IPChainStakeMirrorMultiSigVoting
-// Functions: 8 readable of 10 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 10 — 8 readable via eth_call, 2 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IPChainStakeMirrorMultiSigVoting` contract.
+/// Typed bindings for Flare's `IPChainStakeMirrorMultiSigVoting` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -122,6 +130,28 @@ class IPChainStakeMirrorMultiSigVotingContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `submitValidatorUptimeVote(uint256,bytes20[])`.
+  static final AbiFunction submitValidatorUptimeVoteFn = AbiFunction(
+    name: 'submitValidatorUptimeVote',
+    inputs: [
+      AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_nodeIds', type: AbiType.parse('bytes20[]')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `submitVote(uint256,bytes32)`.
+  static final AbiFunction submitVoteFn = AbiFunction(
+    name: 'submitVote',
+    inputs: [
+      AbiParameter(name: '_epochId', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_merkleRoot', type: AbiType.parse('bytes32')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// Calls `getCurrentEpochId()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
@@ -217,6 +247,44 @@ class IPChainStakeMirrorMultiSigVotingContract {
     );
     return out[0]! as bool;
   }
+
+  /// Builds an unsigned `submitValidatorUptimeVote(uint256,bytes20[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest submitValidatorUptimeVoteTx(
+    BigInt rewardEpochId,
+    List<Uint8List> nodeIds, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: submitValidatorUptimeVoteFn,
+    args: [rewardEpochId, nodeIds],
+    from: from,
+  );
+
+  /// Builds an unsigned `submitVote(uint256,bytes32)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest submitVoteTx(
+    BigInt epochId,
+    Uint8List merkleRoot, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: submitVoteFn,
+    args: [epochId, merkleRoot],
+    from: from,
+  );
 
   /// `PChainStakeMirrorValidatorUptimeVoteSubmitted(uint256,uint256,address,bytes20[])`
   ///

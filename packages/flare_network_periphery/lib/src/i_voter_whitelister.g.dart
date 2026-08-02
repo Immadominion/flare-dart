@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IVoterWhitelister
-// Functions: 5 readable of 7 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 7 — 5 readable via eth_call, 2 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IVoterWhitelister` contract.
+/// Typed bindings for Flare's `IVoterWhitelister` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -82,6 +90,28 @@ class IVoterWhitelisterContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `requestFullVoterWhitelisting(address)`.
+  static final AbiFunction requestFullVoterWhitelistingFn = AbiFunction(
+    name: 'requestFullVoterWhitelisting',
+    inputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
+    outputs: [
+      AbiParameter(name: '_supportedIndices', type: AbiType.parse('uint256[]')),
+      AbiParameter(name: '_success', type: AbiType.parse('bool[]')),
+    ],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `requestWhitelistingVoter(address,uint256)`.
+  static final AbiFunction requestWhitelistingVoterFn = AbiFunction(
+    name: 'requestWhitelistingVoter',
+    inputs: [
+      AbiParameter(name: '_voter', type: AbiType.parse('address')),
+      AbiParameter(name: '_ftsoIndex', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// Calls `chilledUntilRewardEpoch(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
@@ -144,6 +174,43 @@ class IVoterWhitelisterContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `requestFullVoterWhitelisting(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest requestFullVoterWhitelistingTx(
+    EthAddress voter, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: requestFullVoterWhitelistingFn,
+    args: [voter],
+    from: from,
+  );
+
+  /// Builds an unsigned `requestWhitelistingVoter(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest requestWhitelistingVoterTx(
+    EthAddress voter,
+    BigInt ftsoIndex, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: requestWhitelistingVoterFn,
+    args: [voter, ftsoIndex],
+    from: from,
+  );
 
   /// `VoterChilled(address,uint256)`
   ///

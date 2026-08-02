@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IIAddressUpdater
-// Functions: 5 readable of 5 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 5 — 5 readable via eth_call, 0 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IIAddressUpdater` contract.
+/// Typed bindings for Flare's `IIAddressUpdater` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.

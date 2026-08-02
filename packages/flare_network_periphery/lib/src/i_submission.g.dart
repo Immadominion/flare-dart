@@ -2,14 +2,24 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: ISubmission
-// Functions: 3 readable of 8 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 8 — 3 readable via eth_call, 5 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
+import 'dart:typed_data';
+
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `ISubmission` contract.
+/// Typed bindings for Flare's `ISubmission` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -75,6 +85,46 @@ class ISubmissionContract {
         stateMutability: StateMutability.view,
       );
 
+  /// ABI descriptor for `submit1()`.
+  static final AbiFunction submit1Fn = AbiFunction(
+    name: 'submit1',
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `submit2()`.
+  static final AbiFunction submit2Fn = AbiFunction(
+    name: 'submit2',
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `submit3()`.
+  static final AbiFunction submit3Fn = AbiFunction(
+    name: 'submit3',
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `submitAndPass(bytes)`.
+  static final AbiFunction submitAndPassFn = AbiFunction(
+    name: 'submitAndPass',
+    inputs: [AbiParameter(name: '_data', type: AbiType.parse('bytes'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `submitSignatures()`.
+  static final AbiFunction submitSignaturesFn = AbiFunction(
+    name: 'submitSignatures',
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// Calls `getCurrentRandom()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
@@ -113,6 +163,82 @@ class ISubmissionContract {
       randomTimestamp: out[2]! as BigInt,
     );
   }
+
+  /// Builds an unsigned `submit1()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest submit1Tx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: submit1Fn,
+        from: from,
+      );
+
+  /// Builds an unsigned `submit2()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest submit2Tx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: submit2Fn,
+        from: from,
+      );
+
+  /// Builds an unsigned `submit3()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest submit3Tx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: submit3Fn,
+        from: from,
+      );
+
+  /// Builds an unsigned `submitAndPass(bytes)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest submitAndPassTx(Uint8List data, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: submitAndPassFn,
+        args: [data],
+        from: from,
+      );
+
+  /// Builds an unsigned `submitSignatures()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest submitSignaturesTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: submitSignaturesFn,
+        from: from,
+      );
 
   /// `NewVotingRoundInitiated()`
   ///

@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IFastUpdateIncentiveManager
-// Functions: 10 readable of 11 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 11 — 10 readable via eth_call, 1 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IFastUpdateIncentiveManager` contract.
+/// Typed bindings for Flare's `IFastUpdateIncentiveManager` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -98,6 +106,16 @@ class IFastUpdateIncentiveManagerContract {
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `offerIncentive((uint256,uint256))`.
+  static final AbiFunction offerIncentiveFn = AbiFunction(
+    name: 'offerIncentive',
+    inputs: [
+      AbiParameter(name: '_offer', type: AbiType.parse('(uint256,uint256)')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.payable,
   );
 
   /// ABI descriptor for `rangeIncreaseLimit()`.
@@ -233,6 +251,28 @@ class IFastUpdateIncentiveManagerContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `offerIncentive((uint256,uint256))`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest offerIncentiveTx(
+    List<Object?> offer, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: offerIncentiveFn,
+    args: [offer],
+    from: from,
+    value: value,
+  );
 
   /// `IncentiveOffered(uint24,uint256,uint256,uint256)`
   ///

@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IIERC20WithMetadata
-// Functions: 6 readable of 9 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 9 — 6 readable via eth_call, 3 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IIERC20WithMetadata` contract.
+/// Typed bindings for Flare's `IIERC20WithMetadata` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -53,6 +61,17 @@ class IIERC20WithMetadataContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `approve(address,uint256)`.
+  static final AbiFunction approveFn = AbiFunction(
+    name: 'approve',
+    inputs: [
+      AbiParameter(name: 'spender', type: AbiType.parse('address')),
+      AbiParameter(name: 'amount', type: AbiType.parse('uint256')),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `balanceOf(address)`.
   static final AbiFunction balanceOfFn = AbiFunction(
     name: 'balanceOf',
@@ -91,6 +110,29 @@ class IIERC20WithMetadataContract {
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `transfer(address,uint256)`.
+  static final AbiFunction transferFn = AbiFunction(
+    name: 'transfer',
+    inputs: [
+      AbiParameter(name: 'to', type: AbiType.parse('address')),
+      AbiParameter(name: 'amount', type: AbiType.parse('uint256')),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `transferFrom(address,address,uint256)`.
+  static final AbiFunction transferFromFn = AbiFunction(
+    name: 'transferFrom',
+    inputs: [
+      AbiParameter(name: 'from', type: AbiType.parse('address')),
+      AbiParameter(name: 'to', type: AbiType.parse('address')),
+      AbiParameter(name: 'amount', type: AbiType.parse('uint256')),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `allowance(address,address)`.
@@ -157,6 +199,64 @@ class IIERC20WithMetadataContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `approve(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest approveTx(
+    EthAddress spender,
+    BigInt amount, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: approveFn,
+    args: [spender, amount],
+    from: from,
+  );
+
+  /// Builds an unsigned `transfer(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest transferTx(
+    EthAddress to,
+    BigInt amount, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: transferFn,
+    args: [to, amount],
+    from: from,
+  );
+
+  /// Builds an unsigned `transferFrom(address,address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest transferFromTx(
+    EthAddress from_,
+    EthAddress to,
+    BigInt amount, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: transferFromFn,
+    args: [from_, to, amount],
+    from: from,
+  );
 
   /// `Approval(address,address,uint256)`
   ///

@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: ICoreVaultClient
-// Functions: 2 readable of 8 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 8 — 2 readable via eth_call, 6 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `ICoreVaultClient` contract.
+/// Typed bindings for Flare's `ICoreVaultClient` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -39,6 +47,45 @@ class ICoreVaultClientContract {
     return ICoreVaultClientContract(client: client, address: resolved);
   }
 
+  /// ABI descriptor for `cancelReturnFromCoreVault(address)`.
+  static final AbiFunction cancelReturnFromCoreVaultFn = AbiFunction(
+    name: 'cancelReturnFromCoreVault',
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `confirmCoreVaultDonation((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,address),(uint64,uint64,string,bytes32,bytes32,bytes32,int256,int256,int256,int256,bool,bytes,bool,uint256,uint8))))`.
+  static final AbiFunction confirmCoreVaultDonationFn = AbiFunction(
+    name: 'confirmCoreVaultDonation',
+    inputs: [
+      AbiParameter(
+        name: '_payment',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,address),(uint64,uint64,string,bytes32,bytes32,bytes32,int256,int256,int256,int256,bool,bytes,bool,uint256,uint8)))',
+        ),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `confirmReturnFromCoreVault((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),address)`.
+  static final AbiFunction confirmReturnFromCoreVaultFn = AbiFunction(
+    name: 'confirmReturnFromCoreVault',
+    inputs: [
+      AbiParameter(
+        name: '_payment',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8)))',
+        ),
+      ),
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `coreVaultAvailableAmount()`.
   static final AbiFunction coreVaultAvailableAmountFn = AbiFunction(
     name: 'coreVaultAvailableAmount',
@@ -65,6 +112,42 @@ class ICoreVaultClientContract {
       ),
     ],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `redeemFromCoreVault(uint256,string)`.
+  static final AbiFunction redeemFromCoreVaultFn = AbiFunction(
+    name: 'redeemFromCoreVault',
+    inputs: [
+      AbiParameter(name: '_lots', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_redeemerUnderlyingAddress',
+        type: AbiType.parse('string'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `requestReturnFromCoreVault(address,uint256)`.
+  static final AbiFunction requestReturnFromCoreVaultFn = AbiFunction(
+    name: 'requestReturnFromCoreVault',
+    inputs: [
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+      AbiParameter(name: '_lots', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `transferToCoreVault(address,uint256)`.
+  static final AbiFunction transferToCoreVaultFn = AbiFunction(
+    name: 'transferToCoreVault',
+    inputs: [
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+      AbiParameter(name: '_amountUBA', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `coreVaultAvailableAmount()`.
@@ -97,6 +180,118 @@ class ICoreVaultClientContract {
       minimumLeftAmountUBA: out[1]! as BigInt,
     );
   }
+
+  /// Builds an unsigned `cancelReturnFromCoreVault(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest cancelReturnFromCoreVaultTx(
+    EthAddress agentVault, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: cancelReturnFromCoreVaultFn,
+    args: [agentVault],
+    from: from,
+  );
+
+  /// Builds an unsigned `confirmCoreVaultDonation((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,address),(uint64,uint64,string,bytes32,bytes32,bytes32,int256,int256,int256,int256,bool,bytes,bool,uint256,uint8))))`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest confirmCoreVaultDonationTx(
+    List<Object?> payment, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: confirmCoreVaultDonationFn,
+    args: [payment],
+    from: from,
+  );
+
+  /// Builds an unsigned `confirmReturnFromCoreVault((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest confirmReturnFromCoreVaultTx(
+    List<Object?> payment,
+    EthAddress agentVault, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: confirmReturnFromCoreVaultFn,
+    args: [payment, agentVault],
+    from: from,
+  );
+
+  /// Builds an unsigned `redeemFromCoreVault(uint256,string)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest redeemFromCoreVaultTx(
+    BigInt lots,
+    String redeemerUnderlyingAddress, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: redeemFromCoreVaultFn,
+    args: [lots, redeemerUnderlyingAddress],
+    from: from,
+  );
+
+  /// Builds an unsigned `requestReturnFromCoreVault(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest requestReturnFromCoreVaultTx(
+    EthAddress agentVault,
+    BigInt lots, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: requestReturnFromCoreVaultFn,
+    args: [agentVault, lots],
+    from: from,
+  );
+
+  /// Builds an unsigned `transferToCoreVault(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest transferToCoreVaultTx(
+    EthAddress agentVault,
+    BigInt amountUBA, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: transferToCoreVaultFn,
+    args: [agentVault, amountUBA],
+    from: from,
+  );
 
   /// `CoreVaultFundsAdded(uint256)`
   ///

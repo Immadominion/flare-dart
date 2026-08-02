@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IIGovernanceVotePower
-// Functions: 7 readable of 12 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 12 — 7 readable via eth_call, 5 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IIGovernanceVotePower` contract.
+/// Typed bindings for Flare's `IIGovernanceVotePower` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -41,6 +49,14 @@ class IIGovernanceVotePowerContract {
     );
     return IIGovernanceVotePowerContract(client: client, address: resolved);
   }
+
+  /// ABI descriptor for `delegate(address)`.
+  static final AbiFunction delegateFn = AbiFunction(
+    name: 'delegate',
+    inputs: [AbiParameter(name: '_to', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
 
   /// ABI descriptor for `getCleanupBlockNumber()`.
   static final AbiFunction getCleanupBlockNumberFn = AbiFunction(
@@ -91,6 +107,48 @@ class IIGovernanceVotePowerContract {
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `setCleanerContract(address)`.
+  static final AbiFunction setCleanerContractFn = AbiFunction(
+    name: 'setCleanerContract',
+    inputs: [
+      AbiParameter(name: '_cleanerContract', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setCleanupBlockNumber(uint256)`.
+  static final AbiFunction setCleanupBlockNumberFn = AbiFunction(
+    name: 'setCleanupBlockNumber',
+    inputs: [
+      AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `undelegate()`.
+  static final AbiFunction undelegateFn = AbiFunction(
+    name: 'undelegate',
+    inputs: [],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `updateAtTokenTransfer(address,address,uint256,uint256,uint256)`.
+  static final AbiFunction updateAtTokenTransferFn = AbiFunction(
+    name: 'updateAtTokenTransfer',
+    inputs: [
+      AbiParameter(name: '_from', type: AbiType.parse('address')),
+      AbiParameter(name: '_to', type: AbiType.parse('address')),
+      AbiParameter(name: '_fromBalance', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_toBalance', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_amount', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `votePowerOfAt(address,uint256)`.
@@ -184,6 +242,95 @@ class IIGovernanceVotePowerContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `delegate(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest delegateTx(EthAddress to, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: delegateFn,
+        args: [to],
+        from: from,
+      );
+
+  /// Builds an unsigned `setCleanerContract(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setCleanerContractTx(
+    EthAddress cleanerContract, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setCleanerContractFn,
+    args: [cleanerContract],
+    from: from,
+  );
+
+  /// Builds an unsigned `setCleanupBlockNumber(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setCleanupBlockNumberTx(
+    BigInt blockNumber, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setCleanupBlockNumberFn,
+    args: [blockNumber],
+    from: from,
+  );
+
+  /// Builds an unsigned `undelegate()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest undelegateTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: undelegateFn,
+        from: from,
+      );
+
+  /// Builds an unsigned `updateAtTokenTransfer(address,address,uint256,uint256,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest updateAtTokenTransferTx(
+    EthAddress from_,
+    EthAddress to,
+    BigInt fromBalance,
+    BigInt toBalance,
+    BigInt amount, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: updateAtTokenTransferFn,
+    args: [from_, to, fromBalance, toBalance, amount],
+    from: from,
+  );
 
   /// `DelegateChanged(address,address,address)`
   ///

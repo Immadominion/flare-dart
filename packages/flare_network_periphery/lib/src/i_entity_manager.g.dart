@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IEntityManager
-// Functions: 14 readable of 26 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 26 — 14 readable via eth_call, 12 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IEntityManager` contract.
+/// Typed bindings for Flare's `IEntityManager` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -39,6 +47,40 @@ class IEntityManagerContract {
     );
     return IEntityManagerContract(client: client, address: resolved);
   }
+
+  /// ABI descriptor for `confirmDelegationAddressRegistration(address)`.
+  static final AbiFunction confirmDelegationAddressRegistrationFn = AbiFunction(
+    name: 'confirmDelegationAddressRegistration',
+    inputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `confirmSigningPolicyAddressRegistration(address)`.
+  static final AbiFunction confirmSigningPolicyAddressRegistrationFn =
+      AbiFunction(
+        name: 'confirmSigningPolicyAddressRegistration',
+        inputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
+        outputs: [],
+        stateMutability: StateMutability.nonpayable,
+      );
+
+  /// ABI descriptor for `confirmSubmitAddressRegistration(address)`.
+  static final AbiFunction confirmSubmitAddressRegistrationFn = AbiFunction(
+    name: 'confirmSubmitAddressRegistration',
+    inputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `confirmSubmitSignaturesAddressRegistration(address)`.
+  static final AbiFunction confirmSubmitSignaturesAddressRegistrationFn =
+      AbiFunction(
+        name: 'confirmSubmitSignaturesAddressRegistration',
+        inputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
+        outputs: [],
+        stateMutability: StateMutability.nonpayable,
+      );
 
   /// ABI descriptor for `getDelegationAddressOf(address)`.
   static final AbiFunction getDelegationAddressOfFn = AbiFunction(
@@ -203,6 +245,92 @@ class IEntityManagerContract {
     ],
     outputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `proposeDelegationAddress(address)`.
+  static final AbiFunction proposeDelegationAddressFn = AbiFunction(
+    name: 'proposeDelegationAddress',
+    inputs: [
+      AbiParameter(name: '_delegationAddress', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `proposeSigningPolicyAddress(address)`.
+  static final AbiFunction proposeSigningPolicyAddressFn = AbiFunction(
+    name: 'proposeSigningPolicyAddress',
+    inputs: [
+      AbiParameter(
+        name: '_signingPolicyAddress',
+        type: AbiType.parse('address'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `proposeSubmitAddress(address)`.
+  static final AbiFunction proposeSubmitAddressFn = AbiFunction(
+    name: 'proposeSubmitAddress',
+    inputs: [
+      AbiParameter(name: '_submitAddress', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `proposeSubmitSignaturesAddress(address)`.
+  static final AbiFunction proposeSubmitSignaturesAddressFn = AbiFunction(
+    name: 'proposeSubmitSignaturesAddress',
+    inputs: [
+      AbiParameter(
+        name: '_submitSignaturesAddress',
+        type: AbiType.parse('address'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `registerNodeId(bytes20,bytes,bytes)`.
+  static final AbiFunction registerNodeIdFn = AbiFunction(
+    name: 'registerNodeId',
+    inputs: [
+      AbiParameter(name: '_nodeId', type: AbiType.parse('bytes20')),
+      AbiParameter(name: '_certificateRaw', type: AbiType.parse('bytes')),
+      AbiParameter(name: '_signature', type: AbiType.parse('bytes')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `registerPublicKey(bytes32,bytes32,bytes)`.
+  static final AbiFunction registerPublicKeyFn = AbiFunction(
+    name: 'registerPublicKey',
+    inputs: [
+      AbiParameter(name: '_part1', type: AbiType.parse('bytes32')),
+      AbiParameter(name: '_part2', type: AbiType.parse('bytes32')),
+      AbiParameter(name: '_verificationData', type: AbiType.parse('bytes')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `unregisterNodeId(bytes20)`.
+  static final AbiFunction unregisterNodeIdFn = AbiFunction(
+    name: 'unregisterNodeId',
+    inputs: [AbiParameter(name: '_nodeId', type: AbiType.parse('bytes20'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `unregisterPublicKey()`.
+  static final AbiFunction unregisterPublicKeyFn = AbiFunction(
+    name: 'unregisterPublicKey',
+    inputs: [],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `getDelegationAddressOf(address)`.
@@ -403,6 +531,221 @@ class IEntityManagerContract {
     );
     return out[0]! as EthAddress;
   }
+
+  /// Builds an unsigned `confirmDelegationAddressRegistration(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest confirmDelegationAddressRegistrationTx(
+    EthAddress voter, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: confirmDelegationAddressRegistrationFn,
+    args: [voter],
+    from: from,
+  );
+
+  /// Builds an unsigned `confirmSigningPolicyAddressRegistration(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest confirmSigningPolicyAddressRegistrationTx(
+    EthAddress voter, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: confirmSigningPolicyAddressRegistrationFn,
+    args: [voter],
+    from: from,
+  );
+
+  /// Builds an unsigned `confirmSubmitAddressRegistration(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest confirmSubmitAddressRegistrationTx(
+    EthAddress voter, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: confirmSubmitAddressRegistrationFn,
+    args: [voter],
+    from: from,
+  );
+
+  /// Builds an unsigned `confirmSubmitSignaturesAddressRegistration(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest confirmSubmitSignaturesAddressRegistrationTx(
+    EthAddress voter, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: confirmSubmitSignaturesAddressRegistrationFn,
+    args: [voter],
+    from: from,
+  );
+
+  /// Builds an unsigned `proposeDelegationAddress(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest proposeDelegationAddressTx(
+    EthAddress delegationAddress, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: proposeDelegationAddressFn,
+    args: [delegationAddress],
+    from: from,
+  );
+
+  /// Builds an unsigned `proposeSigningPolicyAddress(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest proposeSigningPolicyAddressTx(
+    EthAddress signingPolicyAddress, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: proposeSigningPolicyAddressFn,
+    args: [signingPolicyAddress],
+    from: from,
+  );
+
+  /// Builds an unsigned `proposeSubmitAddress(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest proposeSubmitAddressTx(
+    EthAddress submitAddress, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: proposeSubmitAddressFn,
+    args: [submitAddress],
+    from: from,
+  );
+
+  /// Builds an unsigned `proposeSubmitSignaturesAddress(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest proposeSubmitSignaturesAddressTx(
+    EthAddress submitSignaturesAddress, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: proposeSubmitSignaturesAddressFn,
+    args: [submitSignaturesAddress],
+    from: from,
+  );
+
+  /// Builds an unsigned `registerNodeId(bytes20,bytes,bytes)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest registerNodeIdTx(
+    Uint8List nodeId,
+    Uint8List certificateRaw,
+    Uint8List signature, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: registerNodeIdFn,
+    args: [nodeId, certificateRaw, signature],
+    from: from,
+  );
+
+  /// Builds an unsigned `registerPublicKey(bytes32,bytes32,bytes)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest registerPublicKeyTx(
+    Uint8List part1,
+    Uint8List part2,
+    Uint8List verificationData, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: registerPublicKeyFn,
+    args: [part1, part2, verificationData],
+    from: from,
+  );
+
+  /// Builds an unsigned `unregisterNodeId(bytes20)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest unregisterNodeIdTx(Uint8List nodeId, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: unregisterNodeIdFn,
+        args: [nodeId],
+        from: from,
+      );
+
+  /// Builds an unsigned `unregisterPublicKey()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest unregisterPublicKeyTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: unregisterPublicKeyFn,
+        from: from,
+      );
 
   /// `DelegationAddressProposed(address,address)`
   ///

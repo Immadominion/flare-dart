@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IFAssetRedeemComposer
-// Functions: 17 readable of 21 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 21 — 17 readable via eth_call, 4 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 12
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IFAssetRedeemComposer` contract.
+/// Typed bindings for Flare's `IFAssetRedeemComposer` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -52,6 +60,14 @@ class IFAssetRedeemComposerContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `cancelTimelockedCall(bytes)`.
+  static final AbiFunction cancelTimelockedCallFn = AbiFunction(
+    name: 'cancelTimelockedCall',
+    inputs: [AbiParameter(name: '_encodedCall', type: AbiType.parse('bytes'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `composerFeeRecipient()`.
   static final AbiFunction composerFeeRecipientFn = AbiFunction(
     name: 'composerFeeRecipient',
@@ -82,6 +98,14 @@ class IFAssetRedeemComposerContract {
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `executeTimelockedCall(bytes)`.
+  static final AbiFunction executeTimelockedCallFn = AbiFunction(
+    name: 'executeTimelockedCall',
+    inputs: [AbiParameter(name: '_encodedCall', type: AbiType.parse('bytes'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `fAsset()`.
@@ -165,12 +189,39 @@ class IFAssetRedeemComposerContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `lzCompose(address,bytes32,bytes,address,bytes)`.
+  static final AbiFunction lzComposeFn = AbiFunction(
+    name: 'lzCompose',
+    inputs: [
+      AbiParameter(name: '_from', type: AbiType.parse('address')),
+      AbiParameter(name: '_guid', type: AbiType.parse('bytes32')),
+      AbiParameter(name: '_message', type: AbiType.parse('bytes')),
+      AbiParameter(name: '_executor', type: AbiType.parse('address')),
+      AbiParameter(name: '_extraData', type: AbiType.parse('bytes')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.payable,
+  );
+
   /// ABI descriptor for `redeemerAccountImplementation()`.
   static final AbiFunction redeemerAccountImplementationFn = AbiFunction(
     name: 'redeemerAccountImplementation',
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `setTimelockDuration(uint256)`.
+  static final AbiFunction setTimelockDurationFn = AbiFunction(
+    name: 'setTimelockDuration',
+    inputs: [
+      AbiParameter(
+        name: '_timelockDurationSeconds',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `stableCoin()`.
@@ -389,6 +440,240 @@ class IFAssetRedeemComposerContract {
     final out = await client.callFunction(contract: address, function: wNatFn);
     return out[0]! as EthAddress;
   }
+
+  /// Builds an unsigned `cancelTimelockedCall(bytes)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest cancelTimelockedCallTx(
+    Uint8List encodedCall, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: cancelTimelockedCallFn,
+    args: [encodedCall],
+    from: from,
+  );
+
+  /// Builds an unsigned `executeTimelockedCall(bytes)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest executeTimelockedCallTx(
+    Uint8List encodedCall, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: executeTimelockedCallFn,
+    args: [encodedCall],
+    from: from,
+  );
+
+  /// Builds an unsigned `lzCompose(address,bytes32,bytes,address,bytes)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest lzComposeTx(
+    EthAddress from_,
+    Uint8List guid,
+    Uint8List message,
+    EthAddress executor,
+    Uint8List extraData, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: lzComposeFn,
+    args: [from_, guid, message, executor, extraData],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `setTimelockDuration(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setTimelockDurationTx(
+    BigInt timelockDurationSeconds, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setTimelockDurationFn,
+    args: [timelockDurationSeconds],
+    from: from,
+  );
+
+  /// `ComposerFeeNotSet(uint32)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError composerFeeNotSetError = AbiError(
+    name: 'ComposerFeeNotSet',
+    inputs: [AbiParameter(name: 'srcEid', type: AbiType.parse('uint32'))],
+  );
+
+  /// `InsufficientExecutorFee(uint256,uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError insufficientExecutorFeeError = AbiError(
+    name: 'InsufficientExecutorFee',
+    inputs: [
+      AbiParameter(name: 'providedFee', type: AbiType.parse('uint256')),
+      AbiParameter(name: 'requiredFee', type: AbiType.parse('uint256')),
+    ],
+  );
+
+  /// `InvalidAddress()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidAddressError = AbiError(
+    name: 'InvalidAddress',
+    inputs: [],
+  );
+
+  /// `InvalidComposerFeePPM()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidComposerFeePPMError = AbiError(
+    name: 'InvalidComposerFeePPM',
+    inputs: [],
+  );
+
+  /// `InvalidComposerFeeRecipient()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidComposerFeeRecipientError = AbiError(
+    name: 'InvalidComposerFeeRecipient',
+    inputs: [],
+  );
+
+  /// `InvalidRedeemerAccountImplementation()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidRedeemerAccountImplementationError = AbiError(
+    name: 'InvalidRedeemerAccountImplementation',
+    inputs: [],
+  );
+
+  /// `InvalidSourceOApp(address)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidSourceOAppError = AbiError(
+    name: 'InvalidSourceOApp',
+    inputs: [AbiParameter(name: 'from', type: AbiType.parse('address'))],
+  );
+
+  /// `LengthMismatch()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError lengthMismatchError = AbiError(
+    name: 'LengthMismatch',
+    inputs: [],
+  );
+
+  /// `OnlyEndpoint()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError onlyEndpointError = AbiError(
+    name: 'OnlyEndpoint',
+    inputs: [],
+  );
+
+  /// `TimelockDurationTooLong()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError timelockDurationTooLongError = AbiError(
+    name: 'TimelockDurationTooLong',
+    inputs: [],
+  );
+
+  /// `TimelockInvalidSelector()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError timelockInvalidSelectorError = AbiError(
+    name: 'TimelockInvalidSelector',
+    inputs: [],
+  );
+
+  /// `TimelockNotAllowedYet()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError timelockNotAllowedYetError = AbiError(
+    name: 'TimelockNotAllowedYet',
+    inputs: [],
+  );
+
+  /// Every custom error this contract declares.
+  static final List<AbiError> allErrors = [
+    composerFeeNotSetError,
+    insufficientExecutorFeeError,
+    invalidAddressError,
+    invalidComposerFeePPMError,
+    invalidComposerFeeRecipientError,
+    invalidRedeemerAccountImplementationError,
+    invalidSourceOAppError,
+    lengthMismatchError,
+    onlyEndpointError,
+    timelockDurationTooLongError,
+    timelockInvalidSelectorError,
+    timelockNotAllowedYetError,
+  ];
+
+  /// Explains why a call to this contract reverted.
+  ///
+  /// ```dart
+  /// try {
+  ///   await client.estimateGas(request.toCallRequest());
+  /// } on FlareRpcException catch (e) {
+  ///   print(decodeRevert(e)?.description);
+  /// }
+  /// ```
+  ///
+  /// Returns null when the node attached no revert data,
+  /// which is how Flare reports a bare `revert()`.
+  static RevertReason? decodeRevert(FlareRpcException e) =>
+      e.revertReasonWith(allErrors);
 
   /// `CallTimelocked(bytes,bytes32,uint256)`
   ///

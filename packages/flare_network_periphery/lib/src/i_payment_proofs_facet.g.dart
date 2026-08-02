@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IPaymentProofsFacet
-// Functions: 2 readable of 2 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 2 — 2 readable via eth_call, 0 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 7
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IPaymentProofsFacet` contract.
+/// Typed bindings for Flare's `IPaymentProofsFacet` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -82,6 +90,102 @@ class IPaymentProofsFacetContract {
     );
     return out[0]! as Uint8List;
   }
+
+  /// `InvalidPaymentProofValidityDuration()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidPaymentProofValidityDurationError = AbiError(
+    name: 'InvalidPaymentProofValidityDuration',
+    inputs: [],
+  );
+
+  /// `InvalidReceivingAddressHash()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidReceivingAddressHashError = AbiError(
+    name: 'InvalidReceivingAddressHash',
+    inputs: [],
+  );
+
+  /// `InvalidSourceId()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidSourceIdError = AbiError(
+    name: 'InvalidSourceId',
+    inputs: [],
+  );
+
+  /// `InvalidTransactionProof()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidTransactionProofError = AbiError(
+    name: 'InvalidTransactionProof',
+    inputs: [],
+  );
+
+  /// `InvalidTransactionStatus()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidTransactionStatusError = AbiError(
+    name: 'InvalidTransactionStatus',
+    inputs: [],
+  );
+
+  /// `MismatchingSourceAndXrplAddr()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError mismatchingSourceAndXrplAddrError = AbiError(
+    name: 'MismatchingSourceAndXrplAddr',
+    inputs: [],
+  );
+
+  /// `PaymentProofExpired()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError paymentProofExpiredError = AbiError(
+    name: 'PaymentProofExpired',
+    inputs: [],
+  );
+
+  /// Every custom error this contract declares.
+  static final List<AbiError> allErrors = [
+    invalidPaymentProofValidityDurationError,
+    invalidReceivingAddressHashError,
+    invalidSourceIdError,
+    invalidTransactionProofError,
+    invalidTransactionStatusError,
+    mismatchingSourceAndXrplAddrError,
+    paymentProofExpiredError,
+  ];
+
+  /// Explains why a call to this contract reverted.
+  ///
+  /// ```dart
+  /// try {
+  ///   await client.estimateGas(request.toCallRequest());
+  /// } on FlareRpcException catch (e) {
+  ///   print(decodeRevert(e)?.description);
+  /// }
+  /// ```
+  ///
+  /// Returns null when the node attached no revert data,
+  /// which is how Flare reports a bare `revert()`.
+  static RevertReason? decodeRevert(FlareRpcException e) =>
+      e.revertReasonWith(allErrors);
 
   /// `PaymentProofValidityDurationSecondsSet(uint256)`
   ///

@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IAssetManager
-// Functions: 76 readable of 147 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 147 — 76 readable via eth_call, 75 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IAssetManager` contract.
+/// Typed bindings for Flare's `IAssetManager` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -39,6 +47,40 @@ class IAssetManagerContract {
     );
     return IAssetManagerContract(client: client, address: resolved);
   }
+
+  /// ABI descriptor for `addAlwaysAllowedMinterForAgent(address,address)`.
+  static final AbiFunction addAlwaysAllowedMinterForAgentFn = AbiFunction(
+    name: 'addAlwaysAllowedMinterForAgent',
+    inputs: [
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+      AbiParameter(name: '_minter', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `agentPing(address,uint256)`.
+  static final AbiFunction agentPingFn = AbiFunction(
+    name: 'agentPing',
+    inputs: [
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+      AbiParameter(name: '_query', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `agentPingResponse(address,uint256,string)`.
+  static final AbiFunction agentPingResponseFn = AbiFunction(
+    name: 'agentPingResponse',
+    inputs: [
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+      AbiParameter(name: '_query', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_response', type: AbiType.parse('string')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
 
   /// ABI descriptor for `agentRedemptionQueue(address,uint256,uint256)`.
   static final AbiFunction agentRedemptionQueueFn = AbiFunction(
@@ -72,6 +114,80 @@ class IAssetManagerContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `announceAgentPoolTokenRedemption(address,uint256)`.
+  static final AbiFunction announceAgentPoolTokenRedemptionFn = AbiFunction(
+    name: 'announceAgentPoolTokenRedemption',
+    inputs: [
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+      AbiParameter(name: '_valuePoolTokenWei', type: AbiType.parse('uint256')),
+    ],
+    outputs: [
+      AbiParameter(
+        name: '_redemptionAllowedAt',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `announceAgentSettingUpdate(address,string,uint256)`.
+  static final AbiFunction announceAgentSettingUpdateFn = AbiFunction(
+    name: 'announceAgentSettingUpdate',
+    inputs: [
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+      AbiParameter(name: '_name', type: AbiType.parse('string')),
+      AbiParameter(name: '_value', type: AbiType.parse('uint256')),
+    ],
+    outputs: [
+      AbiParameter(name: '_updateAllowedAt', type: AbiType.parse('uint256')),
+    ],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `announceDestroyAgent(address)`.
+  static final AbiFunction announceDestroyAgentFn = AbiFunction(
+    name: 'announceDestroyAgent',
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [
+      AbiParameter(name: '_destroyAllowedAt', type: AbiType.parse('uint256')),
+    ],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `announceExitAvailableAgentList(address)`.
+  static final AbiFunction announceExitAvailableAgentListFn = AbiFunction(
+    name: 'announceExitAvailableAgentList',
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [
+      AbiParameter(name: '_exitAllowedAt', type: AbiType.parse('uint256')),
+    ],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `announceUnderlyingWithdrawal(address)`.
+  static final AbiFunction announceUnderlyingWithdrawalFn = AbiFunction(
+    name: 'announceUnderlyingWithdrawal',
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `announceVaultCollateralWithdrawal(address,uint256)`.
+  static final AbiFunction announceVaultCollateralWithdrawalFn = AbiFunction(
+    name: 'announceVaultCollateralWithdrawal',
+    inputs: [
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+      AbiParameter(name: '_valueNATWei', type: AbiType.parse('uint256')),
+    ],
+    outputs: [
+      AbiParameter(
+        name: '_withdrawalAllowedAt',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `assetManagerController()`.
   static final AbiFunction assetManagerControllerFn = AbiFunction(
     name: 'assetManagerController',
@@ -94,6 +210,22 @@ class IAssetManagerContract {
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `cancelReturnFromCoreVault(address)`.
+  static final AbiFunction cancelReturnFromCoreVaultFn = AbiFunction(
+    name: 'cancelReturnFromCoreVault',
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `cancelUnderlyingWithdrawal(address)`.
+  static final AbiFunction cancelUnderlyingWithdrawalFn = AbiFunction(
+    name: 'cancelUnderlyingWithdrawal',
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `collateralReservationFee(uint256)`.
@@ -129,12 +261,150 @@ class IAssetManagerContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `confirmClosedMintingPayment((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),uint256)`.
+  static final AbiFunction confirmClosedMintingPaymentFn = AbiFunction(
+    name: 'confirmClosedMintingPayment',
+    inputs: [
+      AbiParameter(
+        name: '_payment',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8)))',
+        ),
+      ),
+      AbiParameter(
+        name: '_collateralReservationId',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `confirmCoreVaultDonation((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,address),(uint64,uint64,string,bytes32,bytes32,bytes32,int256,int256,int256,int256,bool,bytes,bool,uint256,uint8))))`.
+  static final AbiFunction confirmCoreVaultDonationFn = AbiFunction(
+    name: 'confirmCoreVaultDonation',
+    inputs: [
+      AbiParameter(
+        name: '_payment',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,address),(uint64,uint64,string,bytes32,bytes32,bytes32,int256,int256,int256,int256,bool,bytes,bool,uint256,uint8)))',
+        ),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `confirmRedemptionPayment((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),uint256)`.
+  static final AbiFunction confirmRedemptionPaymentFn = AbiFunction(
+    name: 'confirmRedemptionPayment',
+    inputs: [
+      AbiParameter(
+        name: '_payment',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8)))',
+        ),
+      ),
+      AbiParameter(
+        name: '_redemptionRequestId',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `confirmReturnFromCoreVault((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),address)`.
+  static final AbiFunction confirmReturnFromCoreVaultFn = AbiFunction(
+    name: 'confirmReturnFromCoreVault',
+    inputs: [
+      AbiParameter(
+        name: '_payment',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8)))',
+        ),
+      ),
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `confirmTopupPayment((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),address)`.
+  static final AbiFunction confirmTopupPaymentFn = AbiFunction(
+    name: 'confirmTopupPayment',
+    inputs: [
+      AbiParameter(
+        name: '_payment',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8)))',
+        ),
+      ),
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `confirmUnderlyingWithdrawal((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),address)`.
+  static final AbiFunction confirmUnderlyingWithdrawalFn = AbiFunction(
+    name: 'confirmUnderlyingWithdrawal',
+    inputs: [
+      AbiParameter(
+        name: '_payment',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8)))',
+        ),
+      ),
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `confirmXRPRedemptionPayment((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,address),(uint64,uint64,string,bytes32,bytes32,bytes32,int256,int256,int256,int256,bool,bytes,bool,uint256,uint8))),uint256)`.
+  static final AbiFunction confirmXRPRedemptionPaymentFn = AbiFunction(
+    name: 'confirmXRPRedemptionPayment',
+    inputs: [
+      AbiParameter(
+        name: '_payment',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,address),(uint64,uint64,string,bytes32,bytes32,bytes32,int256,int256,int256,int256,bool,bytes,bool,uint256,uint8)))',
+        ),
+      ),
+      AbiParameter(
+        name: '_redemptionRequestId',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `consolidateSmallTickets(uint256)`.
+  static final AbiFunction consolidateSmallTicketsFn = AbiFunction(
+    name: 'consolidateSmallTickets',
+    inputs: [
+      AbiParameter(name: '_firstTicketId', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `controllerAttached()`.
   static final AbiFunction controllerAttachedFn = AbiFunction(
     name: 'controllerAttached',
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `convertDustToTicket(address)`.
+  static final AbiFunction convertDustToTicketFn = AbiFunction(
+    name: 'convertDustToTicket',
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `coreVaultAvailableAmount()`.
@@ -151,6 +421,29 @@ class IAssetManagerContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `createAgentVault((bytes32[],(bytes32,bytes32,uint64,uint64,(string),(bool,string,bytes32))),(address,string,uint256,uint256,uint256,uint256,uint256,uint256,uint256))`.
+  static final AbiFunction createAgentVaultFn = AbiFunction(
+    name: 'createAgentVault',
+    inputs: [
+      AbiParameter(
+        name: '_addressProof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(string),(bool,string,bytes32)))',
+        ),
+      ),
+      AbiParameter(
+        name: '_settings',
+        type: AbiType.parse(
+          '(address,string,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
+        ),
+      ),
+    ],
+    outputs: [
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+    ],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `currentUnderlyingBlock()`.
   static final AbiFunction currentUnderlyingBlockFn = AbiFunction(
     name: 'currentUnderlyingBlock',
@@ -161,6 +454,17 @@ class IAssetManagerContract {
       AbiParameter(name: '_lastUpdateTs', type: AbiType.parse('uint256')),
     ],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `destroyAgent(address,address)`.
+  static final AbiFunction destroyAgentFn = AbiFunction(
+    name: 'destroyAgent',
+    inputs: [
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+      AbiParameter(name: '_recipient', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `directMintingDelayState(bytes32)`.
@@ -185,6 +489,28 @@ class IAssetManagerContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `doublePaymentChallenge((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,bytes32),(uint64,uint64,bytes32,int256,bytes32))),(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,bytes32),(uint64,uint64,bytes32,int256,bytes32))),address)`.
+  static final AbiFunction doublePaymentChallengeFn = AbiFunction(
+    name: 'doublePaymentChallenge',
+    inputs: [
+      AbiParameter(
+        name: '_payment1',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,bytes32),(uint64,uint64,bytes32,int256,bytes32)))',
+        ),
+      ),
+      AbiParameter(
+        name: '_payment2',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,bytes32),(uint64,uint64,bytes32,int256,bytes32)))',
+        ),
+      ),
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `emergencyPauseLevel()`.
   static final AbiFunction emergencyPauseLevelFn = AbiFunction(
     name: 'emergencyPauseLevel',
@@ -207,6 +533,83 @@ class IAssetManagerContract {
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `endLiquidation(address)`.
+  static final AbiFunction endLiquidationFn = AbiFunction(
+    name: 'endLiquidation',
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `executeAgentSettingUpdate(address,string)`.
+  static final AbiFunction executeAgentSettingUpdateFn = AbiFunction(
+    name: 'executeAgentSettingUpdate',
+    inputs: [
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+      AbiParameter(name: '_name', type: AbiType.parse('string')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `executeDirectMinting((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,address),(uint64,uint64,string,bytes32,bytes32,bytes32,int256,int256,int256,int256,bool,bytes,bool,uint256,uint8))))`.
+  static final AbiFunction executeDirectMintingFn = AbiFunction(
+    name: 'executeDirectMinting',
+    inputs: [
+      AbiParameter(
+        name: '_payment',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,address),(uint64,uint64,string,bytes32,bytes32,bytes32,int256,int256,int256,int256,bool,bytes,bool,uint256,uint8)))',
+        ),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.payable,
+  );
+
+  /// ABI descriptor for `executeDirectMintingWithData((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,address),(uint64,uint64,string,bytes32,bytes32,bytes32,int256,int256,int256,int256,bool,bytes,bool,uint256,uint8))),bytes)`.
+  static final AbiFunction executeDirectMintingWithDataFn = AbiFunction(
+    name: 'executeDirectMintingWithData',
+    inputs: [
+      AbiParameter(
+        name: '_payment',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,address),(uint64,uint64,string,bytes32,bytes32,bytes32,int256,int256,int256,int256,bool,bytes,bool,uint256,uint8)))',
+        ),
+      ),
+      AbiParameter(name: '_data', type: AbiType.parse('bytes')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.payable,
+  );
+
+  /// ABI descriptor for `executeMinting((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),uint256)`.
+  static final AbiFunction executeMintingFn = AbiFunction(
+    name: 'executeMinting',
+    inputs: [
+      AbiParameter(
+        name: '_payment',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8)))',
+        ),
+      ),
+      AbiParameter(
+        name: '_collateralReservationId',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `exitAvailableAgentList(address)`.
+  static final AbiFunction exitAvailableAgentListFn = AbiFunction(
+    name: 'exitAvailableAgentList',
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `fAsset()`.
@@ -263,6 +666,41 @@ class IAssetManagerContract {
       ),
     ],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `finishRedemptionWithoutPayment((bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64),(uint64,uint64,uint64,uint64))),uint256)`.
+  static final AbiFunction finishRedemptionWithoutPaymentFn = AbiFunction(
+    name: 'finishRedemptionWithoutPayment',
+    inputs: [
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64),(uint64,uint64,uint64,uint64)))',
+        ),
+      ),
+      AbiParameter(
+        name: '_redemptionRequestId',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `freeBalanceNegativeChallenge((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,bytes32),(uint64,uint64,bytes32,int256,bytes32)))[],address)`.
+  static final AbiFunction freeBalanceNegativeChallengeFn = AbiFunction(
+    name: 'freeBalanceNegativeChallenge',
+    inputs: [
+      AbiParameter(
+        name: '_payments',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,bytes32),(uint64,uint64,bytes32,int256,bytes32)))[]',
+        ),
+      ),
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `getAgentFullPoolCollateral(address)`.
@@ -671,12 +1109,46 @@ class IAssetManagerContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `illegalPaymentChallenge((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,bytes32),(uint64,uint64,bytes32,int256,bytes32))),address)`.
+  static final AbiFunction illegalPaymentChallengeFn = AbiFunction(
+    name: 'illegalPaymentChallenge',
+    inputs: [
+      AbiParameter(
+        name: '_payment',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,bytes32),(uint64,uint64,bytes32,int256,bytes32)))',
+        ),
+      ),
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `isPoolTokenSuffixReserved(string)`.
   static final AbiFunction isPoolTokenSuffixReservedFn = AbiFunction(
     name: 'isPoolTokenSuffixReserved',
     inputs: [AbiParameter(name: '_suffix', type: AbiType.parse('string'))],
     outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `liquidate(address,uint256)`.
+  static final AbiFunction liquidateFn = AbiFunction(
+    name: 'liquidate',
+    inputs: [
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+      AbiParameter(name: '_amountUBA', type: AbiType.parse('uint256')),
+    ],
+    outputs: [
+      AbiParameter(
+        name: '_liquidatedAmountUBA',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(name: '_amountPaidVault', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_amountPaidPool', type: AbiType.parse('uint256')),
+    ],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `lotSize()`.
@@ -687,6 +1159,24 @@ class IAssetManagerContract {
       AbiParameter(name: '_lotSizeUBA', type: AbiType.parse('uint256')),
     ],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `makeAgentAvailable(address)`.
+  static final AbiFunction makeAgentAvailableFn = AbiFunction(
+    name: 'makeAgentAvailable',
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `markUnblockedDirectMintingAllowed(bytes32)`.
+  static final AbiFunction markUnblockedDirectMintingAllowedFn = AbiFunction(
+    name: 'markUnblockedDirectMintingAllowed',
+    inputs: [
+      AbiParameter(name: '_transactionId', type: AbiType.parse('bytes32')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `maximumTransferToCoreVault(address)`.
@@ -711,12 +1201,42 @@ class IAssetManagerContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `mintFromFreeUnderlying(address,uint64)`.
+  static final AbiFunction mintFromFreeUnderlyingFn = AbiFunction(
+    name: 'mintFromFreeUnderlying',
+    inputs: [
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+      AbiParameter(name: '_lots', type: AbiType.parse('uint64')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `mintingPaused()`.
   static final AbiFunction mintingPausedFn = AbiFunction(
     name: 'mintingPaused',
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `mintingPaymentDefault((bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bytes32,bool,bytes32),(uint64,uint64,uint64))),uint256)`.
+  static final AbiFunction mintingPaymentDefaultFn = AbiFunction(
+    name: 'mintingPaymentDefault',
+    inputs: [
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bytes32,bool,bytes32),(uint64,uint64,uint64)))',
+        ),
+      ),
+      AbiParameter(
+        name: '_collateralReservationId',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `priceReader()`.
@@ -761,6 +1281,20 @@ class IAssetManagerContract {
     stateMutability: StateMutability.payable,
   );
 
+  /// ABI descriptor for `redeemFromCoreVault(uint256,string)`.
+  static final AbiFunction redeemFromCoreVaultFn = AbiFunction(
+    name: 'redeemFromCoreVault',
+    inputs: [
+      AbiParameter(name: '_lots', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_redeemerUnderlyingAddress',
+        type: AbiType.parse('string'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `redeemWithTag(uint256,string,address,uint256)`.
   static final AbiFunction redeemWithTagFn = AbiFunction(
     name: 'redeemWithTag',
@@ -785,6 +1319,25 @@ class IAssetManagerContract {
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `redemptionPaymentDefault((bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bytes32,bool,bytes32),(uint64,uint64,uint64))),uint256)`.
+  static final AbiFunction redemptionPaymentDefaultFn = AbiFunction(
+    name: 'redemptionPaymentDefault',
+    inputs: [
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bytes32,bool,bytes32),(uint64,uint64,uint64)))',
+        ),
+      ),
+      AbiParameter(
+        name: '_redemptionRequestId',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `redemptionPaymentExtensionSeconds()`.
@@ -858,6 +1411,47 @@ class IAssetManagerContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `rejectInvalidRedemption((bytes32[],(bytes32,bytes32,uint64,uint64,(string),(bool,string,bytes32))),uint256)`.
+  static final AbiFunction rejectInvalidRedemptionFn = AbiFunction(
+    name: 'rejectInvalidRedemption',
+    inputs: [
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(string),(bool,string,bytes32)))',
+        ),
+      ),
+      AbiParameter(
+        name: '_redemptionRequestId',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `removeAlwaysAllowedMinterForAgent(address,address)`.
+  static final AbiFunction removeAlwaysAllowedMinterForAgentFn = AbiFunction(
+    name: 'removeAlwaysAllowedMinterForAgent',
+    inputs: [
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+      AbiParameter(name: '_minter', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `requestReturnFromCoreVault(address,uint256)`.
+  static final AbiFunction requestReturnFromCoreVaultFn = AbiFunction(
+    name: 'requestReturnFromCoreVault',
+    inputs: [
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+      AbiParameter(name: '_lots', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `reserveCollateral(address,uint256,uint256,address)`.
   static final AbiFunction reserveCollateralFn = AbiFunction(
     name: 'reserveCollateral',
@@ -874,6 +1468,265 @@ class IAssetManagerContract {
       ),
     ],
     stateMutability: StateMutability.payable,
+  );
+
+  /// ABI descriptor for `selfClose(address,uint256)`.
+  static final AbiFunction selfCloseFn = AbiFunction(
+    name: 'selfClose',
+    inputs: [
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+      AbiParameter(name: '_amountUBA', type: AbiType.parse('uint256')),
+    ],
+    outputs: [
+      AbiParameter(name: '_closedAmountUBA', type: AbiType.parse('uint256')),
+    ],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `selfMint((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),address,uint256)`.
+  static final AbiFunction selfMintFn = AbiFunction(
+    name: 'selfMint',
+    inputs: [
+      AbiParameter(
+        name: '_payment',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8)))',
+        ),
+      ),
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+      AbiParameter(name: '_lots', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setCoreVaultManager(address)`.
+  static final AbiFunction setCoreVaultManagerFn = AbiFunction(
+    name: 'setCoreVaultManager',
+    inputs: [
+      AbiParameter(name: '_coreVaultManager', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setCoreVaultMinimumAmountLeftBIPS(uint256)`.
+  static final AbiFunction setCoreVaultMinimumAmountLeftBIPSFn = AbiFunction(
+    name: 'setCoreVaultMinimumAmountLeftBIPS',
+    inputs: [
+      AbiParameter(
+        name: '_minimumAmountLeftBIPS',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setCoreVaultMinimumRedeemLots(uint256)`.
+  static final AbiFunction setCoreVaultMinimumRedeemLotsFn = AbiFunction(
+    name: 'setCoreVaultMinimumRedeemLots',
+    inputs: [
+      AbiParameter(name: '_minimumRedeemLots', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setCoreVaultNativeAddress(address)`.
+  static final AbiFunction setCoreVaultNativeAddressFn = AbiFunction(
+    name: 'setCoreVaultNativeAddress',
+    inputs: [
+      AbiParameter(name: '_nativeAddress', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setCoreVaultRedemptionFeeBIPS(uint256)`.
+  static final AbiFunction setCoreVaultRedemptionFeeBIPSFn = AbiFunction(
+    name: 'setCoreVaultRedemptionFeeBIPS',
+    inputs: [
+      AbiParameter(name: '_redemptionFeeBIPS', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setCoreVaultTransferDefaultPenaltyBIPS(uint256)`.
+  static final AbiFunction setCoreVaultTransferDefaultPenaltyBIPSFn =
+      AbiFunction(
+        name: 'setCoreVaultTransferDefaultPenaltyBIPS',
+        inputs: [
+          AbiParameter(
+            name: '_transferDefaultPenaltyBIPS',
+            type: AbiType.parse('uint256'),
+          ),
+        ],
+        outputs: [],
+        stateMutability: StateMutability.nonpayable,
+      );
+
+  /// ABI descriptor for `setCoreVaultTransferTimeExtensionSeconds(uint256)`.
+  static final AbiFunction setCoreVaultTransferTimeExtensionSecondsFn =
+      AbiFunction(
+        name: 'setCoreVaultTransferTimeExtensionSeconds',
+        inputs: [
+          AbiParameter(
+            name: '_transferTimeExtensionSeconds',
+            type: AbiType.parse('uint256'),
+          ),
+        ],
+        outputs: [],
+        stateMutability: StateMutability.nonpayable,
+      );
+
+  /// ABI descriptor for `setDirectMintingDailyLimitUBA(uint256)`.
+  static final AbiFunction setDirectMintingDailyLimitUBAFn = AbiFunction(
+    name: 'setDirectMintingDailyLimitUBA',
+    inputs: [
+      AbiParameter(name: '_dailyLimitUBA', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setDirectMintingExecutorFee(uint256)`.
+  static final AbiFunction setDirectMintingExecutorFeeFn = AbiFunction(
+    name: 'setDirectMintingExecutorFee',
+    inputs: [
+      AbiParameter(name: '_executorFeeUBA', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setDirectMintingFee(uint256,uint256)`.
+  static final AbiFunction setDirectMintingFeeFn = AbiFunction(
+    name: 'setDirectMintingFee',
+    inputs: [
+      AbiParameter(name: '_mintingFeeBIPS', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_minimumMintingFeeUBA',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setDirectMintingFeeReceiver(address)`.
+  static final AbiFunction setDirectMintingFeeReceiverFn = AbiFunction(
+    name: 'setDirectMintingFeeReceiver',
+    inputs: [
+      AbiParameter(name: '_mintingFeeReceiver', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setDirectMintingHourlyLimitUBA(uint256)`.
+  static final AbiFunction setDirectMintingHourlyLimitUBAFn = AbiFunction(
+    name: 'setDirectMintingHourlyLimitUBA',
+    inputs: [
+      AbiParameter(name: '_hourlyLimitUBA', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setDirectMintingLargeMintingThrottling(uint256,uint256)`.
+  static final AbiFunction setDirectMintingLargeMintingThrottlingFn =
+      AbiFunction(
+        name: 'setDirectMintingLargeMintingThrottling',
+        inputs: [
+          AbiParameter(
+            name: '_largeMintingThresholdUBA',
+            type: AbiType.parse('uint256'),
+          ),
+          AbiParameter(
+            name: '_largeMintingDelaySeconds',
+            type: AbiType.parse('uint256'),
+          ),
+        ],
+        outputs: [],
+        stateMutability: StateMutability.nonpayable,
+      );
+
+  /// ABI descriptor for `setDirectMintingOthersCanExecuteAfterSeconds(uint256)`.
+  static final AbiFunction setDirectMintingOthersCanExecuteAfterSecondsFn =
+      AbiFunction(
+        name: 'setDirectMintingOthersCanExecuteAfterSeconds',
+        inputs: [
+          AbiParameter(name: '_seconds', type: AbiType.parse('uint256')),
+        ],
+        outputs: [],
+        stateMutability: StateMutability.nonpayable,
+      );
+
+  /// ABI descriptor for `setMinimumRedeemAmountUBA(uint256)`.
+  static final AbiFunction setMinimumRedeemAmountUBAFn = AbiFunction(
+    name: 'setMinimumRedeemAmountUBA',
+    inputs: [AbiParameter(name: '_valueUBA', type: AbiType.parse('uint256'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setMintingTagManager(address)`.
+  static final AbiFunction setMintingTagManagerFn = AbiFunction(
+    name: 'setMintingTagManager',
+    inputs: [
+      AbiParameter(name: '_mintingTagManager', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setRedemptionPaymentExtensionSeconds(uint256)`.
+  static final AbiFunction setRedemptionPaymentExtensionSecondsFn = AbiFunction(
+    name: 'setRedemptionPaymentExtensionSeconds',
+    inputs: [AbiParameter(name: '_value', type: AbiType.parse('uint256'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setSmartAccountManager(address)`.
+  static final AbiFunction setSmartAccountManagerFn = AbiFunction(
+    name: 'setSmartAccountManager',
+    inputs: [
+      AbiParameter(
+        name: '_smartAccountManager',
+        type: AbiType.parse('address'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setSystemRedemptionFeeBIPS(uint256)`.
+  static final AbiFunction setSystemRedemptionFeeBIPSFn = AbiFunction(
+    name: 'setSystemRedemptionFeeBIPS',
+    inputs: [AbiParameter(name: '_feeBIPS', type: AbiType.parse('uint256'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setSystemRedemptionFeeReceiver(address)`.
+  static final AbiFunction setSystemRedemptionFeeReceiverFn = AbiFunction(
+    name: 'setSystemRedemptionFeeReceiver',
+    inputs: [AbiParameter(name: '_receiver', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `startLiquidation(address)`.
+  static final AbiFunction startLiquidationFn = AbiFunction(
+    name: 'startLiquidation',
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [
+      AbiParameter(name: '_liquidationStartTs', type: AbiType.parse('uint256')),
+    ],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `supportsInterface(bytes4)`.
@@ -898,6 +1751,86 @@ class IAssetManagerContract {
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `transferToCoreVault(address,uint256)`.
+  static final AbiFunction transferToCoreVaultFn = AbiFunction(
+    name: 'transferToCoreVault',
+    inputs: [
+      AbiParameter(name: '_agentVault', type: AbiType.parse('address')),
+      AbiParameter(name: '_amountUBA', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `unblockDirectMintingsUntil(uint256)`.
+  static final AbiFunction unblockDirectMintingsUntilFn = AbiFunction(
+    name: 'unblockDirectMintingsUntil',
+    inputs: [AbiParameter(name: '_timestamp', type: AbiType.parse('uint256'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `unstickMinting((bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64),(uint64,uint64,uint64,uint64))),uint256)`.
+  static final AbiFunction unstickMintingFn = AbiFunction(
+    name: 'unstickMinting',
+    inputs: [
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64),(uint64,uint64,uint64,uint64)))',
+        ),
+      ),
+      AbiParameter(
+        name: '_collateralReservationId',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.payable,
+  );
+
+  /// ABI descriptor for `updateCurrentBlock((bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64),(uint64,uint64,uint64,uint64))))`.
+  static final AbiFunction updateCurrentBlockFn = AbiFunction(
+    name: 'updateCurrentBlock',
+    inputs: [
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64),(uint64,uint64,uint64,uint64)))',
+        ),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `upgradeAgentVaultAndPool(address)`.
+  static final AbiFunction upgradeAgentVaultAndPoolFn = AbiFunction(
+    name: 'upgradeAgentVaultAndPool',
+    inputs: [AbiParameter(name: '_agentVault', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `xrpRedemptionPaymentDefault((bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bool,bytes32,bool,uint256,address),(uint64,uint64,uint64))),uint256)`.
+  static final AbiFunction xrpRedemptionPaymentDefaultFn = AbiFunction(
+    name: 'xrpRedemptionPaymentDefault',
+    inputs: [
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bool,bytes32,bool,uint256,address),(uint64,uint64,uint64)))',
+        ),
+      ),
+      AbiParameter(
+        name: '_redemptionRequestId',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `agentRedemptionQueue(address,uint256,uint256)`.
@@ -1867,6 +2800,1439 @@ class IAssetManagerContract {
     );
     return out[0]! as EthAddress;
   }
+
+  /// Builds an unsigned `addAlwaysAllowedMinterForAgent(address,address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest addAlwaysAllowedMinterForAgentTx(
+    EthAddress agentVault,
+    EthAddress minter, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: addAlwaysAllowedMinterForAgentFn,
+    args: [agentVault, minter],
+    from: from,
+  );
+
+  /// Builds an unsigned `agentPing(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest agentPingTx(
+    EthAddress agentVault,
+    BigInt query, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: agentPingFn,
+    args: [agentVault, query],
+    from: from,
+  );
+
+  /// Builds an unsigned `agentPingResponse(address,uint256,string)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest agentPingResponseTx(
+    EthAddress agentVault,
+    BigInt query,
+    String response, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: agentPingResponseFn,
+    args: [agentVault, query, response],
+    from: from,
+  );
+
+  /// Builds an unsigned `announceAgentPoolTokenRedemption(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest announceAgentPoolTokenRedemptionTx(
+    EthAddress agentVault,
+    BigInt valuePoolTokenWei, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: announceAgentPoolTokenRedemptionFn,
+    args: [agentVault, valuePoolTokenWei],
+    from: from,
+  );
+
+  /// Builds an unsigned `announceAgentSettingUpdate(address,string,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest announceAgentSettingUpdateTx(
+    EthAddress agentVault,
+    String name,
+    BigInt value_, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: announceAgentSettingUpdateFn,
+    args: [agentVault, name, value_],
+    from: from,
+  );
+
+  /// Builds an unsigned `announceDestroyAgent(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest announceDestroyAgentTx(
+    EthAddress agentVault, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: announceDestroyAgentFn,
+    args: [agentVault],
+    from: from,
+  );
+
+  /// Builds an unsigned `announceExitAvailableAgentList(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest announceExitAvailableAgentListTx(
+    EthAddress agentVault, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: announceExitAvailableAgentListFn,
+    args: [agentVault],
+    from: from,
+  );
+
+  /// Builds an unsigned `announceUnderlyingWithdrawal(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest announceUnderlyingWithdrawalTx(
+    EthAddress agentVault, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: announceUnderlyingWithdrawalFn,
+    args: [agentVault],
+    from: from,
+  );
+
+  /// Builds an unsigned `announceVaultCollateralWithdrawal(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest announceVaultCollateralWithdrawalTx(
+    EthAddress agentVault,
+    BigInt valueNATWei, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: announceVaultCollateralWithdrawalFn,
+    args: [agentVault, valueNATWei],
+    from: from,
+  );
+
+  /// Builds an unsigned `cancelReturnFromCoreVault(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest cancelReturnFromCoreVaultTx(
+    EthAddress agentVault, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: cancelReturnFromCoreVaultFn,
+    args: [agentVault],
+    from: from,
+  );
+
+  /// Builds an unsigned `cancelUnderlyingWithdrawal(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest cancelUnderlyingWithdrawalTx(
+    EthAddress agentVault, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: cancelUnderlyingWithdrawalFn,
+    args: [agentVault],
+    from: from,
+  );
+
+  /// Builds an unsigned `confirmClosedMintingPayment((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest confirmClosedMintingPaymentTx(
+    List<Object?> payment,
+    BigInt collateralReservationId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: confirmClosedMintingPaymentFn,
+    args: [payment, collateralReservationId],
+    from: from,
+  );
+
+  /// Builds an unsigned `confirmCoreVaultDonation((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,address),(uint64,uint64,string,bytes32,bytes32,bytes32,int256,int256,int256,int256,bool,bytes,bool,uint256,uint8))))`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest confirmCoreVaultDonationTx(
+    List<Object?> payment, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: confirmCoreVaultDonationFn,
+    args: [payment],
+    from: from,
+  );
+
+  /// Builds an unsigned `confirmRedemptionPayment((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest confirmRedemptionPaymentTx(
+    List<Object?> payment,
+    BigInt redemptionRequestId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: confirmRedemptionPaymentFn,
+    args: [payment, redemptionRequestId],
+    from: from,
+  );
+
+  /// Builds an unsigned `confirmReturnFromCoreVault((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest confirmReturnFromCoreVaultTx(
+    List<Object?> payment,
+    EthAddress agentVault, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: confirmReturnFromCoreVaultFn,
+    args: [payment, agentVault],
+    from: from,
+  );
+
+  /// Builds an unsigned `confirmTopupPayment((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest confirmTopupPaymentTx(
+    List<Object?> payment,
+    EthAddress agentVault, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: confirmTopupPaymentFn,
+    args: [payment, agentVault],
+    from: from,
+  );
+
+  /// Builds an unsigned `confirmUnderlyingWithdrawal((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest confirmUnderlyingWithdrawalTx(
+    List<Object?> payment,
+    EthAddress agentVault, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: confirmUnderlyingWithdrawalFn,
+    args: [payment, agentVault],
+    from: from,
+  );
+
+  /// Builds an unsigned `confirmXRPRedemptionPayment((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,address),(uint64,uint64,string,bytes32,bytes32,bytes32,int256,int256,int256,int256,bool,bytes,bool,uint256,uint8))),uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest confirmXRPRedemptionPaymentTx(
+    List<Object?> payment,
+    BigInt redemptionRequestId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: confirmXRPRedemptionPaymentFn,
+    args: [payment, redemptionRequestId],
+    from: from,
+  );
+
+  /// Builds an unsigned `consolidateSmallTickets(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest consolidateSmallTicketsTx(
+    BigInt firstTicketId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: consolidateSmallTicketsFn,
+    args: [firstTicketId],
+    from: from,
+  );
+
+  /// Builds an unsigned `convertDustToTicket(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest convertDustToTicketTx(
+    EthAddress agentVault, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: convertDustToTicketFn,
+    args: [agentVault],
+    from: from,
+  );
+
+  /// Builds an unsigned `createAgentVault((bytes32[],(bytes32,bytes32,uint64,uint64,(string),(bool,string,bytes32))),(address,string,uint256,uint256,uint256,uint256,uint256,uint256,uint256))`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest createAgentVaultTx(
+    List<Object?> addressProof,
+    List<Object?> settings, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: createAgentVaultFn,
+    args: [addressProof, settings],
+    from: from,
+  );
+
+  /// Builds an unsigned `destroyAgent(address,address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest destroyAgentTx(
+    EthAddress agentVault,
+    EthAddress recipient, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: destroyAgentFn,
+    args: [agentVault, recipient],
+    from: from,
+  );
+
+  /// Builds an unsigned `doublePaymentChallenge((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,bytes32),(uint64,uint64,bytes32,int256,bytes32))),(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,bytes32),(uint64,uint64,bytes32,int256,bytes32))),address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest doublePaymentChallengeTx(
+    List<Object?> payment1,
+    List<Object?> payment2,
+    EthAddress agentVault, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: doublePaymentChallengeFn,
+    args: [payment1, payment2, agentVault],
+    from: from,
+  );
+
+  /// Builds an unsigned `endLiquidation(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest endLiquidationTx(
+    EthAddress agentVault, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: endLiquidationFn,
+    args: [agentVault],
+    from: from,
+  );
+
+  /// Builds an unsigned `executeAgentSettingUpdate(address,string)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest executeAgentSettingUpdateTx(
+    EthAddress agentVault,
+    String name, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: executeAgentSettingUpdateFn,
+    args: [agentVault, name],
+    from: from,
+  );
+
+  /// Builds an unsigned `executeDirectMinting((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,address),(uint64,uint64,string,bytes32,bytes32,bytes32,int256,int256,int256,int256,bool,bytes,bool,uint256,uint8))))`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest executeDirectMintingTx(
+    List<Object?> payment, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: executeDirectMintingFn,
+    args: [payment],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `executeDirectMintingWithData((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,address),(uint64,uint64,string,bytes32,bytes32,bytes32,int256,int256,int256,int256,bool,bytes,bool,uint256,uint8))),bytes)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest executeDirectMintingWithDataTx(
+    List<Object?> payment,
+    Uint8List data, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: executeDirectMintingWithDataFn,
+    args: [payment, data],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `executeMinting((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest executeMintingTx(
+    List<Object?> payment,
+    BigInt collateralReservationId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: executeMintingFn,
+    args: [payment, collateralReservationId],
+    from: from,
+  );
+
+  /// Builds an unsigned `exitAvailableAgentList(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest exitAvailableAgentListTx(
+    EthAddress agentVault, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: exitAvailableAgentListFn,
+    args: [agentVault],
+    from: from,
+  );
+
+  /// Builds an unsigned `finishRedemptionWithoutPayment((bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64),(uint64,uint64,uint64,uint64))),uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest finishRedemptionWithoutPaymentTx(
+    List<Object?> proof,
+    BigInt redemptionRequestId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: finishRedemptionWithoutPaymentFn,
+    args: [proof, redemptionRequestId],
+    from: from,
+  );
+
+  /// Builds an unsigned `freeBalanceNegativeChallenge((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,bytes32),(uint64,uint64,bytes32,int256,bytes32)))[],address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest freeBalanceNegativeChallengeTx(
+    List<List<Object?>> payments,
+    EthAddress agentVault, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: freeBalanceNegativeChallengeFn,
+    args: [payments, agentVault],
+    from: from,
+  );
+
+  /// Builds an unsigned `illegalPaymentChallenge((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,bytes32),(uint64,uint64,bytes32,int256,bytes32))),address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest illegalPaymentChallengeTx(
+    List<Object?> payment,
+    EthAddress agentVault, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: illegalPaymentChallengeFn,
+    args: [payment, agentVault],
+    from: from,
+  );
+
+  /// Builds an unsigned `liquidate(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest liquidateTx(
+    EthAddress agentVault,
+    BigInt amountUBA, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: liquidateFn,
+    args: [agentVault, amountUBA],
+    from: from,
+  );
+
+  /// Builds an unsigned `makeAgentAvailable(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest makeAgentAvailableTx(
+    EthAddress agentVault, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: makeAgentAvailableFn,
+    args: [agentVault],
+    from: from,
+  );
+
+  /// Builds an unsigned `markUnblockedDirectMintingAllowed(bytes32)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest markUnblockedDirectMintingAllowedTx(
+    Uint8List transactionId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: markUnblockedDirectMintingAllowedFn,
+    args: [transactionId],
+    from: from,
+  );
+
+  /// Builds an unsigned `mintFromFreeUnderlying(address,uint64)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest mintFromFreeUnderlyingTx(
+    EthAddress agentVault,
+    BigInt lots, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: mintFromFreeUnderlyingFn,
+    args: [agentVault, lots],
+    from: from,
+  );
+
+  /// Builds an unsigned `mintingPaymentDefault((bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bytes32,bool,bytes32),(uint64,uint64,uint64))),uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest mintingPaymentDefaultTx(
+    List<Object?> proof,
+    BigInt collateralReservationId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: mintingPaymentDefaultFn,
+    args: [proof, collateralReservationId],
+    from: from,
+  );
+
+  /// Builds an unsigned `redeem(uint256,string,address)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest redeemTx(
+    BigInt lots,
+    String redeemerUnderlyingAddressString,
+    EthAddress executor, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: redeemFn,
+    args: [lots, redeemerUnderlyingAddressString, executor],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `redeemAmount(uint256,string,address)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest redeemAmountTx(
+    BigInt amountUBA,
+    String redeemerUnderlyingAddressString,
+    EthAddress executor, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: redeemAmountFn,
+    args: [amountUBA, redeemerUnderlyingAddressString, executor],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `redeemFromCoreVault(uint256,string)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest redeemFromCoreVaultTx(
+    BigInt lots,
+    String redeemerUnderlyingAddress, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: redeemFromCoreVaultFn,
+    args: [lots, redeemerUnderlyingAddress],
+    from: from,
+  );
+
+  /// Builds an unsigned `redeemWithTag(uint256,string,address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest redeemWithTagTx(
+    BigInt amountUBA,
+    String redeemerUnderlyingAddressString,
+    EthAddress executor,
+    BigInt destinationTag, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: redeemWithTagFn,
+    args: [
+      amountUBA,
+      redeemerUnderlyingAddressString,
+      executor,
+      destinationTag,
+    ],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `redemptionPaymentDefault((bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bytes32,bool,bytes32),(uint64,uint64,uint64))),uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest redemptionPaymentDefaultTx(
+    List<Object?> proof,
+    BigInt redemptionRequestId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: redemptionPaymentDefaultFn,
+    args: [proof, redemptionRequestId],
+    from: from,
+  );
+
+  /// Builds an unsigned `rejectInvalidRedemption((bytes32[],(bytes32,bytes32,uint64,uint64,(string),(bool,string,bytes32))),uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest rejectInvalidRedemptionTx(
+    List<Object?> proof,
+    BigInt redemptionRequestId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: rejectInvalidRedemptionFn,
+    args: [proof, redemptionRequestId],
+    from: from,
+  );
+
+  /// Builds an unsigned `removeAlwaysAllowedMinterForAgent(address,address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest removeAlwaysAllowedMinterForAgentTx(
+    EthAddress agentVault,
+    EthAddress minter, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: removeAlwaysAllowedMinterForAgentFn,
+    args: [agentVault, minter],
+    from: from,
+  );
+
+  /// Builds an unsigned `requestReturnFromCoreVault(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest requestReturnFromCoreVaultTx(
+    EthAddress agentVault,
+    BigInt lots, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: requestReturnFromCoreVaultFn,
+    args: [agentVault, lots],
+    from: from,
+  );
+
+  /// Builds an unsigned `reserveCollateral(address,uint256,uint256,address)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest reserveCollateralTx(
+    EthAddress agentVault,
+    BigInt lots,
+    BigInt maxMintingFeeBIPS,
+    EthAddress executor, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: reserveCollateralFn,
+    args: [agentVault, lots, maxMintingFeeBIPS, executor],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `selfClose(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest selfCloseTx(
+    EthAddress agentVault,
+    BigInt amountUBA, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: selfCloseFn,
+    args: [agentVault, amountUBA],
+    from: from,
+  );
+
+  /// Builds an unsigned `selfMint((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest selfMintTx(
+    List<Object?> payment,
+    EthAddress agentVault,
+    BigInt lots, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: selfMintFn,
+    args: [payment, agentVault, lots],
+    from: from,
+  );
+
+  /// Builds an unsigned `setCoreVaultManager(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setCoreVaultManagerTx(
+    EthAddress coreVaultManager, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setCoreVaultManagerFn,
+    args: [coreVaultManager],
+    from: from,
+  );
+
+  /// Builds an unsigned `setCoreVaultMinimumAmountLeftBIPS(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setCoreVaultMinimumAmountLeftBIPSTx(
+    BigInt minimumAmountLeftBIPS, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setCoreVaultMinimumAmountLeftBIPSFn,
+    args: [minimumAmountLeftBIPS],
+    from: from,
+  );
+
+  /// Builds an unsigned `setCoreVaultMinimumRedeemLots(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setCoreVaultMinimumRedeemLotsTx(
+    BigInt minimumRedeemLots, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setCoreVaultMinimumRedeemLotsFn,
+    args: [minimumRedeemLots],
+    from: from,
+  );
+
+  /// Builds an unsigned `setCoreVaultNativeAddress(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setCoreVaultNativeAddressTx(
+    EthAddress nativeAddress, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setCoreVaultNativeAddressFn,
+    args: [nativeAddress],
+    from: from,
+  );
+
+  /// Builds an unsigned `setCoreVaultRedemptionFeeBIPS(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setCoreVaultRedemptionFeeBIPSTx(
+    BigInt redemptionFeeBIPS, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setCoreVaultRedemptionFeeBIPSFn,
+    args: [redemptionFeeBIPS],
+    from: from,
+  );
+
+  /// Builds an unsigned `setCoreVaultTransferDefaultPenaltyBIPS(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setCoreVaultTransferDefaultPenaltyBIPSTx(
+    BigInt transferDefaultPenaltyBIPS, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setCoreVaultTransferDefaultPenaltyBIPSFn,
+    args: [transferDefaultPenaltyBIPS],
+    from: from,
+  );
+
+  /// Builds an unsigned `setCoreVaultTransferTimeExtensionSeconds(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setCoreVaultTransferTimeExtensionSecondsTx(
+    BigInt transferTimeExtensionSeconds, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setCoreVaultTransferTimeExtensionSecondsFn,
+    args: [transferTimeExtensionSeconds],
+    from: from,
+  );
+
+  /// Builds an unsigned `setDirectMintingDailyLimitUBA(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setDirectMintingDailyLimitUBATx(
+    BigInt dailyLimitUBA, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setDirectMintingDailyLimitUBAFn,
+    args: [dailyLimitUBA],
+    from: from,
+  );
+
+  /// Builds an unsigned `setDirectMintingExecutorFee(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setDirectMintingExecutorFeeTx(
+    BigInt executorFeeUBA, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setDirectMintingExecutorFeeFn,
+    args: [executorFeeUBA],
+    from: from,
+  );
+
+  /// Builds an unsigned `setDirectMintingFee(uint256,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setDirectMintingFeeTx(
+    BigInt mintingFeeBIPS,
+    BigInt minimumMintingFeeUBA, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setDirectMintingFeeFn,
+    args: [mintingFeeBIPS, minimumMintingFeeUBA],
+    from: from,
+  );
+
+  /// Builds an unsigned `setDirectMintingFeeReceiver(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setDirectMintingFeeReceiverTx(
+    EthAddress mintingFeeReceiver, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setDirectMintingFeeReceiverFn,
+    args: [mintingFeeReceiver],
+    from: from,
+  );
+
+  /// Builds an unsigned `setDirectMintingHourlyLimitUBA(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setDirectMintingHourlyLimitUBATx(
+    BigInt hourlyLimitUBA, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setDirectMintingHourlyLimitUBAFn,
+    args: [hourlyLimitUBA],
+    from: from,
+  );
+
+  /// Builds an unsigned `setDirectMintingLargeMintingThrottling(uint256,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setDirectMintingLargeMintingThrottlingTx(
+    BigInt largeMintingThresholdUBA,
+    BigInt largeMintingDelaySeconds, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setDirectMintingLargeMintingThrottlingFn,
+    args: [largeMintingThresholdUBA, largeMintingDelaySeconds],
+    from: from,
+  );
+
+  /// Builds an unsigned `setDirectMintingOthersCanExecuteAfterSeconds(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setDirectMintingOthersCanExecuteAfterSecondsTx(
+    BigInt seconds, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setDirectMintingOthersCanExecuteAfterSecondsFn,
+    args: [seconds],
+    from: from,
+  );
+
+  /// Builds an unsigned `setMinimumRedeemAmountUBA(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setMinimumRedeemAmountUBATx(
+    BigInt valueUBA, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setMinimumRedeemAmountUBAFn,
+    args: [valueUBA],
+    from: from,
+  );
+
+  /// Builds an unsigned `setMintingTagManager(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setMintingTagManagerTx(
+    EthAddress mintingTagManager, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setMintingTagManagerFn,
+    args: [mintingTagManager],
+    from: from,
+  );
+
+  /// Builds an unsigned `setRedemptionPaymentExtensionSeconds(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setRedemptionPaymentExtensionSecondsTx(
+    BigInt value_, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setRedemptionPaymentExtensionSecondsFn,
+    args: [value_],
+    from: from,
+  );
+
+  /// Builds an unsigned `setSmartAccountManager(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setSmartAccountManagerTx(
+    EthAddress smartAccountManager, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setSmartAccountManagerFn,
+    args: [smartAccountManager],
+    from: from,
+  );
+
+  /// Builds an unsigned `setSystemRedemptionFeeBIPS(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setSystemRedemptionFeeBIPSTx(
+    BigInt feeBIPS, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setSystemRedemptionFeeBIPSFn,
+    args: [feeBIPS],
+    from: from,
+  );
+
+  /// Builds an unsigned `setSystemRedemptionFeeReceiver(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setSystemRedemptionFeeReceiverTx(
+    EthAddress receiver, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setSystemRedemptionFeeReceiverFn,
+    args: [receiver],
+    from: from,
+  );
+
+  /// Builds an unsigned `startLiquidation(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest startLiquidationTx(
+    EthAddress agentVault, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: startLiquidationFn,
+    args: [agentVault],
+    from: from,
+  );
+
+  /// Builds an unsigned `transferToCoreVault(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest transferToCoreVaultTx(
+    EthAddress agentVault,
+    BigInt amountUBA, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: transferToCoreVaultFn,
+    args: [agentVault, amountUBA],
+    from: from,
+  );
+
+  /// Builds an unsigned `unblockDirectMintingsUntil(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest unblockDirectMintingsUntilTx(
+    BigInt timestamp, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: unblockDirectMintingsUntilFn,
+    args: [timestamp],
+    from: from,
+  );
+
+  /// Builds an unsigned `unstickMinting((bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64),(uint64,uint64,uint64,uint64))),uint256)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest unstickMintingTx(
+    List<Object?> proof,
+    BigInt collateralReservationId, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: unstickMintingFn,
+    args: [proof, collateralReservationId],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `updateCurrentBlock((bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64),(uint64,uint64,uint64,uint64))))`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest updateCurrentBlockTx(
+    List<Object?> proof, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: updateCurrentBlockFn,
+    args: [proof],
+    from: from,
+  );
+
+  /// Builds an unsigned `upgradeAgentVaultAndPool(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest upgradeAgentVaultAndPoolTx(
+    EthAddress agentVault, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: upgradeAgentVaultAndPoolFn,
+    args: [agentVault],
+    from: from,
+  );
+
+  /// Builds an unsigned `xrpRedemptionPaymentDefault((bytes32[],(bytes32,bytes32,uint64,uint64,(uint64,uint64,uint64,bytes32,uint256,bool,bytes32,bool,uint256,address),(uint64,uint64,uint64))),uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest xrpRedemptionPaymentDefaultTx(
+    List<Object?> proof,
+    BigInt redemptionRequestId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: xrpRedemptionPaymentDefaultFn,
+    args: [proof, redemptionRequestId],
+    from: from,
+  );
 
   /// `AgentAvailable(address,uint256,uint256,uint256,uint256)`
   ///

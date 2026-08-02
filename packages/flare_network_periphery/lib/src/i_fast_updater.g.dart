@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IFastUpdater
-// Functions: 9 readable of 10 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 10 — 9 readable via eth_call, 3 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IFastUpdater` contract.
+/// Typed bindings for Flare's `IFastUpdater` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -132,6 +140,21 @@ class IFastUpdaterContract {
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint8'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `submitUpdates((uint256,(uint256,(uint256,uint256),uint256,uint256),bytes,(uint8,bytes32,bytes32)))`.
+  static final AbiFunction submitUpdatesFn = AbiFunction(
+    name: 'submitUpdates',
+    inputs: [
+      AbiParameter(
+        name: '_updates',
+        type: AbiType.parse(
+          '(uint256,(uint256,(uint256,uint256),uint256,uint256),bytes,(uint8,bytes32,bytes32))',
+        ),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `blockScoreCutoff(uint256)`.
@@ -255,6 +278,66 @@ class IFastUpdaterContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `fetchAllCurrentFeeds()`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest fetchAllCurrentFeedsTx({
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: fetchAllCurrentFeedsFn,
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `fetchCurrentFeeds(uint256[])`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest fetchCurrentFeedsTx(
+    List<BigInt> indices, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: fetchCurrentFeedsFn,
+    args: [indices],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `submitUpdates((uint256,(uint256,(uint256,uint256),uint256,uint256),bytes,(uint8,bytes32,bytes32)))`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest submitUpdatesTx(
+    List<Object?> updates, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: submitUpdatesFn,
+    args: [updates],
+    from: from,
+  );
 
   /// `FastUpdateFeedRemoved(uint256)`
   ///

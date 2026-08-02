@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IIPollingFoundation
-// Functions: 7 readable of 14 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 14 — 7 readable via eth_call, 8 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IIPollingFoundation` contract.
+/// Typed bindings for Flare's `IIPollingFoundation` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -44,8 +52,61 @@ class IIPollingFoundationContract {
     return IIPollingFoundationContract(client: client, address: resolved);
   }
 
-  /// ABI descriptor for `execute(address[],uint256[],bytes[],string)`.
+  /// ABI descriptor for `cancel(uint256)`.
+  static final AbiFunction cancelFn = AbiFunction(
+    name: 'cancel',
+    inputs: [AbiParameter(name: '_proposalId', type: AbiType.parse('uint256'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `castVote(uint256,uint8)`.
+  static final AbiFunction castVoteFn = AbiFunction(
+    name: 'castVote',
+    inputs: [
+      AbiParameter(name: '_proposalId', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_support', type: AbiType.parse('uint8')),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `castVoteBySig(uint256,uint8,uint8,bytes32,bytes32)`.
+  static final AbiFunction castVoteBySigFn = AbiFunction(
+    name: 'castVoteBySig',
+    inputs: [
+      AbiParameter(name: '_proposalId', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_support', type: AbiType.parse('uint8')),
+      AbiParameter(name: '_v', type: AbiType.parse('uint8')),
+      AbiParameter(name: '_r', type: AbiType.parse('bytes32')),
+      AbiParameter(name: '_s', type: AbiType.parse('bytes32')),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `castVoteWithReason(uint256,uint8,string)`.
+  static final AbiFunction castVoteWithReasonFn = AbiFunction(
+    name: 'castVoteWithReason',
+    inputs: [
+      AbiParameter(name: '_proposalId', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_support', type: AbiType.parse('uint8')),
+      AbiParameter(name: '_reason', type: AbiType.parse('string')),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `execute(string)`.
   static final AbiFunction executeFn = AbiFunction(
+    name: 'execute',
+    inputs: [AbiParameter(name: '_description', type: AbiType.parse('string'))],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `execute(address[],uint256[],bytes[],string)`.
+  static final AbiFunction execute2Fn = AbiFunction(
     name: 'execute',
     inputs: [
       AbiParameter(name: '_targets', type: AbiType.parse('address[]')),
@@ -123,6 +184,39 @@ class IIPollingFoundationContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `propose(address[],uint256[],bytes[],string,(bool,uint256,uint256,uint256,uint256,uint256,uint256,uint256))`.
+  static final AbiFunction proposeFn = AbiFunction(
+    name: 'propose',
+    inputs: [
+      AbiParameter(name: '_targets', type: AbiType.parse('address[]')),
+      AbiParameter(name: '_values', type: AbiType.parse('uint256[]')),
+      AbiParameter(name: '_calldatas', type: AbiType.parse('bytes[]')),
+      AbiParameter(name: '_description', type: AbiType.parse('string')),
+      AbiParameter(
+        name: '_settings',
+        type: AbiType.parse(
+          '(bool,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
+        ),
+      ),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `propose(string,(bool,uint256,uint256,uint256,uint256,uint256))`.
+  static final AbiFunction propose2Fn = AbiFunction(
+    name: 'propose',
+    inputs: [
+      AbiParameter(name: '_description', type: AbiType.parse('string')),
+      AbiParameter(
+        name: '_settings',
+        type: AbiType.parse('(bool,uint256,uint256,uint256,uint256,uint256)'),
+      ),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `state(uint256)`.
   static final AbiFunction stateFn = AbiFunction(
     name: 'state',
@@ -134,7 +228,7 @@ class IIPollingFoundationContract {
   /// Calls `execute(address[],uint256[],bytes[],string)`.
   ///
   /// Declared `payable` in Solidity; read via `eth_call`.
-  Future<BigInt> execute(
+  Future<BigInt> execute2(
     List<EthAddress> targets,
     List<BigInt> values,
     List<Uint8List> calldatas,
@@ -142,7 +236,7 @@ class IIPollingFoundationContract {
   ) async {
     final out = await client.callFunction(
       contract: address,
-      function: executeFn,
+      function: execute2Fn,
       args: [targets, values, calldatas, description],
     );
     return out[0]! as BigInt;
@@ -246,6 +340,165 @@ class IIPollingFoundationContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `cancel(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest cancelTx(BigInt proposalId, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: cancelFn,
+        args: [proposalId],
+        from: from,
+      );
+
+  /// Builds an unsigned `castVote(uint256,uint8)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest castVoteTx(
+    BigInt proposalId,
+    BigInt support, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: castVoteFn,
+    args: [proposalId, support],
+    from: from,
+  );
+
+  /// Builds an unsigned `castVoteBySig(uint256,uint8,uint8,bytes32,bytes32)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest castVoteBySigTx(
+    BigInt proposalId,
+    BigInt support,
+    BigInt v,
+    Uint8List r,
+    Uint8List s, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: castVoteBySigFn,
+    args: [proposalId, support, v, r, s],
+    from: from,
+  );
+
+  /// Builds an unsigned `castVoteWithReason(uint256,uint8,string)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest castVoteWithReasonTx(
+    BigInt proposalId,
+    BigInt support,
+    String reason, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: castVoteWithReasonFn,
+    args: [proposalId, support, reason],
+    from: from,
+  );
+
+  /// Builds an unsigned `execute(string)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest executeTx(String description, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: executeFn,
+        args: [description],
+        from: from,
+      );
+
+  /// Builds an unsigned `execute(address[],uint256[],bytes[],string)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest execute2Tx(
+    List<EthAddress> targets,
+    List<BigInt> values,
+    List<Uint8List> calldatas,
+    String description, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: execute2Fn,
+    args: [targets, values, calldatas, description],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `propose(address[],uint256[],bytes[],string,(bool,uint256,uint256,uint256,uint256,uint256,uint256,uint256))`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest proposeTx(
+    List<EthAddress> targets,
+    List<BigInt> values,
+    List<Uint8List> calldatas,
+    String description,
+    List<Object?> settings, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: proposeFn,
+    args: [targets, values, calldatas, description, settings],
+    from: from,
+  );
+
+  /// Builds an unsigned `propose(string,(bool,uint256,uint256,uint256,uint256,uint256))`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest propose2Tx(
+    String description,
+    List<Object?> settings, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: propose2Fn,
+    args: [description, settings],
+    from: from,
+  );
 
   /// `ProposalCanceled(uint256)`
   ///

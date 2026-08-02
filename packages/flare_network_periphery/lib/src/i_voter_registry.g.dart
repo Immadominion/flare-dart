@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IVoterRegistry
-// Functions: 7 readable of 8 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 8 — 7 readable via eth_call, 1 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IVoterRegistry` contract.
+/// Typed bindings for Flare's `IVoterRegistry` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -110,6 +118,20 @@ class IVoterRegistryContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `registerVoter(address,(uint8,bytes32,bytes32))`.
+  static final AbiFunction registerVoterFn = AbiFunction(
+    name: 'registerVoter',
+    inputs: [
+      AbiParameter(name: '_voter', type: AbiType.parse('address')),
+      AbiParameter(
+        name: '_signature',
+        type: AbiType.parse('(uint8,bytes32,bytes32)'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// Calls `chilledUntilRewardEpochId(bytes20)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
@@ -193,6 +215,25 @@ class IVoterRegistryContract {
     );
     return out[0]! as bool;
   }
+
+  /// Builds an unsigned `registerVoter(address,(uint8,bytes32,bytes32))`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest registerVoterTx(
+    EthAddress voter,
+    List<Object?> signature, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: registerVoterFn,
+    args: [voter, signature],
+    from: from,
+  );
 
   /// `BeneficiaryChilled(bytes20,uint32)`
   ///

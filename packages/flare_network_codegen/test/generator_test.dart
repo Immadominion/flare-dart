@@ -238,7 +238,7 @@ void main() {
       expect(binding?.methodCount, 1);
     });
 
-    test('omits state-changing functions', () {
+    test('emits a transaction builder for a state-changing function', () {
       final binding = generator.generate('X', [
         fn(
           'setThing',
@@ -248,8 +248,43 @@ void main() {
           mutability: 'nonpayable',
         ),
       ]);
-      // Nothing readable, so no file is emitted at all.
-      expect(binding, isNull);
+
+      // A nonpayable function cannot be read, but it is exactly what a wallet
+      // is asked to sign, so the binding builds the request rather than
+      // leaving the caller to hand-encode calldata.
+      expect(binding, isNotNull);
+      expect(
+        binding!.source,
+        contains('TransactionRequest setThingTx(BigInt v, {EthAddress? from})'),
+      );
+      // Nonpayable: no `value` parameter, because attaching value reverts.
+      expect(binding.source, isNot(contains('BigInt? value')));
+      // And no reader, since eth_call would not reflect the state change.
+      expect(binding.source, isNot(contains('Future<void> setThing(')));
+    });
+
+    test('a payable function gets both a reader and a builder', () {
+      final binding = generator.generate('X', [
+        fn(
+          'requestThing',
+          inputs: [
+            {'name': 'v', 'type': 'uint256'},
+          ],
+          outputs: [
+            {'name': '', 'type': 'bytes32'},
+          ],
+          mutability: 'payable',
+        ),
+      ]);
+
+      // FTSOv2's feed getters are payable yet read for free, while FDC's
+      // requestAttestation is payable and genuinely state-changing. The ABI
+      // does not distinguish them, so both members are emitted.
+      expect(binding!.source, contains('Future<Uint8List> requestThing('));
+      expect(binding.source, contains('TransactionRequest requestThingTx('));
+      // Payable, so value is accepted.
+      expect(binding.source, contains('BigInt? value'));
+      expect(binding.source, contains('value: value,'));
     });
 
     test('emits an events-only interface rather than skipping it', () {
@@ -273,17 +308,42 @@ void main() {
       expect(binding.source, contains('static DecodedLog? decodeLog'));
     });
 
-    test('returns null when there is neither a read nor an event', () {
+    test('returns null only when the ABI declares nothing usable', () {
+      expect(generator.generate('X', []), isNull);
+      expect(
+        generator.generate('X', [
+          {'type': 'constructor', 'inputs': <Object?>[]},
+        ]),
+        isNull,
+      );
+    });
+
+    test('emits custom errors and a decoder', () {
+      // 168 custom errors are declared across the published corpus. They carry
+      // no message, so without the declaration a caller sees only the bare
+      // string "execution reverted".
       final binding = generator.generate('X', [
-        fn(
-          'setThing',
-          inputs: [
-            {'name': 'v', 'type': 'uint256'},
+        {
+          'type': 'error',
+          'name': 'InsufficientFundsForRedeem',
+          'inputs': [
+            {'name': 'required', 'type': 'uint256'},
           ],
-          mutability: 'nonpayable',
-        ),
+        },
+        {'type': 'error', 'name': 'AgentNotWhitelisted', 'inputs': <Object?>[]},
       ]);
-      expect(binding, isNull);
+
+      expect(binding, isNotNull);
+      expect(
+        binding!.source,
+        contains('static final AbiError insufficientFundsForRedeemError'),
+      );
+      expect(binding.source, contains('static final List<AbiError> allErrors'));
+      expect(
+        binding.source,
+        contains('static RevertReason? decodeRevert(FlareRpcException e)'),
+      );
+      expect(binding.source, contains('e.revertReasonWith(allErrors)'));
     });
 
     test('renames a parameter that would shadow a class member', () {

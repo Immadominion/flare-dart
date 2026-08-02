@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IIFtsoFeedPublisher
-// Functions: 4 readable of 6 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 6 — 4 readable via eth_call, 2 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IIFtsoFeedPublisher` contract.
+/// Typed bindings for Flare's `IIFtsoFeedPublisher` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -89,6 +97,32 @@ class IIFtsoFeedPublisherContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `publish((bytes32[],(uint32,bytes21,int32,uint16,int8))[])`.
+  static final AbiFunction publishFn = AbiFunction(
+    name: 'publish',
+    inputs: [
+      AbiParameter(
+        name: '_proofs',
+        type: AbiType.parse('(bytes32[],(uint32,bytes21,int32,uint16,int8))[]'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `publishFeeds((uint32,bytes21,int32,uint16,int8)[])`.
+  static final AbiFunction publishFeedsFn = AbiFunction(
+    name: 'publishFeeds',
+    inputs: [
+      AbiParameter(
+        name: '_feeds',
+        type: AbiType.parse('(uint32,bytes21,int32,uint16,int8)[]'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// Calls `feedsHistorySize()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
@@ -134,6 +168,42 @@ class IIFtsoFeedPublisherContract {
     );
     return (out[0]! as List).cast<Object?>();
   }
+
+  /// Builds an unsigned `publish((bytes32[],(uint32,bytes21,int32,uint16,int8))[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest publishTx(
+    List<List<Object?>> proofs, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: publishFn,
+    args: [proofs],
+    from: from,
+  );
+
+  /// Builds an unsigned `publishFeeds((uint32,bytes21,int32,uint16,int8)[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest publishFeedsTx(
+    List<List<Object?>> feeds, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: publishFeedsFn,
+    args: [feeds],
+    from: from,
+  );
 
   /// `FtsoFeedPublished(uint32,bytes21,int32,uint16,int8)`
   ///

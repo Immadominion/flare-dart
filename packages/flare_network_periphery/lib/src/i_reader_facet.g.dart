@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IReaderFacet
-// Functions: 5 readable of 5 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 5 — 5 readable via eth_call, 0 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 1
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IReaderFacet` contract.
+/// Typed bindings for Flare's `IReaderFacet` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -165,4 +173,32 @@ class IReaderFacetContract {
     );
     return (out[0]! as List).cast<List<Object?>>();
   }
+
+  /// `UnsupportedVaultType(uint8)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError unsupportedVaultTypeError = AbiError(
+    name: 'UnsupportedVaultType',
+    inputs: [AbiParameter(name: 'vaultType', type: AbiType.parse('uint8'))],
+  );
+
+  /// Every custom error this contract declares.
+  static final List<AbiError> allErrors = [unsupportedVaultTypeError];
+
+  /// Explains why a call to this contract reverted.
+  ///
+  /// ```dart
+  /// try {
+  ///   await client.estimateGas(request.toCallRequest());
+  /// } on FlareRpcException catch (e) {
+  ///   print(decodeRevert(e)?.description);
+  /// }
+  /// ```
+  ///
+  /// Returns null when the node attached no revert data,
+  /// which is how Flare reports a bare `revert()`.
+  static RevertReason? decodeRevert(FlareRpcException e) =>
+      e.revertReasonWith(allErrors);
 }

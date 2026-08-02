@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IAddressBinder
-// Functions: 2 readable of 4 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 4 — 2 readable via eth_call, 2 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IAddressBinder` contract.
+/// Typed bindings for Flare's `IAddressBinder` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -57,6 +65,29 @@ class IAddressBinderContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `registerAddresses(bytes,bytes20,address)`.
+  static final AbiFunction registerAddressesFn = AbiFunction(
+    name: 'registerAddresses',
+    inputs: [
+      AbiParameter(name: '_publicKey', type: AbiType.parse('bytes')),
+      AbiParameter(name: '_pAddress', type: AbiType.parse('bytes20')),
+      AbiParameter(name: '_cAddress', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `registerPublicKey(bytes)`.
+  static final AbiFunction registerPublicKeyFn = AbiFunction(
+    name: 'registerPublicKey',
+    inputs: [AbiParameter(name: '_publicKey', type: AbiType.parse('bytes'))],
+    outputs: [
+      AbiParameter(name: '_pAddress', type: AbiType.parse('bytes20')),
+      AbiParameter(name: '_cAddress', type: AbiType.parse('address')),
+    ],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// Calls `cAddressToPAddress(address)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
@@ -80,6 +111,44 @@ class IAddressBinderContract {
     );
     return out[0]! as EthAddress;
   }
+
+  /// Builds an unsigned `registerAddresses(bytes,bytes20,address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest registerAddressesTx(
+    Uint8List publicKey,
+    Uint8List pAddress,
+    EthAddress cAddress, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: registerAddressesFn,
+    args: [publicKey, pAddress, cAddress],
+    from: from,
+  );
+
+  /// Builds an unsigned `registerPublicKey(bytes)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest registerPublicKeyTx(
+    Uint8List publicKey, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: registerPublicKeyFn,
+    args: [publicKey],
+    from: from,
+  );
 
   /// `AddressesRegistered(bytes,bytes20,address)`
   ///

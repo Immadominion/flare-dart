@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IInstructionsFacet
-// Functions: 2 readable of 4 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 4 — 2 readable via eth_call, 3 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 8
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IInstructionsFacet` contract.
+/// Typed bindings for Flare's `IInstructionsFacet` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -43,6 +51,42 @@ class IInstructionsFacetContract {
     );
     return IInstructionsFacetContract(client: client, address: resolved);
   }
+
+  /// ABI descriptor for `executeDepositAfterMinting(uint256,(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),string)`.
+  static final AbiFunction executeDepositAfterMintingFn = AbiFunction(
+    name: 'executeDepositAfterMinting',
+    inputs: [
+      AbiParameter(
+        name: '_collateralReservationId',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8)))',
+        ),
+      ),
+      AbiParameter(name: '_xrplAddress', type: AbiType.parse('string')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `executeInstruction((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),string)`.
+  static final AbiFunction executeInstructionFn = AbiFunction(
+    name: 'executeInstruction',
+    inputs: [
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8)))',
+        ),
+      ),
+      AbiParameter(name: '_xrplAddress', type: AbiType.parse('string')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.payable,
+  );
 
   /// ABI descriptor for `getTransactionIdForCollateralReservation(uint256)`.
   static final AbiFunction getTransactionIdForCollateralReservationFn =
@@ -106,6 +150,187 @@ class IInstructionsFacetContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `executeDepositAfterMinting(uint256,(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),string)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest executeDepositAfterMintingTx(
+    BigInt collateralReservationId,
+    List<Object?> proof,
+    String xrplAddress, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: executeDepositAfterMintingFn,
+    args: [collateralReservationId, proof, xrplAddress],
+    from: from,
+  );
+
+  /// Builds an unsigned `executeInstruction((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),string)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest executeInstructionTx(
+    List<Object?> proof,
+    String xrplAddress, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: executeInstructionFn,
+    args: [proof, xrplAddress],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `reserveCollateral(string,bytes32,bytes32)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest reserveCollateralTx(
+    String xrplAddress,
+    Uint8List paymentReference,
+    Uint8List transactionId, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: reserveCollateralFn,
+    args: [xrplAddress, paymentReference, transactionId],
+    from: from,
+    value: value,
+  );
+
+  /// `InvalidAmount()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidAmountError = AbiError(
+    name: 'InvalidAmount',
+    inputs: [],
+  );
+
+  /// `InvalidInstruction(uint256,uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidInstructionError = AbiError(
+    name: 'InvalidInstruction',
+    inputs: [
+      AbiParameter(name: 'instructionType', type: AbiType.parse('uint256')),
+      AbiParameter(name: 'instructionCommand', type: AbiType.parse('uint256')),
+    ],
+  );
+
+  /// `InvalidInstructionType(uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidInstructionTypeError = AbiError(
+    name: 'InvalidInstructionType',
+    inputs: [
+      AbiParameter(name: 'instructionType', type: AbiType.parse('uint256')),
+    ],
+  );
+
+  /// `InvalidMinter()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidMinterError = AbiError(
+    name: 'InvalidMinter',
+    inputs: [],
+  );
+
+  /// `InvalidPaymentAmount(uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidPaymentAmountError = AbiError(
+    name: 'InvalidPaymentAmount',
+    inputs: [
+      AbiParameter(name: 'requiredAmount', type: AbiType.parse('uint256')),
+    ],
+  );
+
+  /// `InvalidTransactionId()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidTransactionIdError = AbiError(
+    name: 'InvalidTransactionId',
+    inputs: [],
+  );
+
+  /// `MintingNotCompleted()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError mintingNotCompletedError = AbiError(
+    name: 'MintingNotCompleted',
+    inputs: [],
+  );
+
+  /// `UnknownCollateralReservationId()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError unknownCollateralReservationIdError = AbiError(
+    name: 'UnknownCollateralReservationId',
+    inputs: [],
+  );
+
+  /// Every custom error this contract declares.
+  static final List<AbiError> allErrors = [
+    invalidAmountError,
+    invalidInstructionError,
+    invalidInstructionTypeError,
+    invalidMinterError,
+    invalidPaymentAmountError,
+    invalidTransactionIdError,
+    mintingNotCompletedError,
+    unknownCollateralReservationIdError,
+  ];
+
+  /// Explains why a call to this contract reverted.
+  ///
+  /// ```dart
+  /// try {
+  ///   await client.estimateGas(request.toCallRequest());
+  /// } on FlareRpcException catch (e) {
+  ///   print(decodeRevert(e)?.description);
+  /// }
+  /// ```
+  ///
+  /// Returns null when the node attached no revert data,
+  /// which is how Flare reports a bare `revert()`.
+  static RevertReason? decodeRevert(FlareRpcException e) =>
+      e.revertReasonWith(allErrors);
 
   /// `Approved(address,address,address,uint256)`
   ///

@@ -2,14 +2,24 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IPriceSubmitter
-// Functions: 6 readable of 8 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 8 — 6 readable via eth_call, 2 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
+import 'dart:typed_data';
+
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IPriceSubmitter` contract.
+/// Typed bindings for Flare's `IPriceSubmitter` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -76,6 +86,30 @@ class IPriceSubmitterContract {
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `revealPrices(uint256,uint256[],uint256[],uint256)`.
+  static final AbiFunction revealPricesFn = AbiFunction(
+    name: 'revealPrices',
+    inputs: [
+      AbiParameter(name: '_epochId', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_ftsoIndices', type: AbiType.parse('uint256[]')),
+      AbiParameter(name: '_prices', type: AbiType.parse('uint256[]')),
+      AbiParameter(name: '_random', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `submitHash(uint256,bytes32)`.
+  static final AbiFunction submitHashFn = AbiFunction(
+    name: 'submitHash',
+    inputs: [
+      AbiParameter(name: '_epochId', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_hash', type: AbiType.parse('bytes32')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `voterWhitelistBitmap(address)`.
@@ -153,6 +187,46 @@ class IPriceSubmitterContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `revealPrices(uint256,uint256[],uint256[],uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest revealPricesTx(
+    BigInt epochId,
+    List<BigInt> ftsoIndices,
+    List<BigInt> prices,
+    BigInt random, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: revealPricesFn,
+    args: [epochId, ftsoIndices, prices, random],
+    from: from,
+  );
+
+  /// Builds an unsigned `submitHash(uint256,bytes32)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest submitHashTx(
+    BigInt epochId,
+    Uint8List hash, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: submitHashFn,
+    args: [epochId, hash],
+    from: from,
+  );
 
   /// `HashSubmitted(address,uint256,bytes32,uint256)`
   ///

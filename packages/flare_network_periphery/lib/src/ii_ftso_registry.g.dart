@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IIFtsoRegistry
-// Functions: 19 readable of 21 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 21 — 19 readable via eth_call, 2 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IIFtsoRegistry` contract.
+/// Typed bindings for Flare's `IIFtsoRegistry` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -38,6 +46,16 @@ class IIFtsoRegistryContract {
     );
     return IIFtsoRegistryContract(client: client, address: resolved);
   }
+
+  /// ABI descriptor for `addFtso(address)`.
+  static final AbiFunction addFtsoFn = AbiFunction(
+    name: 'addFtso',
+    inputs: [
+      AbiParameter(name: '_ftsoContract', type: AbiType.parse('address')),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+    stateMutability: StateMutability.nonpayable,
+  );
 
   /// ABI descriptor for `getAllCurrentPrices()`.
   static final AbiFunction getAllCurrentPricesFn = AbiFunction(
@@ -247,6 +265,14 @@ class IIFtsoRegistryContract {
       AbiParameter(name: '_ftsos', type: AbiType.parse('address[]')),
     ],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `removeFtso(address)`.
+  static final AbiFunction removeFtsoFn = AbiFunction(
+    name: 'removeFtso',
+    inputs: [AbiParameter(name: '_ftso', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `getAllCurrentPrices()`.
@@ -509,4 +535,36 @@ class IIFtsoRegistryContract {
       ftsos: (out[1]! as List).cast<EthAddress>(),
     );
   }
+
+  /// Builds an unsigned `addFtso(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest addFtsoTx(EthAddress ftsoContract, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: addFtsoFn,
+        args: [ftsoContract],
+        from: from,
+      );
+
+  /// Builds an unsigned `removeFtso(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest removeFtsoTx(EthAddress ftso, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: removeFtsoFn,
+        args: [ftso],
+        from: from,
+      );
 }

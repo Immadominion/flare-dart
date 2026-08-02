@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IRNat
-// Functions: 18 readable of 27 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 27 — 18 readable via eth_call, 9 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IRNat` contract.
+/// Typed bindings for Flare's `IRNat` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -50,6 +58,17 @@ class IRNatContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `approve(address,uint256)`.
+  static final AbiFunction approveFn = AbiFunction(
+    name: 'approve',
+    inputs: [
+      AbiParameter(name: 'spender', type: AbiType.parse('address')),
+      AbiParameter(name: 'amount', type: AbiType.parse('uint256')),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `balanceOf(address)`.
   static final AbiFunction balanceOfFn = AbiFunction(
     name: 'balanceOf',
@@ -58,12 +77,38 @@ class IRNatContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `claimRewards(uint256[],uint256)`.
+  static final AbiFunction claimRewardsFn = AbiFunction(
+    name: 'claimRewards',
+    inputs: [
+      AbiParameter(name: '_projectIds', type: AbiType.parse('uint256[]')),
+      AbiParameter(name: '_month', type: AbiType.parse('uint256')),
+    ],
+    outputs: [
+      AbiParameter(name: '_claimedRewardsWei', type: AbiType.parse('uint128')),
+    ],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `decimals()`.
   static final AbiFunction decimalsFn = AbiFunction(
     name: 'decimals',
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint8'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `distributeRewards(uint256,uint256,address[],uint128[])`.
+  static final AbiFunction distributeRewardsFn = AbiFunction(
+    name: 'distributeRewards',
+    inputs: [
+      AbiParameter(name: '_projectId', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_month', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_recipients', type: AbiType.parse('address[]')),
+      AbiParameter(name: '_amountsWei', type: AbiType.parse('uint128[]')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `firstMonthStartTs()`.
@@ -241,6 +286,16 @@ class IRNatContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `setClaimExecutors(address[])`.
+  static final AbiFunction setClaimExecutorsFn = AbiFunction(
+    name: 'setClaimExecutors',
+    inputs: [
+      AbiParameter(name: '_executors', type: AbiType.parse('address[]')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.payable,
+  );
+
   /// ABI descriptor for `symbol()`.
   static final AbiFunction symbolFn = AbiFunction(
     name: 'symbol',
@@ -257,12 +312,65 @@ class IRNatContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `transfer(address,uint256)`.
+  static final AbiFunction transferFn = AbiFunction(
+    name: 'transfer',
+    inputs: [
+      AbiParameter(name: 'to', type: AbiType.parse('address')),
+      AbiParameter(name: 'amount', type: AbiType.parse('uint256')),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `transferExternalToken(address,uint256)`.
+  static final AbiFunction transferExternalTokenFn = AbiFunction(
+    name: 'transferExternalToken',
+    inputs: [
+      AbiParameter(name: '_token', type: AbiType.parse('address')),
+      AbiParameter(name: '_amount', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `transferFrom(address,address,uint256)`.
+  static final AbiFunction transferFromFn = AbiFunction(
+    name: 'transferFrom',
+    inputs: [
+      AbiParameter(name: 'from', type: AbiType.parse('address')),
+      AbiParameter(name: 'to', type: AbiType.parse('address')),
+      AbiParameter(name: 'amount', type: AbiType.parse('uint256')),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `wNat()`.
   static final AbiFunction wNatFn = AbiFunction(
     name: 'wNat',
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `withdraw(uint128,bool)`.
+  static final AbiFunction withdrawFn = AbiFunction(
+    name: 'withdraw',
+    inputs: [
+      AbiParameter(name: '_amount', type: AbiType.parse('uint128')),
+      AbiParameter(name: '_wrap', type: AbiType.parse('bool')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `withdrawAll(bool)`.
+  static final AbiFunction withdrawAllFn = AbiFunction(
+    name: 'withdrawAll',
+    inputs: [AbiParameter(name: '_wrap', type: AbiType.parse('bool'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `allowance(address,address)`.
@@ -531,6 +639,177 @@ class IRNatContract {
     final out = await client.callFunction(contract: address, function: wNatFn);
     return out[0]! as EthAddress;
   }
+
+  /// Builds an unsigned `approve(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest approveTx(
+    EthAddress spender,
+    BigInt amount, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: approveFn,
+    args: [spender, amount],
+    from: from,
+  );
+
+  /// Builds an unsigned `claimRewards(uint256[],uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest claimRewardsTx(
+    List<BigInt> projectIds,
+    BigInt month, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: claimRewardsFn,
+    args: [projectIds, month],
+    from: from,
+  );
+
+  /// Builds an unsigned `distributeRewards(uint256,uint256,address[],uint128[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest distributeRewardsTx(
+    BigInt projectId,
+    BigInt month,
+    List<EthAddress> recipients,
+    List<BigInt> amountsWei, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: distributeRewardsFn,
+    args: [projectId, month, recipients, amountsWei],
+    from: from,
+  );
+
+  /// Builds an unsigned `setClaimExecutors(address[])`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest setClaimExecutorsTx(
+    List<EthAddress> executors, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setClaimExecutorsFn,
+    args: [executors],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `transfer(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest transferTx(
+    EthAddress to,
+    BigInt amount, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: transferFn,
+    args: [to, amount],
+    from: from,
+  );
+
+  /// Builds an unsigned `transferExternalToken(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest transferExternalTokenTx(
+    EthAddress token,
+    BigInt amount, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: transferExternalTokenFn,
+    args: [token, amount],
+    from: from,
+  );
+
+  /// Builds an unsigned `transferFrom(address,address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest transferFromTx(
+    EthAddress from_,
+    EthAddress to,
+    BigInt amount, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: transferFromFn,
+    args: [from_, to, amount],
+    from: from,
+  );
+
+  /// Builds an unsigned `withdraw(uint128,bool)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest withdrawTx(BigInt amount, bool wrap, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: withdrawFn,
+        args: [amount, wrap],
+        from: from,
+      );
+
+  /// Builds an unsigned `withdrawAll(bool)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest withdrawAllTx(bool wrap, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: withdrawAllFn,
+        args: [wrap],
+        from: from,
+      );
 
   /// `Approval(address,address,uint256)`
   ///

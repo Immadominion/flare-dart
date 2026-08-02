@@ -2,14 +2,24 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IFdcHub
-// Functions: 3 readable of 4 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 4 — 3 readable via eth_call, 1 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
+import 'dart:typed_data';
+
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IFdcHub` contract.
+/// Typed bindings for Flare's `IFdcHub` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -54,6 +64,14 @@ class IFdcHubContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `requestAttestation(bytes)`.
+  static final AbiFunction requestAttestationFn = AbiFunction(
+    name: 'requestAttestation',
+    inputs: [AbiParameter(name: '_data', type: AbiType.parse('bytes'))],
+    outputs: [],
+    stateMutability: StateMutability.payable,
+  );
+
   /// ABI descriptor for `requestsOffsetSeconds()`.
   static final AbiFunction requestsOffsetSecondsFn = AbiFunction(
     name: 'requestsOffsetSeconds',
@@ -94,6 +112,28 @@ class IFdcHubContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `requestAttestation(bytes)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest requestAttestationTx(
+    Uint8List data, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: requestAttestationFn,
+    args: [data],
+    from: from,
+    value: value,
+  );
 
   /// `AttestationRequest(bytes,uint256)`
   ///

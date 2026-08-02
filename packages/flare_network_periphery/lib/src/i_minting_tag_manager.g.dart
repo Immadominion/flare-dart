@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IMintingTagManager
-// Functions: 17 readable of 25 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 25 — 17 readable via eth_call, 9 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IMintingTagManager` contract.
+/// Typed bindings for Flare's `IMintingTagManager` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -50,6 +58,17 @@ class IMintingTagManagerContract {
     inputs: [AbiParameter(name: '_mintingTag', type: AbiType.parse('uint256'))],
     outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `approve(address,uint256)`.
+  static final AbiFunction approveFn = AbiFunction(
+    name: 'approve',
+    inputs: [
+      AbiParameter(name: 'to', type: AbiType.parse('address')),
+      AbiParameter(name: 'tokenId', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `balanceOf(address)`.
@@ -155,6 +174,64 @@ class IMintingTagManagerContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `safeTransferFrom(address,address,uint256)`.
+  static final AbiFunction safeTransferFromFn = AbiFunction(
+    name: 'safeTransferFrom',
+    inputs: [
+      AbiParameter(name: 'from', type: AbiType.parse('address')),
+      AbiParameter(name: 'to', type: AbiType.parse('address')),
+      AbiParameter(name: 'tokenId', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `safeTransferFrom(address,address,uint256,bytes)`.
+  static final AbiFunction safeTransferFrom2Fn = AbiFunction(
+    name: 'safeTransferFrom',
+    inputs: [
+      AbiParameter(name: 'from', type: AbiType.parse('address')),
+      AbiParameter(name: 'to', type: AbiType.parse('address')),
+      AbiParameter(name: 'tokenId', type: AbiType.parse('uint256')),
+      AbiParameter(name: 'data', type: AbiType.parse('bytes')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setAllowedExecutor(uint256,address)`.
+  static final AbiFunction setAllowedExecutorFn = AbiFunction(
+    name: 'setAllowedExecutor',
+    inputs: [
+      AbiParameter(name: '_mintingTag', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_executor', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setApprovalForAll(address,bool)`.
+  static final AbiFunction setApprovalForAllFn = AbiFunction(
+    name: 'setApprovalForAll',
+    inputs: [
+      AbiParameter(name: 'operator', type: AbiType.parse('address')),
+      AbiParameter(name: 'approved', type: AbiType.parse('bool')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setMintingRecipient(uint256,address)`.
+  static final AbiFunction setMintingRecipientFn = AbiFunction(
+    name: 'setMintingRecipient',
+    inputs: [
+      AbiParameter(name: '_mintingTag', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_recipient', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `supportsInterface(bytes4)`.
   static final AbiFunction supportsInterfaceFn = AbiFunction(
     name: 'supportsInterface',
@@ -188,6 +265,29 @@ class IMintingTagManagerContract {
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `transfer(address,uint256)`.
+  static final AbiFunction transferFn = AbiFunction(
+    name: 'transfer',
+    inputs: [
+      AbiParameter(name: '_to', type: AbiType.parse('address')),
+      AbiParameter(name: '_mintingTag', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `transferFrom(address,address,uint256)`.
+  static final AbiFunction transferFromFn = AbiFunction(
+    name: 'transferFrom',
+    inputs: [
+      AbiParameter(name: 'from', type: AbiType.parse('address')),
+      AbiParameter(name: 'to', type: AbiType.parse('address')),
+      AbiParameter(name: 'tokenId', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `allowedExecutor(uint256)`.
@@ -395,6 +495,180 @@ class IMintingTagManagerContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `approve(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest approveTx(
+    EthAddress to,
+    BigInt tokenId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: approveFn,
+    args: [to, tokenId],
+    from: from,
+  );
+
+  /// Builds an unsigned `reserve()`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest reserveTx({EthAddress? from, BigInt? value}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: reserveFn,
+        from: from,
+        value: value,
+      );
+
+  /// Builds an unsigned `safeTransferFrom(address,address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest safeTransferFromTx(
+    EthAddress from_,
+    EthAddress to,
+    BigInt tokenId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: safeTransferFromFn,
+    args: [from_, to, tokenId],
+    from: from,
+  );
+
+  /// Builds an unsigned `safeTransferFrom(address,address,uint256,bytes)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest safeTransferFrom2Tx(
+    EthAddress from_,
+    EthAddress to,
+    BigInt tokenId,
+    Uint8List data, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: safeTransferFrom2Fn,
+    args: [from_, to, tokenId, data],
+    from: from,
+  );
+
+  /// Builds an unsigned `setAllowedExecutor(uint256,address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setAllowedExecutorTx(
+    BigInt mintingTag,
+    EthAddress executor, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setAllowedExecutorFn,
+    args: [mintingTag, executor],
+    from: from,
+  );
+
+  /// Builds an unsigned `setApprovalForAll(address,bool)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setApprovalForAllTx(
+    EthAddress operatorValue,
+    bool approved, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setApprovalForAllFn,
+    args: [operatorValue, approved],
+    from: from,
+  );
+
+  /// Builds an unsigned `setMintingRecipient(uint256,address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setMintingRecipientTx(
+    BigInt mintingTag,
+    EthAddress recipient, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setMintingRecipientFn,
+    args: [mintingTag, recipient],
+    from: from,
+  );
+
+  /// Builds an unsigned `transfer(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest transferTx(
+    EthAddress to,
+    BigInt mintingTag, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: transferFn,
+    args: [to, mintingTag],
+    from: from,
+  );
+
+  /// Builds an unsigned `transferFrom(address,address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest transferFromTx(
+    EthAddress from_,
+    EthAddress to,
+    BigInt tokenId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: transferFromFn,
+    args: [from_, to, tokenId],
+    from: from,
+  );
 
   /// `AllowedExecutorChangeCancelled(uint256)`
   ///

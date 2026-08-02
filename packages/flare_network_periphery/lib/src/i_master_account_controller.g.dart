@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IMasterAccountController
-// Functions: 33 readable of 41 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 41 — 33 readable via eth_call, 9 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 59
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IMasterAccountController` contract.
+/// Typed bindings for Flare's `IMasterAccountController` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -54,6 +62,65 @@ class IMasterAccountControllerContract {
       ),
     ],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `diamondCut((address,uint8,bytes4[])[],address,bytes)`.
+  static final AbiFunction diamondCutFn = AbiFunction(
+    name: 'diamondCut',
+    inputs: [
+      AbiParameter(
+        name: '_diamondCut',
+        type: AbiType.parse('(address,uint8,bytes4[])[]'),
+      ),
+      AbiParameter(name: '_init', type: AbiType.parse('address')),
+      AbiParameter(name: '_calldata', type: AbiType.parse('bytes')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `executeDepositAfterMinting(uint256,(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),string)`.
+  static final AbiFunction executeDepositAfterMintingFn = AbiFunction(
+    name: 'executeDepositAfterMinting',
+    inputs: [
+      AbiParameter(
+        name: '_collateralReservationId',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8)))',
+        ),
+      ),
+      AbiParameter(name: '_xrplAddress', type: AbiType.parse('string')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `executeInstruction((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),string)`.
+  static final AbiFunction executeInstructionFn = AbiFunction(
+    name: 'executeInstruction',
+    inputs: [
+      AbiParameter(
+        name: '_proof',
+        type: AbiType.parse(
+          '(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8)))',
+        ),
+      ),
+      AbiParameter(name: '_xrplAddress', type: AbiType.parse('string')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.payable,
+  );
+
+  /// ABI descriptor for `executeTimelockedCall(bytes)`.
+  static final AbiFunction executeTimelockedCallFn = AbiFunction(
+    name: 'executeTimelockedCall',
+    inputs: [AbiParameter(name: '_encodedCall', type: AbiType.parse('bytes'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `facetAddress(bytes4)`.
@@ -353,12 +420,38 @@ class IMasterAccountControllerContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `mintedFAssets(bytes32,string,uint256,uint256,bytes,address)`.
+  static final AbiFunction mintedFAssetsFn = AbiFunction(
+    name: 'mintedFAssets',
+    inputs: [
+      AbiParameter(name: '_transactionId', type: AbiType.parse('bytes32')),
+      AbiParameter(name: '_sourceAddress', type: AbiType.parse('string')),
+      AbiParameter(name: '_amount', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_underlyingTimestamp',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(name: '_memoData', type: AbiType.parse('bytes')),
+      AbiParameter(name: '_executor', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.payable,
+  );
+
   /// ABI descriptor for `owner()`.
   static final AbiFunction ownerFn = AbiFunction(
     name: 'owner',
     inputs: [],
     outputs: [AbiParameter(name: 'owner_', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `pause()`.
+  static final AbiFunction pauseFn = AbiFunction(
+    name: 'pause',
+    inputs: [],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `reserveCollateral(string,bytes32,bytes32)`.
@@ -384,6 +477,22 @@ class IMasterAccountControllerContract {
     inputs: [AbiParameter(name: 'interfaceId', type: AbiType.parse('bytes4'))],
     outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `transferOwnership(address)`.
+  static final AbiFunction transferOwnershipFn = AbiFunction(
+    name: 'transferOwnership',
+    inputs: [AbiParameter(name: '_newOwner', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `unpause()`.
+  static final AbiFunction unpauseFn = AbiFunction(
+    name: 'unpause',
+    inputs: [],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `vaults()`.
@@ -799,6 +908,901 @@ class IMasterAccountControllerContract {
     );
     return (out[0]! as List).cast<List<Object?>>();
   }
+
+  /// Builds an unsigned `diamondCut((address,uint8,bytes4[])[],address,bytes)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest diamondCutTx(
+    List<List<Object?>> diamondCut,
+    EthAddress init,
+    Uint8List calldata, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: diamondCutFn,
+    args: [diamondCut, init, calldata],
+    from: from,
+  );
+
+  /// Builds an unsigned `executeDepositAfterMinting(uint256,(bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),string)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest executeDepositAfterMintingTx(
+    BigInt collateralReservationId,
+    List<Object?> proof,
+    String xrplAddress, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: executeDepositAfterMintingFn,
+    args: [collateralReservationId, proof, xrplAddress],
+    from: from,
+  );
+
+  /// Builds an unsigned `executeInstruction((bytes32[],(bytes32,bytes32,uint64,uint64,(bytes32,uint256,uint256),(uint64,uint64,bytes32,bytes32,bytes32,bytes32,int256,int256,int256,int256,bytes32,bool,uint8))),string)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest executeInstructionTx(
+    List<Object?> proof,
+    String xrplAddress, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: executeInstructionFn,
+    args: [proof, xrplAddress],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `executeTimelockedCall(bytes)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest executeTimelockedCallTx(
+    Uint8List encodedCall, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: executeTimelockedCallFn,
+    args: [encodedCall],
+    from: from,
+  );
+
+  /// Builds an unsigned `mintedFAssets(bytes32,string,uint256,uint256,bytes,address)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest mintedFAssetsTx(
+    Uint8List transactionId,
+    String sourceAddress,
+    BigInt amount,
+    BigInt underlyingTimestamp,
+    Uint8List memoData,
+    EthAddress executor, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: mintedFAssetsFn,
+    args: [
+      transactionId,
+      sourceAddress,
+      amount,
+      underlyingTimestamp,
+      memoData,
+      executor,
+    ],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `pause()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest pauseTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: pauseFn,
+        from: from,
+      );
+
+  /// Builds an unsigned `reserveCollateral(string,bytes32,bytes32)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest reserveCollateralTx(
+    String xrplAddress,
+    Uint8List paymentReference,
+    Uint8List transactionId, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: reserveCollateralFn,
+    args: [xrplAddress, paymentReference, transactionId],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `transferOwnership(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest transferOwnershipTx(
+    EthAddress newOwner, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: transferOwnershipFn,
+    args: [newOwner],
+    from: from,
+  );
+
+  /// Builds an unsigned `unpause()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest unpauseTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: unpauseFn,
+        from: from,
+      );
+
+  /// `AddressZero()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError addressZeroError = AbiError(
+    name: 'AddressZero',
+    inputs: [],
+  );
+
+  /// `AgentNotAvailable(address)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError agentNotAvailableError = AbiError(
+    name: 'AgentNotAvailable',
+    inputs: [AbiParameter(name: 'agentVault', type: AbiType.parse('address'))],
+  );
+
+  /// `AgentVaultAddressAlreadyAdded(address)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError agentVaultAddressAlreadyAddedError = AbiError(
+    name: 'AgentVaultAddressAlreadyAdded',
+    inputs: [
+      AbiParameter(name: 'agentVaultAddress', type: AbiType.parse('address')),
+    ],
+  );
+
+  /// `AgentVaultAddressZero(uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError agentVaultAddressZeroError = AbiError(
+    name: 'AgentVaultAddressZero',
+    inputs: [AbiParameter(name: 'index', type: AbiType.parse('uint256'))],
+  );
+
+  /// `AgentVaultIdAlreadyAdded(uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError agentVaultIdAlreadyAddedError = AbiError(
+    name: 'AgentVaultIdAlreadyAdded',
+    inputs: [
+      AbiParameter(name: 'agentVaultId', type: AbiType.parse('uint256')),
+    ],
+  );
+
+  /// `AgentVaultIdZero(uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError agentVaultIdZeroError = AbiError(
+    name: 'AgentVaultIdZero',
+    inputs: [AbiParameter(name: 'index', type: AbiType.parse('uint256'))],
+  );
+
+  /// `AgentsVaultsLengthsMismatch()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError agentsVaultsLengthsMismatchError = AbiError(
+    name: 'AgentsVaultsLengthsMismatch',
+    inputs: [],
+  );
+
+  /// `CallFailed(bytes)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError callFailedError = AbiError(
+    name: 'CallFailed',
+    inputs: [AbiParameter(name: 'returnData', type: AbiType.parse('bytes'))],
+  );
+
+  /// `InstructionFeeNotSet(uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError instructionFeeNotSetError = AbiError(
+    name: 'InstructionFeeNotSet',
+    inputs: [
+      AbiParameter(name: 'instructionId', type: AbiType.parse('uint256')),
+    ],
+  );
+
+  /// `InstructionFeesLengthsMismatch()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError instructionFeesLengthsMismatchError = AbiError(
+    name: 'InstructionFeesLengthsMismatch',
+    inputs: [],
+  );
+
+  /// `InsufficientAmountForFee(uint256,uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError insufficientAmountForFeeError = AbiError(
+    name: 'InsufficientAmountForFee',
+    inputs: [
+      AbiParameter(name: 'amount', type: AbiType.parse('uint256')),
+      AbiParameter(name: 'fee', type: AbiType.parse('uint256')),
+    ],
+  );
+
+  /// `InvalidAgentVault(uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidAgentVaultError = AbiError(
+    name: 'InvalidAgentVault',
+    inputs: [
+      AbiParameter(name: 'agentVaultId', type: AbiType.parse('uint256')),
+    ],
+  );
+
+  /// `InvalidAmount()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidAmountError = AbiError(
+    name: 'InvalidAmount',
+    inputs: [],
+  );
+
+  /// `InvalidExecutor()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidExecutorError = AbiError(
+    name: 'InvalidExecutor',
+    inputs: [],
+  );
+
+  /// `InvalidExecutorFee()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidExecutorFeeError = AbiError(
+    name: 'InvalidExecutorFee',
+    inputs: [],
+  );
+
+  /// `InvalidInstruction(uint256,uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidInstructionError = AbiError(
+    name: 'InvalidInstruction',
+    inputs: [
+      AbiParameter(name: 'instructionType', type: AbiType.parse('uint256')),
+      AbiParameter(name: 'instructionCommand', type: AbiType.parse('uint256')),
+    ],
+  );
+
+  /// `InvalidInstructionFee(uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidInstructionFeeError = AbiError(
+    name: 'InvalidInstructionFee',
+    inputs: [
+      AbiParameter(name: 'instructionId', type: AbiType.parse('uint256')),
+    ],
+  );
+
+  /// `InvalidInstructionId(uint8)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidInstructionIdError = AbiError(
+    name: 'InvalidInstructionId',
+    inputs: [AbiParameter(name: 'instructionId', type: AbiType.parse('uint8'))],
+  );
+
+  /// `InvalidInstructionType(uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidInstructionTypeError = AbiError(
+    name: 'InvalidInstructionType',
+    inputs: [
+      AbiParameter(name: 'instructionType', type: AbiType.parse('uint256')),
+    ],
+  );
+
+  /// `InvalidMemoData()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidMemoDataError = AbiError(
+    name: 'InvalidMemoData',
+    inputs: [],
+  );
+
+  /// `InvalidMinter()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidMinterError = AbiError(
+    name: 'InvalidMinter',
+    inputs: [],
+  );
+
+  /// `InvalidNonce(uint256,uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidNonceError = AbiError(
+    name: 'InvalidNonce',
+    inputs: [
+      AbiParameter(name: 'expected', type: AbiType.parse('uint256')),
+      AbiParameter(name: 'actual', type: AbiType.parse('uint256')),
+    ],
+  );
+
+  /// `InvalidNonceIncrease(uint256,uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidNonceIncreaseError = AbiError(
+    name: 'InvalidNonceIncrease',
+    inputs: [
+      AbiParameter(name: 'currentNonce', type: AbiType.parse('uint256')),
+      AbiParameter(name: 'newNonce', type: AbiType.parse('uint256')),
+    ],
+  );
+
+  /// `InvalidPaymentAmount(uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidPaymentAmountError = AbiError(
+    name: 'InvalidPaymentAmount',
+    inputs: [
+      AbiParameter(name: 'requiredAmount', type: AbiType.parse('uint256')),
+    ],
+  );
+
+  /// `InvalidPaymentProofValidityDuration()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidPaymentProofValidityDurationError = AbiError(
+    name: 'InvalidPaymentProofValidityDuration',
+    inputs: [],
+  );
+
+  /// `InvalidPersonalAccountImplementation()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidPersonalAccountImplementationError = AbiError(
+    name: 'InvalidPersonalAccountImplementation',
+    inputs: [],
+  );
+
+  /// `InvalidReceivingAddressHash()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidReceivingAddressHashError = AbiError(
+    name: 'InvalidReceivingAddressHash',
+    inputs: [],
+  );
+
+  /// `InvalidSender(address,address)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidSenderError = AbiError(
+    name: 'InvalidSender',
+    inputs: [
+      AbiParameter(name: 'sender', type: AbiType.parse('address')),
+      AbiParameter(name: 'personalAccount', type: AbiType.parse('address')),
+    ],
+  );
+
+  /// `InvalidSourceId()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidSourceIdError = AbiError(
+    name: 'InvalidSourceId',
+    inputs: [],
+  );
+
+  /// `InvalidTransactionId()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidTransactionIdError = AbiError(
+    name: 'InvalidTransactionId',
+    inputs: [],
+  );
+
+  /// `InvalidTransactionProof()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidTransactionProofError = AbiError(
+    name: 'InvalidTransactionProof',
+    inputs: [],
+  );
+
+  /// `InvalidTransactionStatus()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidTransactionStatusError = AbiError(
+    name: 'InvalidTransactionStatus',
+    inputs: [],
+  );
+
+  /// `InvalidVaultId(uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidVaultIdError = AbiError(
+    name: 'InvalidVaultId',
+    inputs: [AbiParameter(name: 'vaultId', type: AbiType.parse('uint256'))],
+  );
+
+  /// `InvalidVaultType(uint8)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidVaultTypeError = AbiError(
+    name: 'InvalidVaultType',
+    inputs: [AbiParameter(name: 'vaultType', type: AbiType.parse('uint8'))],
+  );
+
+  /// `InvalidXrplProviderWallet(string)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidXrplProviderWalletError = AbiError(
+    name: 'InvalidXrplProviderWallet',
+    inputs: [
+      AbiParameter(name: 'xrplProviderWallet', type: AbiType.parse('string')),
+    ],
+  );
+
+  /// `IsPaused()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError isPausedError = AbiError(name: 'IsPaused', inputs: []);
+
+  /// `MintingNotCompleted()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError mintingNotCompletedError = AbiError(
+    name: 'MintingNotCompleted',
+    inputs: [],
+  );
+
+  /// `MismatchingSourceAndXrplAddr()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError mismatchingSourceAndXrplAddrError = AbiError(
+    name: 'MismatchingSourceAndXrplAddr',
+    inputs: [],
+  );
+
+  /// `NotPauser(address)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError notPauserError = AbiError(
+    name: 'NotPauser',
+    inputs: [AbiParameter(name: 'account', type: AbiType.parse('address'))],
+  );
+
+  /// `NotUnpauser(address)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError notUnpauserError = AbiError(
+    name: 'NotUnpauser',
+    inputs: [AbiParameter(name: 'account', type: AbiType.parse('address'))],
+  );
+
+  /// `OnlyAssetManager()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError onlyAssetManagerError = AbiError(
+    name: 'OnlyAssetManager',
+    inputs: [],
+  );
+
+  /// `PauserAlreadyAdded(address)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError pauserAlreadyAddedError = AbiError(
+    name: 'PauserAlreadyAdded',
+    inputs: [AbiParameter(name: 'account', type: AbiType.parse('address'))],
+  );
+
+  /// `PaymentProofExpired()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError paymentProofExpiredError = AbiError(
+    name: 'PaymentProofExpired',
+    inputs: [],
+  );
+
+  /// `PersonalAccountNotSuccessfullyDeployed(address)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError personalAccountNotSuccessfullyDeployedError = AbiError(
+    name: 'PersonalAccountNotSuccessfullyDeployed',
+    inputs: [
+      AbiParameter(
+        name: 'personalAccountAddress',
+        type: AbiType.parse('address'),
+      ),
+    ],
+  );
+
+  /// `TimelockDurationTooLong()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError timelockDurationTooLongError = AbiError(
+    name: 'TimelockDurationTooLong',
+    inputs: [],
+  );
+
+  /// `TimelockInvalidSelector()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError timelockInvalidSelectorError = AbiError(
+    name: 'TimelockInvalidSelector',
+    inputs: [],
+  );
+
+  /// `TimelockNotAllowedYet()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError timelockNotAllowedYetError = AbiError(
+    name: 'TimelockNotAllowedYet',
+    inputs: [],
+  );
+
+  /// `TransactionAlreadyExecuted()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError transactionAlreadyExecutedError = AbiError(
+    name: 'TransactionAlreadyExecuted',
+    inputs: [],
+  );
+
+  /// `UnknownCollateralReservationId()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError unknownCollateralReservationIdError = AbiError(
+    name: 'UnknownCollateralReservationId',
+    inputs: [],
+  );
+
+  /// `UnpauserAlreadyAdded(address)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError unpauserAlreadyAddedError = AbiError(
+    name: 'UnpauserAlreadyAdded',
+    inputs: [AbiParameter(name: 'account', type: AbiType.parse('address'))],
+  );
+
+  /// `UnsupportedVaultType(uint8)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError unsupportedVaultTypeError = AbiError(
+    name: 'UnsupportedVaultType',
+    inputs: [AbiParameter(name: 'vaultType', type: AbiType.parse('uint8'))],
+  );
+
+  /// `ValueZero()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError valueZeroError = AbiError(
+    name: 'ValueZero',
+    inputs: [],
+  );
+
+  /// `VaultAddressAlreadyAdded(address)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError vaultAddressAlreadyAddedError = AbiError(
+    name: 'VaultAddressAlreadyAdded',
+    inputs: [
+      AbiParameter(name: 'vaultAddress', type: AbiType.parse('address')),
+    ],
+  );
+
+  /// `VaultAddressZero(uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError vaultAddressZeroError = AbiError(
+    name: 'VaultAddressZero',
+    inputs: [AbiParameter(name: 'index', type: AbiType.parse('uint256'))],
+  );
+
+  /// `VaultIdAlreadyAdded(uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError vaultIdAlreadyAddedError = AbiError(
+    name: 'VaultIdAlreadyAdded',
+    inputs: [AbiParameter(name: 'vaultId', type: AbiType.parse('uint256'))],
+  );
+
+  /// `VaultIdZero(uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError vaultIdZeroError = AbiError(
+    name: 'VaultIdZero',
+    inputs: [AbiParameter(name: 'index', type: AbiType.parse('uint256'))],
+  );
+
+  /// `VaultsLengthsMismatch()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError vaultsLengthsMismatchError = AbiError(
+    name: 'VaultsLengthsMismatch',
+    inputs: [],
+  );
+
+  /// `WrongExecutor(address,address)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError wrongExecutorError = AbiError(
+    name: 'WrongExecutor',
+    inputs: [
+      AbiParameter(name: 'expected', type: AbiType.parse('address')),
+      AbiParameter(name: 'actual', type: AbiType.parse('address')),
+    ],
+  );
+
+  /// `XrplProviderWalletAlreadyExists(string)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError xrplProviderWalletAlreadyExistsError = AbiError(
+    name: 'XrplProviderWalletAlreadyExists',
+    inputs: [
+      AbiParameter(name: 'xrplProviderWallet', type: AbiType.parse('string')),
+    ],
+  );
+
+  /// Every custom error this contract declares.
+  static final List<AbiError> allErrors = [
+    addressZeroError,
+    agentNotAvailableError,
+    agentVaultAddressAlreadyAddedError,
+    agentVaultAddressZeroError,
+    agentVaultIdAlreadyAddedError,
+    agentVaultIdZeroError,
+    agentsVaultsLengthsMismatchError,
+    callFailedError,
+    instructionFeeNotSetError,
+    instructionFeesLengthsMismatchError,
+    insufficientAmountForFeeError,
+    invalidAgentVaultError,
+    invalidAmountError,
+    invalidExecutorError,
+    invalidExecutorFeeError,
+    invalidInstructionError,
+    invalidInstructionFeeError,
+    invalidInstructionIdError,
+    invalidInstructionTypeError,
+    invalidMemoDataError,
+    invalidMinterError,
+    invalidNonceError,
+    invalidNonceIncreaseError,
+    invalidPaymentAmountError,
+    invalidPaymentProofValidityDurationError,
+    invalidPersonalAccountImplementationError,
+    invalidReceivingAddressHashError,
+    invalidSenderError,
+    invalidSourceIdError,
+    invalidTransactionIdError,
+    invalidTransactionProofError,
+    invalidTransactionStatusError,
+    invalidVaultIdError,
+    invalidVaultTypeError,
+    invalidXrplProviderWalletError,
+    isPausedError,
+    mintingNotCompletedError,
+    mismatchingSourceAndXrplAddrError,
+    notPauserError,
+    notUnpauserError,
+    onlyAssetManagerError,
+    pauserAlreadyAddedError,
+    paymentProofExpiredError,
+    personalAccountNotSuccessfullyDeployedError,
+    timelockDurationTooLongError,
+    timelockInvalidSelectorError,
+    timelockNotAllowedYetError,
+    transactionAlreadyExecutedError,
+    unknownCollateralReservationIdError,
+    unpauserAlreadyAddedError,
+    unsupportedVaultTypeError,
+    valueZeroError,
+    vaultAddressAlreadyAddedError,
+    vaultAddressZeroError,
+    vaultIdAlreadyAddedError,
+    vaultIdZeroError,
+    vaultsLengthsMismatchError,
+    wrongExecutorError,
+    xrplProviderWalletAlreadyExistsError,
+  ];
+
+  /// Explains why a call to this contract reverted.
+  ///
+  /// ```dart
+  /// try {
+  ///   await client.estimateGas(request.toCallRequest());
+  /// } on FlareRpcException catch (e) {
+  ///   print(decodeRevert(e)?.description);
+  /// }
+  /// ```
+  ///
+  /// Returns null when the node attached no revert data,
+  /// which is how Flare reports a bare `revert()`.
+  static RevertReason? decodeRevert(FlareRpcException e) =>
+      e.revertReasonWith(allErrors);
 
   /// `AgentVaultAdded(uint256,address)`
   ///

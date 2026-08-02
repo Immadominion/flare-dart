@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IIFtsoManager
-// Functions: 20 readable of 34 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 34 — 20 readable via eth_call, 14 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IIFtsoManager` contract.
+/// Typed bindings for Flare's `IIFtsoManager` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -39,6 +47,14 @@ class IIFtsoManagerContract {
     return IIFtsoManagerContract(client: client, address: resolved);
   }
 
+  /// ABI descriptor for `activate()`.
+  static final AbiFunction activateFn = AbiFunction(
+    name: 'activate',
+    inputs: [],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `active()`.
   static final AbiFunction activeFn = AbiFunction(
     name: 'active',
@@ -47,12 +63,36 @@ class IIFtsoManagerContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `addFtso(address)`.
+  static final AbiFunction addFtsoFn = AbiFunction(
+    name: 'addFtso',
+    inputs: [AbiParameter(name: '_ftso', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `addFtsosBulk(address[])`.
+  static final AbiFunction addFtsosBulkFn = AbiFunction(
+    name: 'addFtsosBulk',
+    inputs: [AbiParameter(name: '_ftsos', type: AbiType.parse('address[]'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `currentRewardEpochEnds()`.
   static final AbiFunction currentRewardEpochEndsFn = AbiFunction(
     name: 'currentRewardEpochEnds',
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `daemonize()`.
+  static final AbiFunction daemonizeFn = AbiFunction(
+    name: 'daemonize',
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `getContractName()`.
@@ -237,6 +277,38 @@ class IIFtsoManagerContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `removeFtso(address)`.
+  static final AbiFunction removeFtsoFn = AbiFunction(
+    name: 'removeFtso',
+    inputs: [AbiParameter(name: '_ftso', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `replaceFtso(address,bool,bool)`.
+  static final AbiFunction replaceFtsoFn = AbiFunction(
+    name: 'replaceFtso',
+    inputs: [
+      AbiParameter(name: '_ftsoToAdd', type: AbiType.parse('address')),
+      AbiParameter(name: 'copyCurrentPrice', type: AbiType.parse('bool')),
+      AbiParameter(name: 'copyAssetOrAssetFtsos', type: AbiType.parse('bool')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `replaceFtsosBulk(address[],bool,bool)`.
+  static final AbiFunction replaceFtsosBulkFn = AbiFunction(
+    name: 'replaceFtsosBulk',
+    inputs: [
+      AbiParameter(name: '_ftsosToAdd', type: AbiType.parse('address[]')),
+      AbiParameter(name: 'copyCurrentPrice', type: AbiType.parse('bool')),
+      AbiParameter(name: 'copyAssetOrAssetFtsos', type: AbiType.parse('bool')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `rewardEpochDurationSeconds()`.
   static final AbiFunction rewardEpochDurationSecondsFn = AbiFunction(
     name: 'rewardEpochDurationSeconds',
@@ -265,6 +337,116 @@ class IIFtsoManagerContract {
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `setFallbackMode(bool)`.
+  static final AbiFunction setFallbackModeFn = AbiFunction(
+    name: 'setFallbackMode',
+    inputs: [AbiParameter(name: '_fallbackMode', type: AbiType.parse('bool'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setFtsoAsset(address,address)`.
+  static final AbiFunction setFtsoAssetFn = AbiFunction(
+    name: 'setFtsoAsset',
+    inputs: [
+      AbiParameter(name: '_ftso', type: AbiType.parse('address')),
+      AbiParameter(name: '_asset', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setFtsoAssetFtsos(address,address[])`.
+  static final AbiFunction setFtsoAssetFtsosFn = AbiFunction(
+    name: 'setFtsoAssetFtsos',
+    inputs: [
+      AbiParameter(name: '_ftso', type: AbiType.parse('address')),
+      AbiParameter(name: '_assetFtsos', type: AbiType.parse('address[]')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setFtsoFallbackMode(address,bool)`.
+  static final AbiFunction setFtsoFallbackModeFn = AbiFunction(
+    name: 'setFtsoFallbackMode',
+    inputs: [
+      AbiParameter(name: '_ftso', type: AbiType.parse('address')),
+      AbiParameter(name: '_fallbackMode', type: AbiType.parse('bool')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setGovernanceParameters(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,address[])`.
+  static final AbiFunction setGovernanceParametersFn = AbiFunction(
+    name: 'setGovernanceParameters',
+    inputs: [
+      AbiParameter(name: '_updateTs', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_maxVotePowerNatThresholdFraction',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_maxVotePowerAssetThresholdFraction',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_lowAssetUSDThreshold',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_highAssetUSDThreshold',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_highAssetTurnoutThresholdBIPS',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_lowNatTurnoutThresholdBIPS',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_elasticBandRewardBIPS',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_rewardExpiryOffsetSeconds',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(name: '_trustedAddresses', type: AbiType.parse('address[]')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setInitialRewardData(uint256,uint256,uint256)`.
+  static final AbiFunction setInitialRewardDataFn = AbiFunction(
+    name: 'setInitialRewardData',
+    inputs: [
+      AbiParameter(
+        name: '_nextRewardEpochToExpire',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(name: '_rewardEpochsLength', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_currentRewardEpochEnds',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `switchToFallbackMode()`.
+  static final AbiFunction switchToFallbackModeFn = AbiFunction(
+    name: 'switchToFallbackMode',
+    inputs: [],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `active()`.
@@ -544,6 +726,272 @@ class IIFtsoManagerContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `activate()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest activateTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: activateFn,
+        from: from,
+      );
+
+  /// Builds an unsigned `addFtso(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest addFtsoTx(EthAddress ftso, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: addFtsoFn,
+        args: [ftso],
+        from: from,
+      );
+
+  /// Builds an unsigned `addFtsosBulk(address[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest addFtsosBulkTx(
+    List<EthAddress> ftsos, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: addFtsosBulkFn,
+    args: [ftsos],
+    from: from,
+  );
+
+  /// Builds an unsigned `daemonize()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest daemonizeTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: daemonizeFn,
+        from: from,
+      );
+
+  /// Builds an unsigned `removeFtso(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest removeFtsoTx(EthAddress ftso, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: removeFtsoFn,
+        args: [ftso],
+        from: from,
+      );
+
+  /// Builds an unsigned `replaceFtso(address,bool,bool)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest replaceFtsoTx(
+    EthAddress ftsoToAdd,
+    bool copyCurrentPrice,
+    bool copyAssetOrAssetFtsos, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: replaceFtsoFn,
+    args: [ftsoToAdd, copyCurrentPrice, copyAssetOrAssetFtsos],
+    from: from,
+  );
+
+  /// Builds an unsigned `replaceFtsosBulk(address[],bool,bool)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest replaceFtsosBulkTx(
+    List<EthAddress> ftsosToAdd,
+    bool copyCurrentPrice,
+    bool copyAssetOrAssetFtsos, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: replaceFtsosBulkFn,
+    args: [ftsosToAdd, copyCurrentPrice, copyAssetOrAssetFtsos],
+    from: from,
+  );
+
+  /// Builds an unsigned `setFallbackMode(bool)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setFallbackModeTx(bool fallbackMode, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: setFallbackModeFn,
+        args: [fallbackMode],
+        from: from,
+      );
+
+  /// Builds an unsigned `setFtsoAsset(address,address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setFtsoAssetTx(
+    EthAddress ftso,
+    EthAddress asset, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setFtsoAssetFn,
+    args: [ftso, asset],
+    from: from,
+  );
+
+  /// Builds an unsigned `setFtsoAssetFtsos(address,address[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setFtsoAssetFtsosTx(
+    EthAddress ftso,
+    List<EthAddress> assetFtsos, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setFtsoAssetFtsosFn,
+    args: [ftso, assetFtsos],
+    from: from,
+  );
+
+  /// Builds an unsigned `setFtsoFallbackMode(address,bool)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setFtsoFallbackModeTx(
+    EthAddress ftso,
+    bool fallbackMode, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setFtsoFallbackModeFn,
+    args: [ftso, fallbackMode],
+    from: from,
+  );
+
+  /// Builds an unsigned `setGovernanceParameters(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,address[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setGovernanceParametersTx(
+    BigInt updateTs,
+    BigInt maxVotePowerNatThresholdFraction,
+    BigInt maxVotePowerAssetThresholdFraction,
+    BigInt lowAssetUSDThreshold,
+    BigInt highAssetUSDThreshold,
+    BigInt highAssetTurnoutThresholdBIPS,
+    BigInt lowNatTurnoutThresholdBIPS,
+    BigInt elasticBandRewardBIPS,
+    BigInt rewardExpiryOffsetSeconds,
+    List<EthAddress> trustedAddresses, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setGovernanceParametersFn,
+    args: [
+      updateTs,
+      maxVotePowerNatThresholdFraction,
+      maxVotePowerAssetThresholdFraction,
+      lowAssetUSDThreshold,
+      highAssetUSDThreshold,
+      highAssetTurnoutThresholdBIPS,
+      lowNatTurnoutThresholdBIPS,
+      elasticBandRewardBIPS,
+      rewardExpiryOffsetSeconds,
+      trustedAddresses,
+    ],
+    from: from,
+  );
+
+  /// Builds an unsigned `setInitialRewardData(uint256,uint256,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setInitialRewardDataTx(
+    BigInt nextRewardEpochToExpire,
+    BigInt rewardEpochsLength,
+    BigInt currentRewardEpochEnds, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setInitialRewardDataFn,
+    args: [nextRewardEpochToExpire, rewardEpochsLength, currentRewardEpochEnds],
+    from: from,
+  );
+
+  /// Builds an unsigned `switchToFallbackMode()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest switchToFallbackModeTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: switchToFallbackModeFn,
+        from: from,
+      );
 
   /// `AccruingUnearnedRewardsFailed(uint256)`
   ///

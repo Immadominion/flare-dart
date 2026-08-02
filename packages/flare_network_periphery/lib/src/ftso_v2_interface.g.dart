@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: FtsoV2Interface
-// Functions: 10 readable of 10 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 10 — 10 readable via eth_call, 4 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `FtsoV2Interface` contract.
+/// Typed bindings for Flare's `FtsoV2Interface` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -278,6 +286,94 @@ class FtsoV2InterfaceContract {
     );
     return out[0]! as bool;
   }
+
+  /// Builds an unsigned `getFeedById(bytes21)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest getFeedByIdTx(
+    Uint8List feedId, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: getFeedByIdFn,
+    args: [feedId],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `getFeedByIdInWei(bytes21)`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest getFeedByIdInWeiTx(
+    Uint8List feedId, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: getFeedByIdInWeiFn,
+    args: [feedId],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `getFeedsById(bytes21[])`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest getFeedsByIdTx(
+    List<Uint8List> feedIds, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: getFeedsByIdFn,
+    args: [feedIds],
+    from: from,
+    value: value,
+  );
+
+  /// Builds an unsigned `getFeedsByIdInWei(bytes21[])`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest getFeedsByIdInWeiTx(
+    List<Uint8List> feedIds, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: getFeedsByIdInWeiFn,
+    args: [feedIds],
+    from: from,
+    value: value,
+  );
 
   /// `FeedIdChanged(bytes21,bytes21)`
   ///

@@ -2,14 +2,24 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IFlareSystemsManager
-// Functions: 13 readable of 17 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 17 — 13 readable via eth_call, 4 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
+import 'dart:typed_data';
+
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IFlareSystemsManager` contract.
+/// Typed bindings for Flare's `IFlareSystemsManager` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -150,6 +160,73 @@ class IFlareSystemsManagerContract {
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint64'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `signNewSigningPolicy(uint24,bytes32,(uint8,bytes32,bytes32))`.
+  static final AbiFunction signNewSigningPolicyFn = AbiFunction(
+    name: 'signNewSigningPolicy',
+    inputs: [
+      AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint24')),
+      AbiParameter(
+        name: '_newSigningPolicyHash',
+        type: AbiType.parse('bytes32'),
+      ),
+      AbiParameter(
+        name: '_signature',
+        type: AbiType.parse('(uint8,bytes32,bytes32)'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `signRewards(uint24,(uint256,uint256)[],bytes32,(uint8,bytes32,bytes32))`.
+  static final AbiFunction signRewardsFn = AbiFunction(
+    name: 'signRewards',
+    inputs: [
+      AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint24')),
+      AbiParameter(
+        name: '_noOfWeightBasedClaims',
+        type: AbiType.parse('(uint256,uint256)[]'),
+      ),
+      AbiParameter(name: '_rewardsHash', type: AbiType.parse('bytes32')),
+      AbiParameter(
+        name: '_signature',
+        type: AbiType.parse('(uint8,bytes32,bytes32)'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `signUptimeVote(uint24,bytes32,(uint8,bytes32,bytes32))`.
+  static final AbiFunction signUptimeVoteFn = AbiFunction(
+    name: 'signUptimeVote',
+    inputs: [
+      AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint24')),
+      AbiParameter(name: '_uptimeVoteHash', type: AbiType.parse('bytes32')),
+      AbiParameter(
+        name: '_signature',
+        type: AbiType.parse('(uint8,bytes32,bytes32)'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `submitUptimeVote(uint24,bytes20[],(uint8,bytes32,bytes32))`.
+  static final AbiFunction submitUptimeVoteFn = AbiFunction(
+    name: 'submitUptimeVote',
+    inputs: [
+      AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint24')),
+      AbiParameter(name: '_nodeIds', type: AbiType.parse('bytes20[]')),
+      AbiParameter(
+        name: '_signature',
+        type: AbiType.parse('(uint8,bytes32,bytes32)'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `votingEpochDurationSeconds()`.
@@ -309,6 +386,87 @@ class IFlareSystemsManagerContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `signNewSigningPolicy(uint24,bytes32,(uint8,bytes32,bytes32))`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest signNewSigningPolicyTx(
+    BigInt rewardEpochId,
+    Uint8List newSigningPolicyHash,
+    List<Object?> signature, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: signNewSigningPolicyFn,
+    args: [rewardEpochId, newSigningPolicyHash, signature],
+    from: from,
+  );
+
+  /// Builds an unsigned `signRewards(uint24,(uint256,uint256)[],bytes32,(uint8,bytes32,bytes32))`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest signRewardsTx(
+    BigInt rewardEpochId,
+    List<List<Object?>> noOfWeightBasedClaims,
+    Uint8List rewardsHash,
+    List<Object?> signature, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: signRewardsFn,
+    args: [rewardEpochId, noOfWeightBasedClaims, rewardsHash, signature],
+    from: from,
+  );
+
+  /// Builds an unsigned `signUptimeVote(uint24,bytes32,(uint8,bytes32,bytes32))`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest signUptimeVoteTx(
+    BigInt rewardEpochId,
+    Uint8List uptimeVoteHash,
+    List<Object?> signature, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: signUptimeVoteFn,
+    args: [rewardEpochId, uptimeVoteHash, signature],
+    from: from,
+  );
+
+  /// Builds an unsigned `submitUptimeVote(uint24,bytes20[],(uint8,bytes32,bytes32))`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest submitUptimeVoteTx(
+    BigInt rewardEpochId,
+    List<Uint8List> nodeIds,
+    List<Object?> signature, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: submitUptimeVoteFn,
+    args: [rewardEpochId, nodeIds, signature],
+    from: from,
+  );
 
   /// `RandomAcquisitionStarted(uint24,uint64)`
   ///

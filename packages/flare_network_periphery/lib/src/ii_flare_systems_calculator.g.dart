@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IIFlareSystemsCalculator
-// Functions: 5 readable of 6 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 6 — 5 readable via eth_call, 1 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IIFlareSystemsCalculator` contract.
+/// Typed bindings for Flare's `IIFlareSystemsCalculator` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -51,6 +59,23 @@ class IIFlareSystemsCalculatorContract {
     ],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `calculateRegistrationWeight(address,uint32,uint256)`.
+  static final AbiFunction calculateRegistrationWeightFn = AbiFunction(
+    name: 'calculateRegistrationWeight',
+    inputs: [
+      AbiParameter(name: '_voter', type: AbiType.parse('address')),
+      AbiParameter(name: '_rewardEpochId', type: AbiType.parse('uint32')),
+      AbiParameter(
+        name: '_votePowerBlockNumber',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [
+      AbiParameter(name: '_registrationWeight', type: AbiType.parse('uint256')),
+    ],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `signingPolicySignNoRewardsDurationBlocks()`.
@@ -146,6 +171,26 @@ class IIFlareSystemsCalculatorContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `calculateRegistrationWeight(address,uint32,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest calculateRegistrationWeightTx(
+    EthAddress voter,
+    BigInt rewardEpochId,
+    BigInt votePowerBlockNumber, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: calculateRegistrationWeightFn,
+    args: [voter, rewardEpochId, votePowerBlockNumber],
+    from: from,
+  );
 
   /// `VoterRegistrationInfo(address,uint32,address,uint16,uint256,uint256,bytes20[],uint256[])`
   ///

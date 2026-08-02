@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IValidatorRegistry
-// Functions: 3 readable of 5 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 5 — 3 readable via eth_call, 2 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IValidatorRegistry` contract.
+/// Typed bindings for Flare's `IValidatorRegistry` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -79,6 +87,25 @@ class IValidatorRegistryContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `registerDataProvider(string,string)`.
+  static final AbiFunction registerDataProviderFn = AbiFunction(
+    name: 'registerDataProvider',
+    inputs: [
+      AbiParameter(name: '_nodeId', type: AbiType.parse('string')),
+      AbiParameter(name: '_pChainPublicKey', type: AbiType.parse('string')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `unregisterDataProvider()`.
+  static final AbiFunction unregisterDataProviderFn = AbiFunction(
+    name: 'unregisterDataProvider',
+    inputs: [],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// Calls `getDataProviderForNodeId(bytes32)`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
@@ -118,6 +145,40 @@ class IValidatorRegistryContract {
     );
     return (nodeId: out[0]! as String, pChainPublicKey: out[1]! as String);
   }
+
+  /// Builds an unsigned `registerDataProvider(string,string)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest registerDataProviderTx(
+    String nodeId,
+    String pChainPublicKey, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: registerDataProviderFn,
+    args: [nodeId, pChainPublicKey],
+    from: from,
+  );
+
+  /// Builds an unsigned `unregisterDataProvider()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest unregisterDataProviderTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: unregisterDataProviderFn,
+        from: from,
+      );
 
   /// `DataProviderRegistered(address,string,string)`
   ///

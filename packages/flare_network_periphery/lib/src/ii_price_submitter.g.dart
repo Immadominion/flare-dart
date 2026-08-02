@@ -2,14 +2,24 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IIPriceSubmitter
-// Functions: 7 readable of 12 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 12 — 7 readable via eth_call, 5 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
+import 'dart:typed_data';
+
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IIPriceSubmitter` contract.
+/// Typed bindings for Flare's `IIPriceSubmitter` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -87,12 +97,68 @@ class IIPriceSubmitterContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `revealPrices(uint256,uint256[],uint256[],uint256)`.
+  static final AbiFunction revealPricesFn = AbiFunction(
+    name: 'revealPrices',
+    inputs: [
+      AbiParameter(name: '_epochId', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_ftsoIndices', type: AbiType.parse('uint256[]')),
+      AbiParameter(name: '_prices', type: AbiType.parse('uint256[]')),
+      AbiParameter(name: '_random', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setTrustedAddresses(address[])`.
+  static final AbiFunction setTrustedAddressesFn = AbiFunction(
+    name: 'setTrustedAddresses',
+    inputs: [
+      AbiParameter(name: '_trustedAddresses', type: AbiType.parse('address[]')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `submitHash(uint256,bytes32)`.
+  static final AbiFunction submitHashFn = AbiFunction(
+    name: 'submitHash',
+    inputs: [
+      AbiParameter(name: '_epochId', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_hash', type: AbiType.parse('bytes32')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `voterWhitelistBitmap(address)`.
   static final AbiFunction voterWhitelistBitmapFn = AbiFunction(
     name: 'voterWhitelistBitmap',
     inputs: [AbiParameter(name: '_voter', type: AbiType.parse('address'))],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `voterWhitelisted(address,uint256)`.
+  static final AbiFunction voterWhitelistedFn = AbiFunction(
+    name: 'voterWhitelisted',
+    inputs: [
+      AbiParameter(name: '_voter', type: AbiType.parse('address')),
+      AbiParameter(name: '_ftsoIndex', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `votersRemovedFromWhitelist(address[],uint256)`.
+  static final AbiFunction votersRemovedFromWhitelistFn = AbiFunction(
+    name: 'votersRemovedFromWhitelist',
+    inputs: [
+      AbiParameter(name: '_voters', type: AbiType.parse('address[]')),
+      AbiParameter(name: '_ftsoIndex', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `getCurrentRandom()`.
@@ -173,6 +239,102 @@ class IIPriceSubmitterContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `revealPrices(uint256,uint256[],uint256[],uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest revealPricesTx(
+    BigInt epochId,
+    List<BigInt> ftsoIndices,
+    List<BigInt> prices,
+    BigInt random, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: revealPricesFn,
+    args: [epochId, ftsoIndices, prices, random],
+    from: from,
+  );
+
+  /// Builds an unsigned `setTrustedAddresses(address[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setTrustedAddressesTx(
+    List<EthAddress> trustedAddresses, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setTrustedAddressesFn,
+    args: [trustedAddresses],
+    from: from,
+  );
+
+  /// Builds an unsigned `submitHash(uint256,bytes32)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest submitHashTx(
+    BigInt epochId,
+    Uint8List hash, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: submitHashFn,
+    args: [epochId, hash],
+    from: from,
+  );
+
+  /// Builds an unsigned `voterWhitelisted(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest voterWhitelistedTx(
+    EthAddress voter,
+    BigInt ftsoIndex, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: voterWhitelistedFn,
+    args: [voter, ftsoIndex],
+    from: from,
+  );
+
+  /// Builds an unsigned `votersRemovedFromWhitelist(address[],uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest votersRemovedFromWhitelistTx(
+    List<EthAddress> voters,
+    BigInt ftsoIndex, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: votersRemovedFromWhitelistFn,
+    args: [voters, ftsoIndex],
+    from: from,
+  );
 
   /// `HashSubmitted(address,uint256,bytes32,uint256)`
   ///

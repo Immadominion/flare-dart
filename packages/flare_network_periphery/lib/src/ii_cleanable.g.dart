@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IICleanable
-// Functions: 1 readable of 3 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 3 — 1 readable via eth_call, 2 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IICleanable` contract.
+/// Typed bindings for Flare's `IICleanable` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -47,6 +55,26 @@ class IICleanableContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `setCleanerContract(address)`.
+  static final AbiFunction setCleanerContractFn = AbiFunction(
+    name: 'setCleanerContract',
+    inputs: [
+      AbiParameter(name: '_cleanerContract', type: AbiType.parse('address')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setCleanupBlockNumber(uint256)`.
+  static final AbiFunction setCleanupBlockNumberFn = AbiFunction(
+    name: 'setCleanupBlockNumber',
+    inputs: [
+      AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// Calls `cleanupBlockNumber()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
@@ -57,4 +85,40 @@ class IICleanableContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `setCleanerContract(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setCleanerContractTx(
+    EthAddress cleanerContract, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setCleanerContractFn,
+    args: [cleanerContract],
+    from: from,
+  );
+
+  /// Builds an unsigned `setCleanupBlockNumber(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setCleanupBlockNumberTx(
+    BigInt blockNumber, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setCleanupBlockNumberFn,
+    args: [blockNumber],
+    from: from,
+  );
 }

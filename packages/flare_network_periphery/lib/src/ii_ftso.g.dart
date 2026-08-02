@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IIFtso
-// Functions: 21 readable of 34 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 34 — 21 readable via eth_call, 13 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IIFtso` contract.
+/// Typed bindings for Flare's `IIFtso` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -39,12 +47,80 @@ class IIFtsoContract {
     return IIFtsoContract(client: client, address: resolved);
   }
 
+  /// ABI descriptor for `activateFtso(uint256,uint256,uint256)`.
+  static final AbiFunction activateFtsoFn = AbiFunction(
+    name: 'activateFtso',
+    inputs: [
+      AbiParameter(name: '_firstEpochStartTs', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_submitPeriodSeconds',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_revealPeriodSeconds',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `active()`.
   static final AbiFunction activeFn = AbiFunction(
     name: 'active',
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `configureEpochs(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,address[])`.
+  static final AbiFunction configureEpochsFn = AbiFunction(
+    name: 'configureEpochs',
+    inputs: [
+      AbiParameter(
+        name: '_maxVotePowerNatThresholdFraction',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_maxVotePowerAssetThresholdFraction',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_lowAssetUSDThreshold',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_highAssetUSDThreshold',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_highAssetTurnoutThresholdBIPS',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_lowNatTurnoutThresholdBIPS',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_elasticBandRewardBIPS',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(
+        name: '_elasticBandWidthPPM',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(name: '_trustedAddresses', type: AbiType.parse('address[]')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `deactivateFtso()`.
+  static final AbiFunction deactivateFtsoFn = AbiFunction(
+    name: 'deactivateFtso',
+    inputs: [],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `epochsConfiguration()`.
@@ -87,6 +163,40 @@ class IIFtsoContract {
       AbiParameter(name: '_trustedAddresses', type: AbiType.parse('address[]')),
     ],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `fallbackFinalizePriceEpoch(uint256)`.
+  static final AbiFunction fallbackFinalizePriceEpochFn = AbiFunction(
+    name: 'fallbackFinalizePriceEpoch',
+    inputs: [AbiParameter(name: '_epochId', type: AbiType.parse('uint256'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `finalizePriceEpoch(uint256,bool)`.
+  static final AbiFunction finalizePriceEpochFn = AbiFunction(
+    name: 'finalizePriceEpoch',
+    inputs: [
+      AbiParameter(name: '_epochId', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_returnRewardData', type: AbiType.parse('bool')),
+    ],
+    outputs: [
+      AbiParameter(
+        name: '_eligibleAddresses',
+        type: AbiType.parse('address[]'),
+      ),
+      AbiParameter(name: '_natWeights', type: AbiType.parse('uint256[]')),
+      AbiParameter(name: '_totalNatWeight', type: AbiType.parse('uint256')),
+    ],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `forceFinalizePriceEpoch(uint256)`.
+  static final AbiFunction forceFinalizePriceEpochFn = AbiFunction(
+    name: 'forceFinalizePriceEpoch',
+    inputs: [AbiParameter(name: '_epochId', type: AbiType.parse('uint256'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// ABI descriptor for `ftsoManager()`.
@@ -290,6 +400,61 @@ class IIFtsoContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `initializeCurrentEpochStateForReveal(uint256,bool)`.
+  static final AbiFunction initializeCurrentEpochStateForRevealFn = AbiFunction(
+    name: 'initializeCurrentEpochStateForReveal',
+    inputs: [
+      AbiParameter(
+        name: '_circulatingSupplyNat',
+        type: AbiType.parse('uint256'),
+      ),
+      AbiParameter(name: '_fallbackMode', type: AbiType.parse('bool')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `revealPriceSubmitter(address,uint256,uint256,uint256)`.
+  static final AbiFunction revealPriceSubmitterFn = AbiFunction(
+    name: 'revealPriceSubmitter',
+    inputs: [
+      AbiParameter(name: '_voter', type: AbiType.parse('address')),
+      AbiParameter(name: '_epochId', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_price', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_wNatVP', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setAsset(address)`.
+  static final AbiFunction setAssetFn = AbiFunction(
+    name: 'setAsset',
+    inputs: [AbiParameter(name: '_asset', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setAssetFtsos(address[])`.
+  static final AbiFunction setAssetFtsosFn = AbiFunction(
+    name: 'setAssetFtsos',
+    inputs: [
+      AbiParameter(name: '_assetFtsos', type: AbiType.parse('address[]')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `setVotePowerBlock(uint256)`.
+  static final AbiFunction setVotePowerBlockFn = AbiFunction(
+    name: 'setVotePowerBlock',
+    inputs: [
+      AbiParameter(name: '_blockNumber', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `symbol()`.
   static final AbiFunction symbolFn = AbiFunction(
     name: 'symbol',
@@ -298,12 +463,37 @@ class IIFtsoContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `updateInitialPrice(uint256,uint256)`.
+  static final AbiFunction updateInitialPriceFn = AbiFunction(
+    name: 'updateInitialPrice',
+    inputs: [
+      AbiParameter(name: '_initialPriceUSD', type: AbiType.parse('uint256')),
+      AbiParameter(
+        name: '_initialPriceTimestamp',
+        type: AbiType.parse('uint256'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `wNat()`.
   static final AbiFunction wNatFn = AbiFunction(
     name: 'wNat',
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `wNatVotePowerCached(address,uint256)`.
+  static final AbiFunction wNatVotePowerCachedFn = AbiFunction(
+    name: 'wNatVotePowerCached',
+    inputs: [
+      AbiParameter(name: '_voter', type: AbiType.parse('address')),
+      AbiParameter(name: '_epochId', type: AbiType.parse('uint256')),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `active()`.
@@ -629,6 +819,262 @@ class IIFtsoContract {
     final out = await client.callFunction(contract: address, function: wNatFn);
     return out[0]! as EthAddress;
   }
+
+  /// Builds an unsigned `activateFtso(uint256,uint256,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest activateFtsoTx(
+    BigInt firstEpochStartTs,
+    BigInt submitPeriodSeconds,
+    BigInt revealPeriodSeconds, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: activateFtsoFn,
+    args: [firstEpochStartTs, submitPeriodSeconds, revealPeriodSeconds],
+    from: from,
+  );
+
+  /// Builds an unsigned `configureEpochs(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,address[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest configureEpochsTx(
+    BigInt maxVotePowerNatThresholdFraction,
+    BigInt maxVotePowerAssetThresholdFraction,
+    BigInt lowAssetUSDThreshold,
+    BigInt highAssetUSDThreshold,
+    BigInt highAssetTurnoutThresholdBIPS,
+    BigInt lowNatTurnoutThresholdBIPS,
+    BigInt elasticBandRewardBIPS,
+    BigInt elasticBandWidthPPM,
+    List<EthAddress> trustedAddresses, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: configureEpochsFn,
+    args: [
+      maxVotePowerNatThresholdFraction,
+      maxVotePowerAssetThresholdFraction,
+      lowAssetUSDThreshold,
+      highAssetUSDThreshold,
+      highAssetTurnoutThresholdBIPS,
+      lowNatTurnoutThresholdBIPS,
+      elasticBandRewardBIPS,
+      elasticBandWidthPPM,
+      trustedAddresses,
+    ],
+    from: from,
+  );
+
+  /// Builds an unsigned `deactivateFtso()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest deactivateFtsoTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: deactivateFtsoFn,
+        from: from,
+      );
+
+  /// Builds an unsigned `fallbackFinalizePriceEpoch(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest fallbackFinalizePriceEpochTx(
+    BigInt epochId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: fallbackFinalizePriceEpochFn,
+    args: [epochId],
+    from: from,
+  );
+
+  /// Builds an unsigned `finalizePriceEpoch(uint256,bool)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest finalizePriceEpochTx(
+    BigInt epochId,
+    bool returnRewardData, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: finalizePriceEpochFn,
+    args: [epochId, returnRewardData],
+    from: from,
+  );
+
+  /// Builds an unsigned `forceFinalizePriceEpoch(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest forceFinalizePriceEpochTx(
+    BigInt epochId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: forceFinalizePriceEpochFn,
+    args: [epochId],
+    from: from,
+  );
+
+  /// Builds an unsigned `initializeCurrentEpochStateForReveal(uint256,bool)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest initializeCurrentEpochStateForRevealTx(
+    BigInt circulatingSupplyNat,
+    bool fallbackMode, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: initializeCurrentEpochStateForRevealFn,
+    args: [circulatingSupplyNat, fallbackMode],
+    from: from,
+  );
+
+  /// Builds an unsigned `revealPriceSubmitter(address,uint256,uint256,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest revealPriceSubmitterTx(
+    EthAddress voter,
+    BigInt epochId,
+    BigInt price,
+    BigInt wNatVP, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: revealPriceSubmitterFn,
+    args: [voter, epochId, price, wNatVP],
+    from: from,
+  );
+
+  /// Builds an unsigned `setAsset(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setAssetTx(EthAddress asset, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: setAssetFn,
+        args: [asset],
+        from: from,
+      );
+
+  /// Builds an unsigned `setAssetFtsos(address[])`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setAssetFtsosTx(
+    List<EthAddress> assetFtsos, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setAssetFtsosFn,
+    args: [assetFtsos],
+    from: from,
+  );
+
+  /// Builds an unsigned `setVotePowerBlock(uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setVotePowerBlockTx(
+    BigInt blockNumber, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setVotePowerBlockFn,
+    args: [blockNumber],
+    from: from,
+  );
+
+  /// Builds an unsigned `updateInitialPrice(uint256,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest updateInitialPriceTx(
+    BigInt initialPriceUSD,
+    BigInt initialPriceTimestamp, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: updateInitialPriceFn,
+    args: [initialPriceUSD, initialPriceTimestamp],
+    from: from,
+  );
+
+  /// Builds an unsigned `wNatVotePowerCached(address,uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest wNatVotePowerCachedTx(
+    EthAddress voter,
+    BigInt epochId, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: wNatVotePowerCachedFn,
+    args: [voter, epochId],
+    from: from,
+  );
 
   /// `LowTurnout(uint256,uint256,uint256,uint256)`
   ///

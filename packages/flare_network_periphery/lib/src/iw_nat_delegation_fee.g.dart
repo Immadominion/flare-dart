@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IWNatDelegationFee
-// Functions: 5 readable of 6 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 6 — 5 readable via eth_call, 1 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IWNatDelegationFee` contract.
+/// Typed bindings for Flare's `IWNatDelegationFee` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -95,6 +103,16 @@ class IWNatDelegationFeeContract {
         stateMutability: StateMutability.view,
       );
 
+  /// ABI descriptor for `setVoterFeePercentage(uint16)`.
+  static final AbiFunction setVoterFeePercentageFn = AbiFunction(
+    name: 'setVoterFeePercentage',
+    inputs: [
+      AbiParameter(name: '_feePercentageBIPS', type: AbiType.parse('uint16')),
+    ],
+    outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// Calls `defaultFeePercentageBIPS()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
@@ -166,6 +184,24 @@ class IWNatDelegationFeeContract {
       fixed: (out[2]! as List).cast<bool>(),
     );
   }
+
+  /// Builds an unsigned `setVoterFeePercentage(uint16)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest setVoterFeePercentageTx(
+    BigInt feePercentageBIPS, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: setVoterFeePercentageFn,
+    args: [feePercentageBIPS],
+    from: from,
+  );
 
   /// `FeePercentageChanged(address,uint16,uint24)`
   ///

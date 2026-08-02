@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IERC173
-// Functions: 1 readable of 2 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 2 — 1 readable via eth_call, 1 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IERC173` contract.
+/// Typed bindings for Flare's `IERC173` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -47,6 +55,14 @@ class IERC173Contract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `transferOwnership(address)`.
+  static final AbiFunction transferOwnershipFn = AbiFunction(
+    name: 'transferOwnership',
+    inputs: [AbiParameter(name: '_newOwner', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// Calls `owner()`.
   ///
   /// Declared `view` in Solidity; read via `eth_call`.
@@ -54,6 +70,24 @@ class IERC173Contract {
     final out = await client.callFunction(contract: address, function: ownerFn);
     return out[0]! as EthAddress;
   }
+
+  /// Builds an unsigned `transferOwnership(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest transferOwnershipTx(
+    EthAddress newOwner, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: transferOwnershipFn,
+    args: [newOwner],
+    from: from,
+  );
 
   /// `OwnershipTransferred(address,address)`
   ///

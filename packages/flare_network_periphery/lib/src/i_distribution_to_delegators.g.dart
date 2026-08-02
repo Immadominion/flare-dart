@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IDistributionToDelegators
-// Functions: 6 readable of 9 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 9 — 6 readable via eth_call, 3 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IDistributionToDelegators` contract.
+/// Typed bindings for Flare's `IDistributionToDelegators` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -41,6 +49,32 @@ class IDistributionToDelegatorsContract {
     );
     return IDistributionToDelegatorsContract(client: client, address: resolved);
   }
+
+  /// ABI descriptor for `autoClaim(address[],uint256)`.
+  static final AbiFunction autoClaimFn = AbiFunction(
+    name: 'autoClaim',
+    inputs: [
+      AbiParameter(name: '_rewardOwners', type: AbiType.parse('address[]')),
+      AbiParameter(name: '_month', type: AbiType.parse('uint256')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `claim(address,address,uint256,bool)`.
+  static final AbiFunction claimFn = AbiFunction(
+    name: 'claim',
+    inputs: [
+      AbiParameter(name: '_rewardOwner', type: AbiType.parse('address')),
+      AbiParameter(name: '_recipient', type: AbiType.parse('address')),
+      AbiParameter(name: '_month', type: AbiType.parse('uint256')),
+      AbiParameter(name: '_wrap', type: AbiType.parse('bool')),
+    ],
+    outputs: [
+      AbiParameter(name: '_rewardAmount', type: AbiType.parse('uint256')),
+    ],
+    stateMutability: StateMutability.nonpayable,
+  );
 
   /// ABI descriptor for `getClaimableAmount(uint256)`.
   static final AbiFunction getClaimableAmountFn = AbiFunction(
@@ -100,6 +134,14 @@ class IDistributionToDelegatorsContract {
     ],
     outputs: [AbiParameter(name: '', type: AbiType.parse('uint256'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `optOutOfAirdrop()`.
+  static final AbiFunction optOutOfAirdropFn = AbiFunction(
+    name: 'optOutOfAirdrop',
+    inputs: [],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `getClaimableAmount(uint256)`.
@@ -170,6 +212,61 @@ class IDistributionToDelegatorsContract {
     );
     return out[0]! as BigInt;
   }
+
+  /// Builds an unsigned `autoClaim(address[],uint256)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest autoClaimTx(
+    List<EthAddress> rewardOwners,
+    BigInt month, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: autoClaimFn,
+    args: [rewardOwners, month],
+    from: from,
+  );
+
+  /// Builds an unsigned `claim(address,address,uint256,bool)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest claimTx(
+    EthAddress rewardOwner,
+    EthAddress recipient,
+    BigInt month,
+    bool wrap, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: claimFn,
+    args: [rewardOwner, recipient, month, wrap],
+    from: from,
+  );
+
+  /// Builds an unsigned `optOutOfAirdrop()`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest optOutOfAirdropTx({EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: optOutOfAirdropFn,
+        from: from,
+      );
 
   /// `AccountClaimed(address,address,uint256,uint256)`
   ///

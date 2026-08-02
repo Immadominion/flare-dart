@@ -2,14 +2,22 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IPersonalAccount
-// Functions: 3 readable of 4 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 4 — 3 readable via eth_call, 1 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 9
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IPersonalAccount` contract.
+/// Typed bindings for Flare's `IPersonalAccount` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -45,6 +53,19 @@ class IPersonalAccountContract {
     inputs: [],
     outputs: [AbiParameter(name: '', type: AbiType.parse('address'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `executeUserOp((address,uint256,bytes)[])`.
+  static final AbiFunction executeUserOpFn = AbiFunction(
+    name: 'executeUserOp',
+    inputs: [
+      AbiParameter(
+        name: '_calls',
+        type: AbiType.parse('(address,uint256,bytes)[]'),
+      ),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.payable,
   );
 
   /// ABI descriptor for `implementation()`.
@@ -95,6 +116,156 @@ class IPersonalAccountContract {
     );
     return out[0]! as String;
   }
+
+  /// Builds an unsigned `executeUserOp((address,uint256,bytes)[])`
+  /// transaction.
+  ///
+  /// Declared `payable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  ///
+  /// Payable: [value] is attached in wei.
+  TransactionRequest executeUserOpTx(
+    List<List<Object?>> calls, {
+    EthAddress? from,
+    BigInt? value,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: executeUserOpFn,
+    args: [calls],
+    from: from,
+    value: value,
+  );
+
+  /// `AgentNotAvailable()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError agentNotAvailableError = AbiError(
+    name: 'AgentNotAvailable',
+    inputs: [],
+  );
+
+  /// `AlreadyInitialized()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError alreadyInitializedError = AbiError(
+    name: 'AlreadyInitialized',
+    inputs: [],
+  );
+
+  /// `ApprovalFailed()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError approvalFailedError = AbiError(
+    name: 'ApprovalFailed',
+    inputs: [],
+  );
+
+  /// `CallFailed(uint256,bytes)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError callFailedError = AbiError(
+    name: 'CallFailed',
+    inputs: [
+      AbiParameter(name: 'index', type: AbiType.parse('uint256')),
+      AbiParameter(name: 'returnData', type: AbiType.parse('bytes')),
+    ],
+  );
+
+  /// `InsufficientFundsForCollateralReservation(uint256,uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError insufficientFundsForCollateralReservationError =
+      AbiError(
+        name: 'InsufficientFundsForCollateralReservation',
+        inputs: [
+          AbiParameter(
+            name: 'collateralReservationFee',
+            type: AbiType.parse('uint256'),
+          ),
+          AbiParameter(name: 'executorFee', type: AbiType.parse('uint256')),
+        ],
+      );
+
+  /// `InsufficientFundsForRedeem(uint256)`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError insufficientFundsForRedeemError = AbiError(
+    name: 'InsufficientFundsForRedeem',
+    inputs: [AbiParameter(name: 'executorFee', type: AbiType.parse('uint256'))],
+  );
+
+  /// `InvalidControllerAddress()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidControllerAddressError = AbiError(
+    name: 'InvalidControllerAddress',
+    inputs: [],
+  );
+
+  /// `InvalidXrplOwner()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError invalidXrplOwnerError = AbiError(
+    name: 'InvalidXrplOwner',
+    inputs: [],
+  );
+
+  /// `OnlyController()`
+  ///
+  /// A custom error carries no message, so a node reports it
+  /// as a bare `execution reverted`. Match it with
+  /// [decodeRevert] to recover the name and arguments.
+  static final AbiError onlyControllerError = AbiError(
+    name: 'OnlyController',
+    inputs: [],
+  );
+
+  /// Every custom error this contract declares.
+  static final List<AbiError> allErrors = [
+    agentNotAvailableError,
+    alreadyInitializedError,
+    approvalFailedError,
+    callFailedError,
+    insufficientFundsForCollateralReservationError,
+    insufficientFundsForRedeemError,
+    invalidControllerAddressError,
+    invalidXrplOwnerError,
+    onlyControllerError,
+  ];
+
+  /// Explains why a call to this contract reverted.
+  ///
+  /// ```dart
+  /// try {
+  ///   await client.estimateGas(request.toCallRequest());
+  /// } on FlareRpcException catch (e) {
+  ///   print(decodeRevert(e)?.description);
+  /// }
+  /// ```
+  ///
+  /// Returns null when the node attached no revert data,
+  /// which is how Flare reports a bare `revert()`.
+  static RevertReason? decodeRevert(FlareRpcException e) =>
+      e.revertReasonWith(allErrors);
 
   /// `Approved(address,address,uint256)`
   ///

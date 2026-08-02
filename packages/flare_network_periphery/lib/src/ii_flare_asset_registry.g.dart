@@ -2,7 +2,11 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IIFlareAssetRegistry
-// Functions: 12 readable of 17 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 17 — 12 readable via eth_call, 5 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
@@ -11,7 +15,11 @@ import 'dart:typed_data';
 
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IIFlareAssetRegistry` contract.
+/// Typed bindings for Flare's `IIFlareAssetRegistry` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -144,12 +152,58 @@ class IIFlareAssetRegistryContract {
     stateMutability: StateMutability.view,
   );
 
+  /// ABI descriptor for `refreshProviderAssets(address)`.
+  static final AbiFunction refreshProviderAssetsFn = AbiFunction(
+    name: 'refreshProviderAssets',
+    inputs: [AbiParameter(name: '_provider', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `registerAsset(address)`.
+  static final AbiFunction registerAssetFn = AbiFunction(
+    name: 'registerAsset',
+    inputs: [AbiParameter(name: '_token', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `registerProvider(address,bool)`.
+  static final AbiFunction registerProviderFn = AbiFunction(
+    name: 'registerProvider',
+    inputs: [
+      AbiParameter(name: '_provider', type: AbiType.parse('address')),
+      AbiParameter(name: '_registerAssets', type: AbiType.parse('bool')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
   /// ABI descriptor for `supportsFtsoDelegation(address)`.
   static final AbiFunction supportsFtsoDelegationFn = AbiFunction(
     name: 'supportsFtsoDelegation',
     inputs: [AbiParameter(name: 'token', type: AbiType.parse('address'))],
     outputs: [AbiParameter(name: '', type: AbiType.parse('bool'))],
     stateMutability: StateMutability.view,
+  );
+
+  /// ABI descriptor for `unregisterAsset(address)`.
+  static final AbiFunction unregisterAssetFn = AbiFunction(
+    name: 'unregisterAsset',
+    inputs: [AbiParameter(name: '_token', type: AbiType.parse('address'))],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// ABI descriptor for `unregisterProvider(address,bool)`.
+  static final AbiFunction unregisterProviderFn = AbiFunction(
+    name: 'unregisterProvider',
+    inputs: [
+      AbiParameter(name: '_provider', type: AbiType.parse('address')),
+      AbiParameter(name: '_unregisterAssets', type: AbiType.parse('bool')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
   );
 
   /// Calls `allAssetTypes()`.
@@ -303,4 +357,92 @@ class IIFlareAssetRegistryContract {
     );
     return out[0]! as bool;
   }
+
+  /// Builds an unsigned `refreshProviderAssets(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest refreshProviderAssetsTx(
+    EthAddress provider, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: refreshProviderAssetsFn,
+    args: [provider],
+    from: from,
+  );
+
+  /// Builds an unsigned `registerAsset(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest registerAssetTx(EthAddress token, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: registerAssetFn,
+        args: [token],
+        from: from,
+      );
+
+  /// Builds an unsigned `registerProvider(address,bool)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest registerProviderTx(
+    EthAddress provider,
+    bool registerAssets, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: registerProviderFn,
+    args: [provider, registerAssets],
+    from: from,
+  );
+
+  /// Builds an unsigned `unregisterAsset(address)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest unregisterAssetTx(EthAddress token, {EthAddress? from}) =>
+      TransactionRequest.callFunction(
+        to: address,
+        function: unregisterAssetFn,
+        args: [token],
+        from: from,
+      );
+
+  /// Builds an unsigned `unregisterProvider(address,bool)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest unregisterProviderTx(
+    EthAddress provider,
+    bool unregisterAssets, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: unregisterProviderFn,
+    args: [provider, unregisterAssets],
+    from: from,
+  );
 }

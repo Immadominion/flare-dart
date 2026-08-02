@@ -2,14 +2,24 @@
 //
 // Source: @flarenetwork/flare-periphery-contract-artifacts@0.1.52
 // Contract: IDiamondCut
-// Functions: 0 readable of 1 total (state-changing functions are omitted — this SDK does not sign).
+// Functions: 1 — 0 readable via eth_call, 1 requiring a
+// signed transaction. Payable functions are both, and get a reader and a
+// `…Tx` builder. This package never signs: a builder returns an unsigned
+// TransactionRequest for a wallet to sign.
+// Custom errors: 0
 //
 // Regenerate with:
 //   dart run flare_network_codegen --artifacts <dir> --out <dir>
 
+import 'dart:typed_data';
+
 import 'package:flare_network/flare_network.dart';
 
-/// Typed read bindings for Flare's `IDiamondCut` contract.
+/// Typed bindings for Flare's `IDiamondCut` contract.
+///
+/// Read methods call through `eth_call`. Methods ending in
+/// `Tx` build an unsigned [TransactionRequest] for a wallet
+/// to sign — this package holds no keys.
 ///
 /// Resolve it through the registry rather than hardcoding an
 /// address — Flare redeploys contracts.
@@ -38,6 +48,41 @@ class IDiamondCutContract {
     );
     return IDiamondCutContract(client: client, address: resolved);
   }
+
+  /// ABI descriptor for `diamondCut((address,uint8,bytes4[])[],address,bytes)`.
+  static final AbiFunction diamondCutFn = AbiFunction(
+    name: 'diamondCut',
+    inputs: [
+      AbiParameter(
+        name: '_diamondCut',
+        type: AbiType.parse('(address,uint8,bytes4[])[]'),
+      ),
+      AbiParameter(name: '_init', type: AbiType.parse('address')),
+      AbiParameter(name: '_calldata', type: AbiType.parse('bytes')),
+    ],
+    outputs: [],
+    stateMutability: StateMutability.nonpayable,
+  );
+
+  /// Builds an unsigned `diamondCut((address,uint8,bytes4[])[],address,bytes)`
+  /// transaction.
+  ///
+  /// Declared `nonpayable` in Solidity, so it changes state and
+  /// must be signed. This package holds no keys: pass the
+  /// result to [FlareClient.prepareTransaction] to fill in
+  /// gas and fees, then hand
+  /// [TransactionRequest.toWalletJson] to a wallet.
+  TransactionRequest diamondCutTx(
+    List<List<Object?>> diamondCut,
+    EthAddress init,
+    Uint8List calldata, {
+    EthAddress? from,
+  }) => TransactionRequest.callFunction(
+    to: address,
+    function: diamondCutFn,
+    args: [diamondCut, init, calldata],
+    from: from,
+  );
 
   /// `DiamondCut((address,uint8,bytes4[])[],address,bytes)`
   ///
