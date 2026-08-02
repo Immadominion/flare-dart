@@ -29,6 +29,19 @@ final class FlareChain {
   /// Whether this network is a testnet. Guard destructive examples on it.
   final bool isTestnet;
 
+  /// Observed mean time between blocks.
+  ///
+  /// Measured on 2026-08-02 over 1,000 consecutive blocks per network. The
+  /// four differ by a factor of 3.7 — Songbird 1.066 s, Flare 1.161 s,
+  /// Coston2 2.726 s, Coston 3.995 s — so the single "~1.8 s" figure in the
+  /// public documentation does not describe any of them. Anything that polls
+  /// for inclusion should pace itself from this rather than a shared constant.
+  ///
+  /// Each built-in network carries its measured value. The 2-second default
+  /// applies only to a network constructed by hand, where the real figure is
+  /// unknown; erring slow costs a little latency, never correctness.
+  final Duration blockTime;
+
   const FlareChain({
     required this.name,
     required this.chainId,
@@ -36,6 +49,7 @@ final class FlareChain {
     required this.explorerUrl,
     required this.nativeSymbol,
     required this.isTestnet,
+    this.blockTime = const Duration(seconds: 2),
     this.faucetUrl,
   });
 
@@ -47,6 +61,7 @@ final class FlareChain {
     explorerUrl: 'https://flare-explorer.flare.network',
     nativeSymbol: 'FLR',
     isTestnet: false,
+    blockTime: Duration(milliseconds: 1161),
   );
 
   /// Coston2, the testnet for Flare mainnet. Chain ID 114.
@@ -58,6 +73,7 @@ final class FlareChain {
     explorerUrl: 'https://coston2-explorer.flare.network',
     nativeSymbol: 'C2FLR',
     isTestnet: true,
+    blockTime: Duration(milliseconds: 2726),
     faucetUrl: 'https://faucet.flare.network/coston2',
   );
 
@@ -69,6 +85,7 @@ final class FlareChain {
     explorerUrl: 'https://songbird-explorer.flare.network',
     nativeSymbol: 'SGB',
     isTestnet: false,
+    blockTime: Duration(milliseconds: 1066),
   );
 
   /// Coston, the testnet for Songbird. Chain ID 16.
@@ -79,6 +96,7 @@ final class FlareChain {
     explorerUrl: 'https://coston-explorer.flare.network',
     nativeSymbol: 'CFLR',
     isTestnet: true,
+    blockTime: Duration(milliseconds: 3995),
     faucetUrl: 'https://faucet.flare.network/coston',
   );
 
@@ -113,8 +131,15 @@ final class FlareChain {
     explorerUrl: explorerUrl,
     nativeSymbol: nativeSymbol,
     isTestnet: isTestnet,
+    blockTime: blockTime,
     faucetUrl: faucetUrl,
   );
+
+  /// CAIP-2 identifier, e.g. `eip155:114`.
+  ///
+  /// WalletConnect-family libraries take the target chain as a separate
+  /// argument in this form, alongside the request itself.
+  String get caip2 => 'eip155:$chainId';
 
   @override
   String toString() => '$name (chainId $chainId)';

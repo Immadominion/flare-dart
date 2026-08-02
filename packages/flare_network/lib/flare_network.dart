@@ -35,6 +35,7 @@
 library;
 
 // ABI
+export 'src/abi/abi_error.dart' show AbiError, SolidityErrors;
 export 'src/abi/abi_event.dart'
     show AbiEvent, AbiEventParameter, ContractAbiEvents, IndexedHash;
 export 'src/abi/abi_function.dart'
@@ -58,6 +59,15 @@ export 'src/abi/hex.dart' show bytesToHex, hexToBigInt, hexToBytes;
 // filtering on an indexed dynamic parameter requires hashing the value
 // yourself, since the chain stores keccak256(value) rather than the value.
 export 'src/abi/keccak.dart' show functionSelector, keccak256, keccak256Utf8;
+export 'src/abi/revert.dart'
+    show
+        RevertReason,
+        RevertWithCustomError,
+        RevertWithMessage,
+        RevertWithPanic,
+        RevertWithUnknownSelector,
+        RevertWithoutReason,
+        RevertingRpcException;
 
 // DA Layer (Scaling anchor feeds)
 export 'src/dalayer/da_layer_client.dart'
@@ -97,6 +107,7 @@ export 'src/rpc/subscriptions.dart' show BlockHeaderHex, FlareSubscriptions;
 export 'src/rpc/ws/ws_transport.dart' show WsConnector, WsTransport;
 export 'src/rpc/transaction.dart'
     show BlockInfo, CallRequest, TransactionInfo, TransactionReceipt;
+export 'src/rpc/tx_request.dart' show FeeEstimate, TransactionRequest;
 export 'src/rpc/flare_exception.dart'
     show
         FlareAbiException,

@@ -93,14 +93,30 @@ class JsonRpcClient {
   ///
   /// Throws [FlareRpcException] if the node reports an error, or
   /// [FlareTransportException] if the request never succeeded.
-  Future<Object?> call(String method, [List<Object?> params = const []]) async {
+  Future<Object?> call(String method, [List<Object?> params = const []]) =>
+      _callWith(method, params, retries: retryPolicy.maxRetries);
+
+  /// Sends one JSON-RPC call **without retrying it**.
+  ///
+  /// For methods that are not idempotent — `eth_sendRawTransaction` above all.
+  /// Retrying a read costs nothing but time; retrying a broadcast can submit
+  /// the same transaction twice, because a response lost in transit does not
+  /// mean the node discarded the request.
+  Future<Object?> callOnce(String method, [List<Object?> params = const []]) =>
+      _callWith(method, params, retries: 0);
+
+  Future<Object?> _callWith(
+    String method,
+    List<Object?> params, {
+    required int retries,
+  }) async {
     final body = {
       'jsonrpc': '2.0',
       'id': ++_id,
       'method': method,
       'params': params,
     };
-    final decoded = await _post(jsonEncode(body), method);
+    final decoded = await _post(jsonEncode(body), method, retries: retries);
     if (decoded is! Map) {
       throw FlareTransportException(
         'Expected a JSON object, got ${decoded.runtimeType}',
@@ -112,8 +128,8 @@ class JsonRpcClient {
 
   /// Sends [requests] as a single batch and returns results in the same order.
   ///
-  /// One round trip instead of N. Flare's ~1.8s blocks make this the difference
-  /// between one and N network waits when reading several contracts per frame.
+  /// One round trip instead of N — the difference between one and N network
+  /// waits when reading several contracts to paint a single frame.
   ///
   /// If any individual call errors, that error is thrown — so a batch is
   /// all-or-nothing from the caller's point of view.
@@ -169,13 +185,14 @@ class JsonRpcClient {
     return response['result'];
   }
 
-  Future<Object?> _post(String body, String label) async {
+  Future<Object?> _post(String body, String label, {int? retries}) async {
     if (_closed) {
       throw StateError('This JsonRpcClient has been closed');
     }
     FlareTransportException? last;
+    final maxRetries = retries ?? retryPolicy.maxRetries;
 
-    for (var attempt = 0; attempt <= retryPolicy.maxRetries; attempt++) {
+    for (var attempt = 0; attempt <= maxRetries; attempt++) {
       if (attempt > 0) {
         await Future<void>.delayed(retryPolicy.delayFor(attempt, _random));
       }

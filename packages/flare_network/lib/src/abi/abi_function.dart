@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:meta/meta.dart';
 
 import '../rpc/flare_exception.dart';
+import 'abi_error.dart';
 import 'abi_event.dart';
 import 'abi_type.dart';
 import 'hex.dart';
@@ -163,7 +164,17 @@ final class ContractAbi {
   /// Events by name. Overloads share a name, so the value is a list.
   final Map<String, List<AbiEvent>> eventsByName;
 
-  const ContractAbi(this.functionsByName, [this.eventsByName = const {}]);
+  /// Custom errors by name.
+  ///
+  /// Solidity permits overloading these too, so the value is a list for the
+  /// same reason as the other two.
+  final Map<String, List<AbiError>> errorsByName;
+
+  const ContractAbi(
+    this.functionsByName, [
+    this.eventsByName = const {},
+    this.errorsByName = const {},
+  ]);
 
   /// Parses an ABI JSON array.
   ///
@@ -173,6 +184,7 @@ final class ContractAbi {
   factory ContractAbi.fromJson(List<Object?> json) {
     final functions = <String, List<AbiFunction>>{};
     final events = <String, List<AbiEvent>>{};
+    final errors = <String, List<AbiError>>{};
 
     for (final entry in json) {
       if (entry is! Map) continue;
@@ -184,9 +196,12 @@ final class ContractAbi {
         case 'event':
           final ev = AbiEvent.fromJson(map);
           (events[ev.name] ??= []).add(ev);
+        case 'error':
+          final err = AbiError.fromJson(map);
+          (errors[err.name] ??= []).add(err);
       }
     }
-    return ContractAbi(functions, events);
+    return ContractAbi(functions, events, errors);
   }
 
   /// All functions, flattened.
@@ -195,6 +210,12 @@ final class ContractAbi {
 
   /// All events, flattened.
   List<AbiEvent> get events => eventsByName.values.expand((e) => e).toList();
+
+  /// All custom errors, flattened.
+  ///
+  /// Pass this to [RevertReason.decodeBytes] to turn a bare selector back into
+  /// a named error with decoded arguments.
+  List<AbiError> get errors => errorsByName.values.expand((e) => e).toList();
 
   /// Looks up a function by name.
   ///
