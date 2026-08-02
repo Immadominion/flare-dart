@@ -449,3 +449,92 @@ every case tested, but the deployed binary was not inspected. Notably
 `flare-foundation/coreth@master` is an older fork whose revert unpacking handles
 only `Error(string)`, while the live nodes decode `Panic` — so they are not on
 that branch.
+
+---
+
+## 14. Smart Accounts — measured 2026-08-02
+
+`MasterAccountController` is an EIP-2535 diamond at
+`0x434936d47503353f06750Db1A444DBDC5F0AD37c` — the same address on every
+network, like the registry itself. But **deployment is not universal**:
+
+| Network | In registry | Bytecode | Working |
+|---|---|---|---|
+| Flare (14) | yes | yes | yes, `sourceId` = `XRP` |
+| Coston2 (114) | yes | yes | yes, `sourceId` = `testXRP` |
+| Songbird (19) | **no** | present | **no** — `getSourceId()` reverts |
+| Coston (16) | **no** | none | no |
+
+Songbird is the trap: an `eth_getCode` probe finds bytecode there and would
+mark it supported. **Gate on registry resolution**, which returns the zero
+address on Songbird and Coston.
+
+Not a demo surface. Transaction counts when measured: **99,944 on Coston2,
+66,479 on Flare mainnet**.
+
+### `getPersonalAccount` derives; it does not look up
+
+```
+$ cast call $MAC "getPersonalAccount(string)(address)" "rDEFINITELYNOTAREAL…" --rpc-url $C2
+0x9265130BFb1213a6f1f4dE1FA6D962C28801984b     # non-zero, no code
+$ cast call $MAC "getPersonalAccount(string)(address)" "" --rpc-url $C2
+0x43343c9d529D483A5d0ca42BbeadFB52635adfB0     # even the empty string
+```
+
+Every one of those addresses has `eth_getCode` = `0x`. The function is a
+counterfactual derivation: same input, same address, on both networks, with no
+validation of the XRPL address at all.
+
+**Consequence:** a non-zero result is not evidence an account exists. An
+underived address will accept a transfer and has no code to ever move it out.
+`isSmartAccount(address) → (bool, string)` is the existence check, and its
+second return is the XRPL owner, making it a genuine reverse lookup.
+
+Round-trip verified against a real `PersonalAccountCreated` log at mainnet
+block 66,480,471:
+
+```
+rLDkBYohbZw1AuFnpYtAcq8sbMjjBWKvE4
+  -> getPersonalAccount   -> 0x11f8766e8cB6acc21999BB6bFD4b2f5f3C5731d4
+  -> isSmartAccount       -> (true, "rLDkBYohbZw1AuFnpYtAcq8sbMjjBWKvE4")
+  -> xrplOwner() on it    -> "rLDkBYohbZw1AuFnpYtAcq8sbMjjBWKvE4"
+  -> controllerAddress()  -> 0x434936d47503353f06750Db1A444DBDC5F0AD37c
+```
+
+### `getBalances().vaults` is a catalogue, not a portfolio
+
+It returns **every** vault the controller knows about with the account's
+position in each, zeroed where nothing is held. An address that has never
+existed still comes back with all four Coston2 vaults listed. Rendering that as
+holdings shows a user four positions they do not have.
+
+## 15. Signing externally, for the end-to-end test
+
+This package never signs. Foundry's `cast` produces the raw transaction that
+`eth_sendRawTransaction` then takes:
+
+```bash
+cast mktx --private-key $KEY --rpc-url https://coston2-api.flare.network/ext/C/rpc \
+  --chain 114 --nonce 0 --gas-limit 21000 \
+  --gas-price 900gwei --priority-gas-price 150gwei \
+  --value 1 0x…
+```
+
+Verified by decoding the output back: `type 0x2`, `chainId 0x72`,
+`maxFeePerGas 0xd18c2e2800`, `maxPriorityFeePerGas 0x22ecb25c00`.
+
+**The gas price must clear the 500 gwei floor** (§10). A commonly-copied
+`--gas-price 200gwei` produces a transaction the node rejects.
+
+### Still blocked
+
+The Coston2 faucet is reCAPTCHA-gated — the operator's deliberate
+anti-automation control, and not circumvented here. `dart test -P broadcast`
+is written and skips with instructions until `COSTON2_TEST_KEY` names a funded
+key. Two questions stay **[Unverified]** until it runs:
+
+- Is a priority fee below 150 gwei **rejected at submission or merely delayed**?
+  A zero-tip transaction was observed mined on mainnet at ~2% block
+  utilisation, so "delayed" is the [Inference] — from a single observation.
+- Does a **mined-and-reverted receipt** carry any reason, or is re-simulating at
+  the failing block the only recourse?

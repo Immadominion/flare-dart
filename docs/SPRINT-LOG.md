@@ -5,6 +5,114 @@ Newest first.
 
 ---
 
+## Sprint 7 — Smart Accounts, and the write path in the app
+**2026-08-02** · Status: **complete; one item blocked on a human**
+
+### Shipped
+
+- **`SmartAccountsClient`** — XRPL address to Flare account, both directions,
+  with balances. Live on mainnet and Coston2.
+- **Flare Pulse wrap flow** — the whole transaction path in the reference app,
+  behind a one-method `Wallet` seam so the SDK never touches a key.
+- **`test -P broadcast`** — the end-to-end signing test, written and ready,
+  skipping until a funded key exists.
+
+### Proven
+
+| Suite | Count |
+|---|---:|
+| Core hermetic | **234** |
+| Core live | **110** |
+| Generated bindings, live | **27** |
+| Codegen unit | **33** |
+| Flutter widget | **30** |
+
+`flutter analyze` clean and the macOS app builds. pana still 160/160, 6/6
+platforms, WASM-ready.
+
+### Measured this sprint
+
+- **`getPersonalAccount` derives an address; it does not look one up.** It
+  returns a plausible non-zero address for an XRPL address never seen, and for
+  the empty string — three nonsense inputs each produced a distinct address with
+  no code. A non-zero result proves nothing, and believing otherwise loses
+  funds: an underived address accepts a transfer and has no code to move it out.
+  `SmartAccount` therefore always carries `isDeployed`.
+- **`getBalances().vaults` is a catalogue, not a portfolio.** Every vault the
+  controller knows about comes back with the account's position in each, zeroed
+  where nothing is held — an address that never existed still lists all four
+  Coston2 vaults. Added `heldVaults`.
+- **`isSmartAccount(address)` returns `(bool, string)`**, not a bool. The second
+  value is the XRPL owner, making it a genuine reverse lookup.
+- **`getSourceId()` is network-bound**: `XRP` on mainnet, `testXRP` on Coston2 —
+  the same split the Data Connector uses.
+- **The controller is deployed at one address across networks**
+  (`0x4349…D37c`), like the registry. Registered on Flare and Coston2 only.
+  Songbird has bytecode at that address but is a **stub** — `getSourceId()`
+  reverts — and Coston has none. So resolution must gate on the **registry**,
+  not on `eth_getCode`, which would wrongly mark Songbird supported.
+- Smart Accounts is production traffic, not a demo surface: **99,944
+  transactions on Coston2 and 66,479 on mainnet** when measured.
+- **`cast mktx` produces a valid Coston2 type-2 transaction** at 900/150 gwei,
+  verified by decoding it back. At 200 gwei it would be rejected against the
+  500 gwei base-fee floor.
+
+### Corrected mid-sprint
+
+- **A doc comment claimed `accountFor` batched its two reads.** It cannot —
+  the deployment check takes the derived address as its argument, so the calls
+  are necessarily sequential. Comment fixed rather than the claim left standing.
+- **`#FFC24B` was inlined twice in the app and absent from the theme**, and the
+  first draft of the wrap sheet added a third literal. Promoted to
+  `PulseTheme.pending`; the palette itself was private while widgets needed it,
+  so it was promoted and documented too.
+- A test asserted `gasUsed == 156522` against hex `0x263aa`, which is 156,586.
+
+### Verified rather than assumed
+
+- Every direct dependency is current (`dart pub outdated`, `flutter pub
+  outdated`). The four transitive packages flagged as behind are **pinned by the
+  Flutter SDK itself** — `meta` 1.18.0 against 1.19.0 available — which
+  re-confirms the `^1.15.0` constraint as load-bearing rather than merely
+  cautious.
+- Dart 3.12.2 installed is the **latest stable**.
+- `flare_network`, `flare_network_periphery` and `flare_network_codegen` are all
+  **unclaimed on pub.dev**.
+- `walletconnect_flutter_v2` and `web3modal_flutter` are both **discontinued**
+  (last published 2024-09-17). `reown_appkit` 1.8.3 is the live successor, but
+  published 2026-02-19 with its `reown_sign`/`reown_core` dependencies at
+  2025-12-10 — current and not discontinued, but not fast-moving. It is
+  therefore **not** described anywhere here as "actively maintained".
+
+### Blocked
+
+**One live broadcast, on a funded Coston2 key.** The faucet is reCAPTCHA-gated;
+that is the operator's deliberate anti-automation control and was not
+circumvented. The test is written, tagged `broadcast`, excluded from every other
+preset, and skips with instructions. Funding is a single manual claim.
+
+Until it runs, two things stay **[Unverified]** and are labelled as such
+everywhere:
+
+1. Whether a priority fee below the node's suggested 150 gwei is **rejected at
+   submission or merely delayed**. A zero-tip transaction was observed mined on
+   mainnet at ~2% block utilisation, so the answer is probably "delayed", but
+   that is an inference from one observation.
+2. Whether a **mined-and-reverted receipt** exposes any reason, or whether
+   re-simulating at the failing block is the only recourse.
+
+### Next
+
+1. Run `-P broadcast` once a key is funded, and fold the two answers into
+   GROUND-TRUTH.
+2. Decide whether `reown_appkit` belongs in the reference app, given it needs a
+   cloud `projectId` and adds 111 transitive dependencies.
+3. `simulate()` is pinned to `BlockTag.latest` and cannot replay against the
+   block that actually executed — which is what a post-hoc revert diagnosis
+   needs.
+
+---
+
 ## Sprint 6 — The write path
 **2026-08-02** · Status: **complete, all green**
 

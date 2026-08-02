@@ -2,25 +2,35 @@
 # default run: `dart test` stays hermetic, fast and green offline.
 #
 #   dart test                  # unit only
-#   dart test -P integration   # live Coston2
+#   dart test -P integration   # live Coston2 reads
 #   dart test -P mainnet       # live mainnet reads (slower, rate-limited)
+#   dart test -P broadcast     # SPENDS REAL TESTNET FUNDS — needs a funded key
+#
+# `broadcast` is excluded from every other run because it signs and sends real
+# transactions. It skips itself with an explanation when COSTON2_TEST_KEY is
+# unset, so it never fails merely for being unconfigured.
 #
 # A preset replaces the top-level exclude_tags, which is what lets one config
 # serve both the hermetic default and the opt-in live runs. Note these are
 # presets (-P), not tag selectors (-t): passing `-t integration` would be
 # rejected as conflicting with the exclusion below.
-exclude_tags: integration || mainnet
+exclude_tags: integration || mainnet || broadcast
 
 presets:
   integration:
     include_tags: integration
-    exclude_tags: mainnet
+    exclude_tags: mainnet || broadcast
   mainnet:
     include_tags: mainnet
-    exclude_tags: integration
+    exclude_tags: integration || broadcast
+  broadcast:
+    include_tags: broadcast
+    exclude_tags: integration || mainnet
 
 tags:
   integration:
     timeout: 2x
   mainnet:
     timeout: 3x
+  broadcast:
+    timeout: 6x

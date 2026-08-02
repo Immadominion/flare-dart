@@ -84,6 +84,24 @@ Wallets sign; hardware wallets often only sign, and
 P-chain staking and C↔P transfers remain out of scope — they are not EVM
 transactions. The reasoning is in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
+## XRPL holders, without a Flare key
+
+Smart Accounts gives an XRP holder a Flare account they control from XRPL —
+no FLR for gas, no Flare key. It is live on mainnet and Coston2.
+
+```dart
+final accounts = await SmartAccountsClient.resolve(client);
+final account = await accounts.accountFor('rLDkBYohbZw1AuFnpYtAcq8sbMjjBWKvE4');
+
+// `address` is derived, not looked up — it is non-zero even for an XRPL
+// address that has never existed. `isDeployed` is the field that matters.
+if (account.isDeployed) {
+  final held = await accounts.balancesOf(account.address);
+  print(held.fXrp.balance);
+  print(held.heldVaults);   // not `vaults` — that lists every vault, held or not
+}
+```
+
 ## Status
 
 Working against live networks today: contract resolution, FTSOv2 price feeds,
@@ -106,10 +124,14 @@ dart run example/flare_network_example.dart
 | Suite | Count |
 |---|---:|
 | Core hermetic | 234 |
-| Core live | 91 |
+| Core live | 110 |
 | Generated bindings, live | 27 |
 | Codegen unit | 33 |
-| Flutter widget | 10 |
+| Flutter widget | 30 |
+
+One more suite exists and is **excluded by default**: `dart test -P broadcast`
+signs and sends real transactions. It needs a funded Coston2 key and skips with
+an explanation without one, since Flare's faucet is captcha-gated.
 
 Nothing here rests on assumption where measurement was possible:
 
@@ -136,6 +158,9 @@ language:
   usual 2x fee headroom is sized for a market Flare does not have.
 - `WNat.withdrawTo` does not exist. Selector `0x205c2878` is absent from
   mainnet WNat's deployed bytecode, despite appearing in secondary docs.
+- Smart Accounts' `getPersonalAccount` **derives** an address rather than
+  looking one up: it answers for an XRPL address never seen, and for the empty
+  string. A non-zero result is not proof an account exists.
 
 ## Documentation
 

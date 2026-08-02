@@ -24,7 +24,8 @@ docs/                              architecture, ground truth, sprint log
 ```bash
 cd packages/flare_network
 dart test                  # 234 tests, hermetic, ~1s
-dart test -P integration   # 91 tests against live Coston2
+dart test -P integration   # 110 tests against live Coston2 + mainnet reads
+dart test -P broadcast     # SPENDS TESTNET FUNDS; skips without COSTON2_TEST_KEY
 dart analyze               # must be clean before any commit
 
 # Regenerate bindings after an artifacts bump:
@@ -81,7 +82,7 @@ you.
 ## Scope
 
 **Supported:** contract resolution, FTSOv2 reads, DA Layer anchor feeds and
-Merkle proofs, FDC, FAssets, event log decoding, WebSocket subscriptions,
+Merkle proofs, FDC, FAssets, Smart Accounts, event log decoding, subscriptions,
 arbitrary `eth_call`, chain queries — and the whole transaction path either side
 of the signature: build (`TransactionRequest`, generated `…Tx` builders), price
 (`suggestFees`, `prepareTransaction`), broadcast already-signed bytes
