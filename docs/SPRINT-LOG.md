@@ -5,6 +5,191 @@ Newest first.
 
 ---
 
+## Sprint 6 — The write path
+**2026-08-02** · Status: **complete, all green**
+
+### Shipped
+
+The SDK could read Flare and could not help anyone change it. The README told
+people to connect a wallet and let it sign, then gave them nothing to hand that
+wallet: no transaction request type, no fee suggestion, no broadcast, and a
+revert surfaced as `execution reverted` with the reason thrown away.
+
+| Layer | What landed |
+|---|---|
+| `rpc/tx_request.dart` | `TransactionRequest` (+ `.callFunction` / `.transfer` / `.deploy`), `toWalletJson()`, `assertSendable()`, `FeeEstimate` |
+| `rpc/flare_client.dart` | `suggestFees`, `prepareTransaction`, `sendRawTransaction`, `simulate` |
+| `abi/revert.dart` | `RevertReason` — message, panic, custom error, unknown selector, empty |
+| `abi/abi_error.dart` | `AbiError`, `SolidityErrors`; `ContractAbi` now parses `error` entries |
+| codegen | 513 `…Tx` builders and 168 custom-error declarations with `decodeRevert` |
+
+Generated bindings went from **149 files to 164** — fifteen interfaces had
+previously emitted nothing at all because none of their functions has outputs.
+`IWNat` was one of them, so wrapping FLR, the most ordinary action on Flare,
+had no typed path.
+
+### Proven
+
+| Suite | Count |
+|---|---:|
+| Core hermetic | **234** |
+| Core live | **91** |
+| Generated bindings, live | **27** |
+| Codegen unit | **33** |
+| Flutter widget | **10** |
+
+Revert vectors come from Foundry `cast`; the `Error(string)` vector is
+byte-identical to what Coston2 returned live for the same call. The live revert
+tests use `eth_call` **state overrides**, which Coston2 supports — so every
+revert class (message, panic, custom with and without arguments, empty) is
+exercised against a real node with no deployment, no funded key and no gas.
+
+### Measured this sprint
+
+- **Block time is not ~1.8 s, and is not one number.** Over 1,000 consecutive
+  blocks per network: Songbird **1.066 s**, Flare **1.161 s**, Coston2
+  **2.726 s**, Coston **3.995 s** — a 3.7x spread. The published figure
+  describes none of the four. `blockTime` is now per-chain.
+- **The base fee sits at a 500 gwei floor**: 95.2% of mainnet blocks and 99.9%
+  of Coston2 blocks across 8,192 samples, never rising more than 11.3% above it.
+  `gasUsedRatio` medians are 0.019 and 0.0077. The default fee multiplier is
+  **1.5**, not the Ethereum-conventional 2.
+- **`eth_maxPriorityFeePerGas` returns exactly 150 gwei on all four networks**,
+  unchanged across ~20 samples — a flat constant, not a market signal.
+  `eth_gasPrice` is exactly `baseFee + 150 gwei`, so it carries nothing extra.
+- **The node adds no gas buffer.** A plain transfer estimates at exactly 21000,
+  and a caller-supplied gas limit that is too low is ignored rather than
+  rejected. All headroom is the SDK's responsibility.
+- **Revert data arrives in `error.data` with code 3**, over single calls,
+  batches and WebSocket alike. But an **empty** revert comes back as `-32000`
+  with the field **absent entirely**, where geth sends `data: "0x"`. Branching
+  on `code == 3` would miss it, so the decoder branches on presence.
+- **A third error class exists**: the node refusing to simulate at all
+  (`insufficient funds`), reported as `-32000` with a message and no data —
+  neither a revert nor a transport failure.
+- **`eth_call` state overrides are supported**; `debug_traceCall` is not.
+- **168 custom errors** across the 187 published ABIs. They carry no message, so
+  the node reports them as four opaque bytes.
+- **`WNat.withdrawTo` does not exist.** Selector `0x205c2878` is absent from
+  mainnet WNat's deployed bytecode, while `deposit`, `depositTo`, `withdraw` and
+  `withdrawFrom` are all present. Secondary documentation lists it.
+
+### Corrected mid-sprint
+
+- **`sendRawTransaction` inherited the client's retry policy.** A broadcast is
+  not idempotent — a response lost in transit does not mean the node dropped the
+  transaction — so a retry risks submitting it twice and turning a success into
+  `already known`. Added `JsonRpcClient.callOnce`; broadcast never retries.
+- **`simulate()` dropped `from` and `value`**, silently mis-simulating every
+  `msg.sender`-gated and every payable call. Now routed through
+  `toCallRequest()`.
+- **`waitForReceipt` polled on a fixed 1500 ms**, citing the documented block
+  time. Wrong on all four networks; now paces from `chain.blockTime`.
+- **`toWalletJson` emitted `chainId` unconditionally**, with a comment claiming
+  it guarded against a Coston2 request being signed on mainnet. That guard does
+  not exist: MetaMask strips `chainId` while normalising parameters, before
+  validation runs, and neither viem's formatter nor Reown's serialiser emits the
+  key. Now opt-in, with `FlareChain.caip2` for the argument that does carry
+  chain identity.
+- **A Solidity parameter named `from` collided** with the generated builder's
+  own `from`; five contracts failed to compile. Caught by analysing the
+  generated output, not the generator.
+- **`dart:typed_data` was imported for contracts referencing bytes only inside
+  an error declaration**, where no Dart `Uint8List` is ever emitted.
+
+### Next
+
+1. Wire the write path into the Flutter reference app end to end.
+2. Broadcast one real Coston2 transaction from a faucet-funded key, to settle
+   what a below-minimum tip does and whether a mined-and-reverted receipt
+   exposes any reason.
+3. Smart Accounts: XRPL address → Flare account lookup.
+
+---
+
+## Sprint 5 — Receipts, gas estimation, subscriptions, and the web regression
+**2026-08-02** · Status: **complete, all green**
+
+### Shipped
+
+- **`TransactionReceipt` / `TransactionInfo` / `BlockInfo` / `CallRequest`** —
+  the reads a wallet-signing workflow depends on. RPC surface 8 → 15 methods.
+- **`estimateGas`**, so an action can be priced before a user is asked to sign.
+- **`FlareSubscriptions`** — `eth_subscribe` over WebSocket: `newHeads`, `logs`,
+  `pendingTransactions`, with jittered reconnect.
+- **`WsTransport`** — a transport interface behind a conditional export.
+
+### Corrected mid-sprint
+
+- **Exporting `subscriptions.dart` from the public barrel cost the package its
+  `web` platform tag.** pana went from "Supports 6 of 6 possible platforms" to
+  5, naming the chain: `flare_network.dart` → `subscriptions.dart` → `dart:io`.
+  That does not merely disable subscriptions on the web; it makes the **whole**
+  package unresolvable from a Flutter Web app, so reading a price feed stops
+  working too. The doc comment claiming only the one class was affected was
+  wrong. Fixed with a conditional export — `dart:io` natively, the browser's own
+  `WebSocket` through `dart:js_interop` on the web, declared inline rather than
+  pulled from `package:web` so the dependency count stays at three. Measured
+  after: **6 of 6 platforms, and WASM-ready**.
+- Injecting the transport also made the socket testable offline. Reconnect and
+  backoff are precisely the paths a live test cannot reach — an endpoint that
+  stays up never reconnects — so they had no coverage at all. 14 hermetic tests
+  now cover them.
+
+### Measured this sprint
+
+- `eth_subscribe` **requires the filter object even when empty**: `['logs']`
+  fails with `-32602`, so an unconstrained subscription must still pass `{}`.
+- Flare answers `-32000 cannot query unfinalized data` for a height past the
+  head, rather than returning null. A different condition from "no such block",
+  so it is surfaced rather than flattened.
+- Subscription delivery is **at-most-once**: a dropped socket loses whatever the
+  node produced while it was down, and reconnecting resubscribes from the
+  present. Anything critical needs a `getLogs` sweep over the gap.
+
+---
+
+## Sprint 4 — Event decoding, hostile input, registry resolution
+**2026-08-01** · Status: **complete, all green**
+
+### Shipped
+
+- **`AbiEvent` / `DecodedLog` / `LogFilter`** — full event log decoding: topic0
+  from the canonical signature, indexed parameters from topics, non-indexed from
+  data, and dynamic indexed values surfaced as `IndexedHash` since the chain
+  stores `keccak256(value)` rather than the value.
+- **`getLogs` / `streamLogs` / `getEventLogs`**, with automatic splitting around
+  the block-span cap.
+- 592 event declarations emitted across the generated bindings, with a
+  `decodeLog` dispatcher per contract.
+
+### Measured this sprint
+
+- **`eth_getLogs` accepts a span of 30 blocks and rejects 31** — measured on
+  both Coston2 and mainnet: *"requested too many blocks … maximum is set to 30"*.
+  Queries wider than that are split.
+- Event corpus: **592 events, 0 anonymous, 0 with dynamic indexed parameters**.
+- The barrel costs **zero AOT bytes** for unused code — tree-shaking verified by
+  compiling with and without.
+
+### Corrected mid-sprint
+
+- **All 142 generated `resolve()` methods threw.** They defaulted to the
+  Solidity interface name, and measured against a live `getAllContracts()`,
+  **zero** of 142 interface names appear in the registry. Fixed by parsing the
+  interface→registry mapping out of the artifacts package: 39 now default
+  correctly (all verified live), 103 require an explicit name.
+- **The ABI decoder was hardened against hostile responses.** Offsets were
+  compared by addition, so a crafted word near 2^63 overflowed to a negative
+  int64 and passed a bounds check. Comparisons are now by subtraction, element
+  counts are checked against remaining capacity before allocating, and signed
+  integers are range-validated rather than masked.
+- **`.superstack/` had been committed** by an earlier `git add -A`. Purged from
+  history with `git filter-repo` and force-pushed. The old blob may remain
+  reachable by SHA on GitHub until the repository is recreated.
+
+---
+
 ## Sprint 3 — FDC, FAssets, four-network verification, 160/160
 **2026-08-01** · Status: **complete, all green**
 

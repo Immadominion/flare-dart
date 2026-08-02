@@ -6,9 +6,16 @@
 > FFI, no native build step — it runs in Flutter apps on every platform, in
 > server code, and in CLI tools.
 
-Read-only by design. Transaction signing is a documented non-goal, so P-chain
-staking, delegation and C↔P transfers are out of scope. For writes, connect an
-existing wallet over WalletConnect/Reown and let it sign.
+**Signing is a documented non-goal** — the package holds no private keys. It
+covers everything on either side of the signature: build a `TransactionRequest`
+(or use a generated `…Tx` builder), price it with `prepareTransaction`, hand
+`toWalletJson()` to a wallet over WalletConnect/Reown, confirm with
+`waitForReceipt`, and decode any revert with `RevertReason`. Already-signed
+bytes can be broadcast with `sendRawTransaction`, for wallets that sign without
+broadcasting.
+
+P-chain staking and C↔P transfers are out of scope: they are not EVM
+transactions.
 
 ## Getting started
 
@@ -80,7 +87,7 @@ the Flare developer-hub issue tracker and pass it as `apiKey`.
 
 ## Companion packages
 
-- `flare_network_periphery` — 142 generated contract bindings, 1,049 read
+- `flare_network_periphery` — 164 generated contract bindings, 1,049 read
   methods, from Flare's published ABI artifacts. Multi-output functions return
   named records (`result.values`, `result.decimals`, `result.timestamp`).
 - `flare_network_codegen` — the dev-only CLI that generates them.

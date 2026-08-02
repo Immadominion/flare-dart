@@ -6,12 +6,14 @@ the short, operational version.
 
 ## What this is
 
-A pure-Dart SDK for Flare Network. Read-only by design — see *Scope* below.
+A pure-Dart SDK for Flare Network. Reads the chain and builds transactions;
+never signs one — see *Scope* below.
 
 ```
 packages/flare_network/            core SDK, 3 deps, no Flutter
 packages/flare_network_codegen/    dev-only CLI: ABI JSON -> Dart bindings
-packages/flare_network_periphery/  142 generated bindings, 1049 read methods
+packages/flare_network_periphery/  164 generated bindings: 1049 reads, 513 tx
+                                   builders, 592 events, 168 custom errors
 examples/developer-hub-dart/       runnable parity examples
 reference/                         upstream Flare sources, read-only
 docs/                              architecture, ground truth, sprint log
@@ -21,8 +23,8 @@ docs/                              architecture, ground truth, sprint log
 
 ```bash
 cd packages/flare_network
-dart test                  # 54 unit tests, hermetic, ~1s
-dart test -P integration   # 30 tests against live Coston2
+dart test                  # 234 tests, hermetic, ~1s
+dart test -P integration   # 91 tests against live Coston2
 dart analyze               # must be clean before any commit
 
 # Regenerate bindings after an artifacts bump:
@@ -79,13 +81,21 @@ you.
 ## Scope
 
 **Supported:** contract resolution, FTSOv2 reads, DA Layer anchor feeds and
-Merkle proofs, arbitrary `eth_call`, chain queries.
+Merkle proofs, FDC, FAssets, event log decoding, WebSocket subscriptions,
+arbitrary `eth_call`, chain queries — and the whole transaction path either side
+of the signature: build (`TransactionRequest`, generated `…Tx` builders), price
+(`suggestFees`, `prepareTransaction`), broadcast already-signed bytes
+(`sendRawTransaction`), confirm (`waitForReceipt`), and diagnose
+(`RevertReason`).
 
-**Deliberately not supported — a non-goal, not a gap:** transaction signing, and
-therefore P-chain staking, delegation and C↔P transfers. Do not add a signer
-without an explicit decision recorded in `docs/ARCHITECTURE.md`. P-chain needs
-the Avalanche codec, much of which must match AvalancheGo byte-for-byte, for a
-very small share of addresses.
+**Deliberately not supported — a non-goal, not a gap:** *signing*. The package
+holds no private keys. A wallet signs; this SDK prepares what it signs and
+interprets what comes back. Do not add a signer without an explicit decision
+recorded in `docs/ARCHITECTURE.md`.
+
+Also out of scope: P-chain staking and C↔P transfers. Those are not EVM
+transactions — they need the Avalanche codec, much of which must match
+AvalancheGo byte-for-byte, for a very small share of addresses.
 
 ## Conventions
 

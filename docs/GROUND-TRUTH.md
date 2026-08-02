@@ -1,6 +1,7 @@
 # Ground Truth — Empirically Verified
 
-Everything here was measured directly on this machine on **2026-07-31**, not inferred. Each entry
+Everything here was measured directly on this machine, not inferred. Sections 1-8 date from
+**2026-07-31**; sections 9-13 from **2026-08-02**. Each entry
 names the command that produced it so it can be re-run. Anything not verified this way is labelled
 `[Inference]`, `[Speculation]`, or `[Unverified]` and must stay labelled downstream.
 
@@ -309,3 +310,142 @@ This is why `flare_network_codegen` is a standalone CLI rather than a
 
 FDC fees (20 FLR mainnet / 1,000 wei Coston2) and the DA Layer rate limit were
 measured directly in §7 and by integration test, and remain confirmed.
+
+---
+
+## 9. Block time is not one number — measured 2026-08-02
+
+Flare's own documentation gives a single "~1.8 seconds" for the whole family.
+Measured over **1,000 consecutive blocks per network**, by differencing the
+`timestamp` of the head against the head minus 1,000:
+
+| Network | Elapsed / 1,000 blocks | s/block |
+|---|---:|---:|
+| Songbird | 1,066 s | **1.066** |
+| Flare | 1,161 s | **1.161** |
+| Coston2 | 2,726 s | **2.726** |
+| Coston | 3,995 s | **3.995** |
+
+A 3.7x spread, and the published figure matches none of them. `FlareChain`
+carries a per-network `blockTime`, and `waitForReceipt` paces from it. A shared
+constant either burns requests on the fast chains or adds latency on the slow.
+
+## 10. The fee market — measured 2026-08-02
+
+Sampled with `eth_feeHistory` over 8,192 blocks per network, in eight calls of
+`blockCount: 0x400`.
+
+| Fact | Flare mainnet | Coston2 |
+|---|---|---|
+| `baseFeePerGas` floor | 500 gwei (`0x746a528800`) | 500 gwei |
+| Blocks exactly at floor | **95.23%** | **99.91%** |
+| Largest excursion above floor | **+11.3%** (556.5 gwei) | +0.72% (503.6 gwei) |
+| Median `gasUsedRatio` | 0.019 | 0.0077 |
+| `eth_maxPriorityFeePerGas` | **150 gwei**, constant | **150 gwei**, constant |
+| `eth_gasPrice` | exactly `baseFee + 150 gwei` (16/16 samples) | same |
+
+Consequences encoded in the SDK:
+
+- The default `baseFeeMultiplier` is **1.5**, not the Ethereum-conventional 2.
+  1.5 covers four times the largest excursion ever observed. Surplus headroom is
+  refunded, but `gas × maxFeePerGas` is what a wallet shows as the maximum cost,
+  and against a 500 gwei floor an inflated cap makes a routine action alarming.
+- The tip is a flat constant, not a market signal, so `eth_gasPrice` carries no
+  information the base fee and the tip do not already give.
+- `eth_feeHistory` **requires its third argument**; omitting it fails with
+  `-32602 missing value for required argument 2`. `null` is accepted.
+
+`[Unverified]` Whether a tip *below* 150 gwei is rejected or merely delayed. A
+zero-tip transaction was observed mined on mainnet at ~2% block utilisation, but
+behaviour under load is untested. Settling it needs a funded Coston2 key.
+
+## 11. How a revert is reported — measured 2026-08-02
+
+Against `eth_call` and `eth_estimateGas` on Coston2 and mainnet:
+
+| Condition | code | `data` |
+|---|---|---|
+| `require`/`revert` with a message | `3` | `0x08c379a0…` (`Error(string)`) |
+| `assert` / compiler check | `3` | `0x4e487b71…` (`Panic(uint256)`) |
+| Custom error | `3` | selector + args; **message is just `execution reverted`** |
+| Bare `revert()` / no message | `-32000` | **absent entirely** |
+| Node refuses to simulate (`insufficient funds`) | `-32000` | absent, message descriptive |
+
+Two things follow:
+
+1. **Branch on the presence of `data`, never on `code == 3`.** geth sends
+   `data: "0x"` for an empty revert; this node omits the field. Treating absent
+   and `"0x"` as the same case is what makes a client portable across both.
+2. **Custom errors are unreadable without their declaration.** There are
+   **168** across the 187 published ABIs, and the node reports them as four
+   opaque bytes. `flare_network_codegen` emits every one, with a per-contract
+   `decodeRevert`.
+
+Verified live, with the exact bytes:
+
+```
+$ curl -s -X POST https://coston2-api.flare.network/ext/C/rpc \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc":"2.0","id":1,"method":"eth_call","params":[
+        {"to":"<WNat>","data":"0x23b872dd…"},"latest"]}'
+{"error":{"code":3,"message":"execution reverted: ERC20: transfer amount exceeds balance",
+ "data":"0x08c379a0…"}}
+```
+
+Those bytes are byte-identical to
+`cast concat-hex 0x08c379a0 $(cast abi-encode "f(string)" "ERC20: transfer amount exceeds balance")`.
+
+### `eth_call` state overrides are supported
+
+Passing a third parameter substitutes bytecode at an address for one simulated
+call. This makes every revert class testable against a real node with **no
+deployment, no funded key and no gas**:
+
+```
+params: [{"to":"0x…ff","data":"0x"}, "latest",
+         {"0x…ff": {"code": "0x634e487b7160e01b600052601260045260246000fd"}}]
+-> {"code":3,"message":"execution reverted: division or modulo by zero",
+    "data":"0x4e487b71…0012"}
+```
+
+`debug_traceCall` is **not** available (`-32601`), so when `data` is absent there
+is genuinely nothing to recover.
+
+## 12. `WNat.withdrawTo` does not exist — verified 2026-08-02
+
+Some secondary documentation lists `withdrawTo(recipient, amount)` on WNat. It is
+not in `IWNat`'s ABI, and its selector is absent from the deployed bytecode.
+
+```
+$ WNAT=$(cast call 0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019 \
+    "getContractAddressByName(string)(address)" "WNat" \
+    --rpc-url https://flare-api.flare.network/ext/C/rpc)
+0x1D80c49BbBCd1C0911346656B529DF9E5c2F783d
+```
+
+Searching that contract's code for each selector:
+
+| Function | Selector | In deployed bytecode |
+|---|---|---|
+| `withdrawTo(address,uint256)` | `0x205c2878` | **absent** |
+| `deposit()` | `0xd0e30db0` | present |
+| `depositTo(address)` | `0xb760faf9` | present |
+| `withdraw(uint256)` | `0x2e1a7d4d` | present |
+| `withdrawFrom(address,uint256)` | `0x9470b0bd` | present |
+
+Note that `withdrawFrom` is **allowance-based** — it spends the owner's WNat and
+sends native tokens to `msg.sender`. It is not a "withdraw to a recipient"
+helper, and naming it as one leads to misuse.
+
+## 13. Node identity
+
+`web3_clientVersion` returns `"v0.15.4"` on all four networks.
+`eth_getChainConfig` (a coreth extension) reports Cancun active
+(`cancunTime` 1764676800) and a **dynamic** block gas limit under ACP-176 —
+28,000,000 on an older mainnet block, 27,972,664 at the tip. Never hardcode it.
+
+`[Inference]` The nodes appear to be `ava-labs/coreth`, matching its behaviour in
+every case tested, but the deployed binary was not inspected. Notably
+`flare-foundation/coreth@master` is an older fork whose revert unpacking handles
+only `Error(string)`, while the live nodes decode `Panic` — so they are not on
+that branch.
