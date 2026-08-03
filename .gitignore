@@ -6,7 +6,7 @@ pubspec.lock
 !packages/*/pubspec.lock
 doc/api/
 
-# Upstream sources, fetched not authored
+# Upstream sources, fetched not authored. Large, and not ours.
 reference/
 
 # Editors / OS
@@ -20,7 +20,7 @@ packages/*/bin/_tmp_*.dart
 
 # Secrets. This repository is public, and the broadcast test reads a private
 # key from the environment — keys live in ~/.flare-dart/, never in the tree.
-# These patterns are belt-and-braces against a stray `git add -A`.
+# Belt-and-braces against a stray `git add -A`.
 *.env
 !.env.example
 .env*
@@ -29,6 +29,3 @@ packages/*/bin/_tmp_*.dart
 secrets/
 **/private_key*
 **/*keystore*
-
-# Local strategy/research scratch — never publish.
-.superstack/

@@ -5,7 +5,7 @@ runs in Flutter apps, server code and CLI tools alike.
 
 ## Architecture
 
-`packages/flare_network/lib/src/` is layered, and each layer only depends downward:
+`sdk/packages/flare_network/lib/src/` is layered, and each layer only depends downward:
 
 ```
 ftso/ registry/     domain: FtsoV2, ContractRegistry

@@ -355,9 +355,11 @@ Consequences encoded in the SDK:
 - `eth_feeHistory` **requires its third argument**; omitting it fails with
   `-32602 missing value for required argument 2`. `null` is accepted.
 
-`[Unverified]` Whether a tip *below* 150 gwei is rejected or merely delayed. A
-zero-tip transaction was observed mined on mainnet at ~2% block utilisation, but
-behaviour under load is untested. Settling it needs a funded Coston2 key.
+**Resolved in §17.** A **zero-tip** transaction was broadcast to Coston2 on
+2026-08-03 and mined into the very next block — neither rejected nor delayed. So
+the 150 gwei figure is a suggestion, not a submission floor. Behaviour under
+genuine congestion remains untested, but Flare's blocks run ~2% full and there
+is nothing to outbid.
 
 ## 11. How a revert is reported — measured 2026-08-02
 
@@ -526,18 +528,11 @@ Verified by decoding the output back: `type 0x2`, `chainId 0x72`,
 **The gas price must clear the 500 gwei floor** (§10). A commonly-copied
 `--gas-price 200gwei` produces a transaction the node rejects.
 
-### Still blocked
+### Resolved — the broadcast test ran on 2026-08-03
 
-The Coston2 faucet is reCAPTCHA-gated — the operator's deliberate
-anti-automation control, and not circumvented here. `dart test -P broadcast`
-is written and skips with instructions until `COSTON2_TEST_KEY` names a funded
-key. Two questions stay **[Unverified]** until it runs:
-
-- Is a priority fee below 150 gwei **rejected at submission or merely delayed**?
-  A zero-tip transaction was observed mined on mainnet at ~2% block
-  utilisation, so "delayed" is the [Inference] — from a single observation.
-- Does a **mined-and-reverted receipt** carry any reason, or is re-simulating at
-  the failing block the only recourse?
+The account was funded manually (the faucet is reCAPTCHA-gated) and
+`dart test -P broadcast` executed against Coston2. Both open questions are now
+answered by transactions on chain, not by inference.
 
 
 ---
@@ -565,3 +560,86 @@ what an address-only filter needs anyway — one address emits many event types.
 The general rule, worth carrying into any language: **`topic0` identifies a
 signature, not an event.** Two events differing only in which parameters are
 indexed are indistinguishable by `topic0`.
+
+
+---
+
+## 17. FAssets direct-minting measurements — moved
+
+Live direct-minting parameters, the fee-boundary dead zone, and the executor-exclusivity
+measurements were taken for the Plimsoll product and now live in
+[`../../plimsoll/docs/GROUND-TRUTH.md`](../../plimsoll/docs/GROUND-TRUTH.md).
+
+They are kept out of this file so the SDK and the product can be worked on independently. What
+does belong here, and is recorded above: FXRP is **6 decimals** (§1 corpus, and asserted in
+`FAssetsClient`).
+
+
+---
+
+## 17. What a live broadcast settled — measured 2026-08-03
+
+Four real transactions from `0x38d5…8E83` on Coston2.
+
+### A zero-tip transaction is accepted, and not even delayed
+
+| Transaction | `maxPriorityFeePerGas` | Block | Result |
+|---|---:|---:|---|
+| `0x2f7f2b67…` wrap | 150 gwei | 33,560,132 | success |
+| `0x805d4fec…` transfer | **0** | 33,560,133 | **success** |
+
+The zero-tip transaction was mined into **the very next block**. So the
+150 gwei that `eth_maxPriorityFeePerGas` reports is a *suggestion*, not a
+submission floor, and not a queue-jumping requirement at current load.
+
+This **replaces** the earlier [Inference] that a low tip would be "merely
+delayed" — it was not delayed at all. At ~2% block utilisation there is nothing
+to outbid. `[Unverified]` on both counts is now discharged.
+
+Note the floor that *does* bind is on `maxFeePerGas`, which must cover the
+500 gwei base fee (§10). Tip and cap are different constraints.
+
+### A receipt does not carry the revert reason
+
+`0xe508248a…` reverted on chain: `status 0x0`, 30,338 gas burned, zero logs.
+Its receipt has exactly fourteen fields:
+
+```
+blockHash, blockNumber, contractAddress, cumulativeGasUsed, effectiveGasPrice,
+from, gasUsed, logs, logsBloom, status, to, transactionHash,
+transactionIndex, type
+```
+
+No `revertReason`. No `returnData`. **`status: 0x0` is the entire story the
+receipt tells** — which is why a caller cannot simply read a reason off it, and
+why `TransactionReceipt.succeeded` matters so much.
+
+### But the reason is recoverable, because archive queries work
+
+Replaying the same call with `eth_call` pinned to the executing block returns
+the full payload:
+
+```
+{"code":3,"message":"execution reverted: ERC20: transfer amount exceeds balance",
+ "data":"0x08c379a0…"}
+```
+
+Archive depth on the **public** Coston2 endpoint was probed at the failing
+block, one block earlier, 100,000 back and **1,000,000 back** — revert data
+returned at every depth. No paid endpoint needed.
+
+`FlareClient.explainRevert(receipt)` does exactly this: one lookup for the
+original transaction, one `eth_call` at its block.
+
+**Caveat, stated in the API doc too:** replay is a *reconstruction*, not a
+recording. It re-executes against the block's final state, so a transaction
+whose failure depended on its position within the block may replay differently,
+or succeed. Treat it as a strong hint, not proof.
+
+### Gas, for budgeting
+
+| Action | Gas |
+|---|---:|
+| Plain transfer | 21,000 |
+| `WNat.deposit()` | 210,483 |
+| Reverted `withdraw()` | 30,338 (burned for nothing) |

@@ -271,14 +271,25 @@ void main() {
           expect(receipt.logs, isEmpty);
           expect(receipt.feePaid, greaterThan(BigInt.zero));
 
-          // Does the receipt carry a reason? Recorded either way.
-          final raw2 = await client.rpc.call('eth_getTransactionReceipt', [
-            bytesToHex(hash),
-          ]);
-          final keys = (raw2! as Map).keys.map((k) => '$k').toList()..sort();
-          printOnFailure('receipt keys: ${jsonEncode(keys)}');
-          // A revert reason on the receipt is not part of the JSON-RPC spec; if it
-          // is absent, re-simulating at the failing block is the only recourse.
+          // The receipt carries no reason at all. Measured: fourteen fields,
+          // none of them a revert reason. `status: 0x0` is the whole story it
+          // tells, which is why a caller cannot simply read one off.
+          final rawReceipt =
+              (await client.rpc.call('eth_getTransactionReceipt', [
+                    bytesToHex(hash),
+                  ]))!
+                  as Map;
+          final keys = rawReceipt.keys.map((k) => '$k').toSet();
+          printOnFailure('receipt keys: ${jsonEncode(keys.toList()..sort())}');
+          expect(keys, isNot(contains('revertReason')));
+          expect(keys, isNot(contains('returnData')));
+
+          // Replaying the call against the block that executed it does recover
+          // it, because Flare's public endpoints serve archive queries. That is
+          // what explainRevert does, in two round trips.
+          final why = await client.explainRevert(receipt);
+          expect(why, isA<RevertWithMessage>());
+          expect(why!.description, contains('exceeds balance'));
         },
         timeout: const Timeout(Duration(minutes: 3)),
       );

@@ -2,10 +2,12 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 
+import '../abi/abi_error.dart';
 import '../abi/abi_event.dart';
 import '../abi/abi_function.dart';
 import '../abi/eth_address.dart';
 import '../abi/hex.dart';
+import '../abi/revert.dart';
 import '../network/flare_chain.dart';
 import 'flare_exception.dart';
 import 'json_rpc_client.dart';
@@ -473,12 +475,74 @@ class FlareClient {
   /// `value`. Dropping either silently changes what is simulated: a call gated
   /// on `msg.sender` would fail, and a payable one would run with no value
   /// attached.
-  Future<Uint8List> simulate(TransactionRequest request) async {
+  ///
+  /// Pass [block] to simulate against historical state rather than the head.
+  /// Flare's public endpoints serve archive queries — verified at least a
+  /// million blocks back on Coston2 — which is what makes [explainRevert]
+  /// possible.
+  Future<Uint8List> simulate(
+    TransactionRequest request, {
+    BlockRef block = BlockRef.latest,
+  }) async {
     final result = await _rpc.call('eth_call', [
       request.toCallRequest().toJson(),
-      BlockTag.latest.value,
+      block.toJson(),
     ]);
     return hexToBytes(result! as String);
+  }
+
+  /// Recovers why a mined transaction reverted.
+  ///
+  /// **A receipt does not carry the reason.** Measured on Coston2 against a
+  /// real reverted transaction: the receipt has fourteen fields and none of
+  /// them is `revertReason`, `returnData` or anything equivalent. All you get
+  /// is `status: 0x0`.
+  ///
+  /// The reason is recoverable by replaying the call against the state of the
+  /// block that executed it, which is what this does — one lookup for the
+  /// original transaction, one `eth_call` pinned to its block:
+  ///
+  /// ```dart
+  /// final receipt = await client.waitForReceipt(hash);
+  /// if (!receipt.succeeded) {
+  ///   final why = await client.explainRevert(receipt);
+  ///   print(why?.description); // "ERC20: transfer amount exceeds balance"
+  /// }
+  /// ```
+  ///
+  /// Pass [errors] — a generated binding's `allErrors` — to name custom errors.
+  ///
+  /// Returns null if the transaction is unknown, if it did not revert, or if
+  /// the node declines to answer. Replay is a **reconstruction**, not a
+  /// recording: it re-executes against the block's final state, so a
+  /// transaction whose outcome depended on where it sat within the block can
+  /// come back with a different reason, or none. Treat the result as a strong
+  /// hint rather than proof.
+  Future<RevertReason?> explainRevert(
+    TransactionReceipt receipt, {
+    Iterable<AbiError> errors = const [],
+  }) async {
+    if (receipt.succeeded) return null;
+
+    final tx = await getTransactionByHash(receipt.transactionHash);
+    if (tx == null || tx.to == null) return null;
+
+    try {
+      await simulate(
+        TransactionRequest(
+          from: tx.from,
+          to: tx.to,
+          data: tx.input,
+          value: tx.value,
+        ),
+        block: BlockRef.number(receipt.blockNumber),
+      );
+      // It succeeded on replay, so the failure was situational — a
+      // dependency on position within the block, most likely.
+      return null;
+    } on FlareRpcException catch (e) {
+      return e.revertReasonWith(errors);
+    }
   }
 
   /// A block by height. Returns transaction hashes rather than full bodies.

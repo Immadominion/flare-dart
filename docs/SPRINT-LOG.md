@@ -91,7 +91,31 @@ platforms, WASM-ready.
   2025-12-10 — current and not discontinued, but not fast-moving. It is
   therefore **not** described anywhere here as "actively maintained".
 
-### Blocked
+### Unblocked and run — 2026-08-03
+
+The account was funded manually and `dart test -P broadcast` executed against
+Coston2, green on all three tests. Both open questions are now settled by
+transactions on chain rather than inference, and the answers are in
+GROUND-TRUTH §17:
+
+- **A zero-tip transaction is accepted and mined into the very next block.**
+  Not rejected, and not delayed either — which retires the earlier
+  [Inference] that it would merely be delayed. The 150 gwei
+  `eth_maxPriorityFeePerGas` reports is a suggestion, not a submission floor.
+  The floor that does bind is on `maxFeePerGas`, which must cover the 500 gwei
+  base fee. Tip and cap are different constraints.
+- **A receipt carries no revert reason.** Exactly fourteen fields, none of them
+  `revertReason` or `returnData`. `status: 0x0` is the whole story — which is
+  why `TransactionReceipt.succeeded` carries so much weight.
+- **But the reason is recoverable**, because Flare's *public* endpoints serve
+  archive queries: probed at the failing block, one earlier, 100k back and 1M
+  back, all returning full revert data. Added
+  `FlareClient.explainRevert(receipt)`, and `simulate()` now takes a `block`.
+
+Measured gas: transfer 21,000 · `WNat.deposit()` 210,483 · reverted
+`withdraw()` 30,338, burned for nothing.
+
+### What was blocked
 
 **One live broadcast, on a funded Coston2 key.** The faucet is reCAPTCHA-gated;
 that is the operator's deliberate anti-automation control and was not

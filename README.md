@@ -65,7 +65,18 @@ if (!receipt.succeeded) { /* reverted, and still cost gas */ }
 for (final log in receipt.logs) { /* what it emitted */ }
 ```
 
-When something reverts, you get the reason rather than `execution reverted`:
+If it reverts **after** it is mined, the receipt will not tell you why — it has
+no field for it. Replaying the call at its own block does:
+
+```dart
+final receipt = await client.waitForReceipt(hash);
+if (!receipt.succeeded) {
+  final why = await client.explainRevert(receipt);
+  print(why?.description); // "ERC20: transfer amount exceeds balance"
+}
+```
+
+When something reverts **before** signing, you get the reason directly:
 
 ```dart
 try {
@@ -129,9 +140,10 @@ dart run example/flare_network_example.dart
 | Codegen unit | 33 |
 | Flutter widget | 30 |
 
-One more suite exists and is **excluded by default**: `dart test -P broadcast`
-signs and sends real transactions. It needs a funded Coston2 key and skips with
-an explanation without one, since Flare's faucet is captcha-gated.
+One more suite is **excluded by default**: `dart test -P broadcast` signs and
+sends real transactions on Coston2. It has been run — see
+[GROUND-TRUTH §17](docs/GROUND-TRUTH.md) for what it settled — and skips with an
+explanation when `COSTON2_TEST_KEY` is unset.
 
 Nothing here rests on assumption where measurement was possible:
 
@@ -165,7 +177,7 @@ language:
 ## Documentation
 
 - [Core SDK README](packages/flare_network/README.md) — full usage guide
-- [AGENTS.md](AGENTS.md) / [.github/copilot-instructions.md](.github/copilot-instructions.md) — for AI coding agents
+- [AGENTS.md](AGENTS.md) / [.github/copilot-instructions.md](../.github/copilot-instructions.md) — for AI coding agents
 - [llms.txt](llms.txt) — condensed API surface for LLM consumption
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — design decisions and rationale
 - [docs/GROUND-TRUTH.md](docs/GROUND-TRUTH.md) — measured facts and open questions
